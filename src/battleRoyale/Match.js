@@ -102,6 +102,7 @@ export class Match {
       if (!ok) { s = R.range(600, this.len - 600); tx = this.org.x + this.dir.x * s; tz = this.org.z + this.dir.z * s; const f = G.nav.nearestFree(tx, tz, 60); if (f) { tx = f.x; tz = f.z; } }
       b.jumpS = clamp(s - R.range(0, 260), 300, this.len - 300); b.drop = { tx, tz }; b.mode = 'plane';
     }
+    if (G.activities) G.activities.reset(); if (G.career) G.career.applyLoadout(G.player);
     G.ui.onMatchStart();
   }
 
@@ -137,7 +138,7 @@ export class Match {
     G.zone.update(dt);
     // exploration: every named location you set foot in for the first time is logged and rewarded
     this._dT = (this._dT || 0) - dt; if (this._dT <= 0 && G.player.alive && G.player.mode === 'ground') { this._dT = 1; const L = G.world.locationAt(G.player.pos.x, G.player.pos.z); this.seen = this.seen || new Set();
-      if (L && !this.seen.has(L.id)) { this.seen.add(L.id); G.player.points = (G.player.points || 0) + 50; G.fx.sparkle(G.player.pos.x, G.player.pos.y + 1, G.player.pos.z, 1, 0.8, 0.3, 22); G.ui.banner('DISCOVERED · ' + L.name, '+50 POINTS  ·  ' + this.seen.size + ' / ' + G.world.locations.length + ' LOCATIONS'); G.audio.ui('click'); } }
+      if (L && !this.seen.has(L.id)) { this.seen.add(L.id); G.player.points = (G.player.points || 0) + 50; G.fx.sparkle(G.player.pos.x, G.player.pos.y + 1, G.player.pos.z, 1, 0.8, 0.3, 22); if (G.career) G.career.discover(L.id); G.ui.banner('DISCOVERED · ' + L.name, '+50 POINTS  ·  ' + this.seen.size + ' / ' + G.world.locations.length + ' LOCATIONS'); G.audio.ui('click'); } }
     if (G.mission) { const M = G.mission, P = G.player;
       if (M.stage === 1 && M.got >= M.need) { M.stage = 2; G.ui.banner('MISSION 2 · THE RESISTANCE BUNKER', 'Escort complete. Reach the bunker in the north-east and hold it'); G.audio.ui('win'); G.match._celebrate(); }
       if (M.stage === 2 && !M.won && P.alive && this.state !== 'over' && this.endT < 0) { const B = G.world.locations.find(l => l.id === 'base'); M.dist = Math.hypot(P.pos.x - B.x, P.pos.z - B.z); M.hold = M.dist < 30 ? (M.hold || 0) + dt : 0;
@@ -181,7 +182,7 @@ export class Match {
     const G = this.G; this.alive = G.chars.reduce((n, c) => n + (c.alive && !c.civ ? 1 : 0), 0); victim.rank = this.alive + 1;
     if (attacker && attacker !== victim) attacker.kills++;
     if (attacker && attacker.isPlayer && attacker !== victim) attacker.points = (attacker.points || 0) + (head ? 150 : 100);
-    G.fx.kill(victim.pos.x, victim.pos.y, victim.pos.z); if (attacker && attacker.isPlayer && attacker !== victim) { G.player.shakeCam(head ? 0.5 : 0.32); G.ui.shakeHud(1); if (!victim.civ) G.ui.pointsPop(head ? 150 : 100, head ? 'HEADSHOT' : 'KILL'); }
+    G.fx.kill(victim.pos.x, victim.pos.y, victim.pos.z); if (attacker && attacker.isPlayer && attacker !== victim && G.activities) G.activities.onKill(victim, head); if (attacker && attacker.isPlayer && attacker !== victim) { G.player.shakeCam(head ? 0.5 : 0.32); G.ui.shakeHud(1); if (!victim.civ) G.ui.pointsPop(head ? 150 : 100, head ? 'HEADSHOT' : 'KILL'); }
     if (victim.civ) { if (attacker && attacker.isPlayer) { attacker.points -= 300; attacker.kills--; G.ui.toast('CIVILIAN KILLED · -200 POINTS'); } else if (victim.pos.distanceTo(G.player.pos) < 120) G.ui.toast('A CIVILIAN WAS KILLED NEARBY'); }
     if (attacker && attacker.isPlayer && attacker.kills >= PET_KILLS && G.pet && !G.pet.unlocked) G.pet.unlock(attacker);
     G.ui.feed(attacker && attacker !== victim ? attacker : null, victim, wid, head);
@@ -192,7 +193,9 @@ export class Match {
   }
   _finish() {
     const G = this.G, p = G.player; this.state = 'over';
+    this._bankResult = true;
     this.result = { win: !!this.win, rank: this.win ? 1 : p.rank || this.alive + 1, kills: p.kills, points: p.points || 0, damage: Math.round(p.dmgDealt), time: this.time, accuracy: p.shots ? Math.round(p.hits / p.shots * 100) : 0, headshots: p.headshots };
+    if (this.G.career) { const up = this.G.career.bank(this.result); this.result.rankUp = up ? up[1] + (up[2] ? ' · ' + up[2] : '') : null; this.result.career = this.G.career.summary(); }
     if (this.win) G.audio.ui('win'); G.match._celebrate(); G.ui.showEnd(this.result);
   }
   stop() { this.state = 'idle'; this.plane.mesh.visible = false; this.G.zone.active = false; this.G.zone.mesh.visible = false; }

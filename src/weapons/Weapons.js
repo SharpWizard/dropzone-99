@@ -75,14 +75,15 @@ function scopeGeo(zoom) {
 // my: barrel height fraction, fz: fore-end grip as a fraction of length ahead of the grip
 // Muzzle direction per model, checked by eye side-on: these files have the stock at +Z, so they are turned around.
 const GUN_FLIP = new Set(['weapons/scifi_ar_a', 'weapons/scifi_ar_d', 'weapons/scifi_ar_e', 'weapons/scifi_grenade_launcher', 'weapons/scifi_pistol_a', 'weapons/scifi_pistol_b', 'weapons/scifi_smg', 'weapons/scifi_sniper']);
+const GN = (n, sfx = '') => 'guns/' + n + '_free_model' + sfx; // Ultimate Guns Pack (Quaternius, CC0)
 export const GUN_GLB = {
-  kestrel: { keys: ['weapons/scifi_ar_a', 'weapons/scifi_ar_c', 'weapons/scifi_ar_e'], len: 0.9, gz: 0.4, gy: 0.5, my: 0.6, fz: 0.3,  },
-  ravager: { keys: ['weapons/scifi_ar_b', 'weapons/scifi_ar_d', 'weapons/rifle_q'], len: 0.95, gz: 0.4, gy: 0.5, my: 0.6, fz: 0.3,  },
-  hornet: { keys: ['weapons/scifi_smg'], len: 0.66, gz: 0.42, gy: 0.5, my: 0.6, fz: 0.3,  },
-  sentry: { keys: ['weapons/capacitor_rifle'], len: 1.12, gz: 0.36, gy: 0.5, my: 0.6, fz: 0.27,  },
-  longbow: { keys: ['weapons/scifi_sniper'], len: 1.25, gz: 0.34, gy: 0.5, my: 0.6, fz: 0.26,  },
-  breacher: { keys: ['weapons/scifi_grenade_launcher'], len: 0.95, gz: 0.36, gy: 0.5, my: 0.6, fz: 0.32,  },
-  viper: { keys: ['weapons/scifi_pistol_a', 'weapons/scifi_pistol_b', 'weapons/pistol_q'], len: 0.24, gz: 0.25, gy: 0.5, my: 0.6, fz: 0.0,  },
+  kestrel: { keys: [GN('assault_rifle'), GN('assault_rifle', '_b')], len: 0.92, gz: 0.4, gy: 0.5, my: 0.6, fz: 0.3,  },
+  ravager: { keys: [GN('assault_rifle', '_b_b'), GN('bullpup')], len: 0.92, gz: 0.4, gy: 0.5, my: 0.6, fz: 0.3,  },
+  hornet: { keys: [GN('submachine_gun'), GN('submachine_gun', '_b')], len: 0.66, gz: 0.42, gy: 0.5, my: 0.6, fz: 0.3,  },
+  sentry: { keys: [GN('sniper_rifle'), GN('sniper_rifle', '_b')], len: 1.1, gz: 0.36, gy: 0.5, my: 0.6, fz: 0.27,  },
+  longbow: { keys: [GN('sniper_rifle', '_b_b'), GN('sniper_rifle', '_b_b_b')], len: 1.25, gz: 0.34, gy: 0.5, my: 0.6, fz: 0.26,  },
+  breacher: { keys: [GN('shotgun'), GN('shotgun', '_b'), GN('shotgun_short_stock')], len: 0.98, gz: 0.36, gy: 0.5, my: 0.6, fz: 0.32,  },
+  viper: { keys: [GN('pistol'), GN('pistol', '_b'), GN('pistol', '_b_b'), GN('pistol', '_b_b_b'), GN('revolver'), GN('revolver', '_b')], len: 0.26, gz: 0.25, gy: 0.5, my: 0.6, fz: 0.0,  },
 };
 // Find a gun model's grip from its own geometry: the pistol grip is the lowest-hanging part in the rear 70 % of the
 // gun, the fore-end is the front of the body. Results are cached per model.
@@ -104,7 +105,7 @@ function gripOf(f, key) {
 }
 
 function glbWeapon(G, id, scope, supp) {
-  const c = GUN_GLB[id], def = WEAPONS[id]; const key = c.keys[Math.floor(Math.random() * c.keys.length)]; const f = G.assets.fitted(key, { length: c.len, flip: GUN_FLIP.has(key) }); if (!f) return null;
+  const c = GUN_GLB[id], def = WEAPONS[id]; const key = c.keys[Math.floor(Math.random() * c.keys.length)]; const f = G.assets.fitted(key, { length: c.len, flip: GUN_FLIP.has(key) || key.startsWith('guns/') }); /* the Ultimate Guns Pack models all have their muzzle at -Z */ if (!f) return null;
   const sz = f.userData.size, L = sz.z, H = sz.y; const g = gripOf(f, key);
   // the grip point sits at the mount origin (right hand); model length runs along +Z towards the muzzle
   f.position.set(0, -H * g.gripY, L * (0.5 - g.gz)); const grp = new THREE.Group(); grp.add(f);

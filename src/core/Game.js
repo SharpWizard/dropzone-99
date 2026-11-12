@@ -11,6 +11,9 @@ import { buildLocations } from '../world/Locations.js';
 import { Terrain, Water } from '../terrain/Terrain.js';
 import { Vegetation } from '../world/Vegetation.js';
 import { Animals } from '../world/Animals.js';
+import { Activities } from '../battleRoyale/Activities.js';
+import { Career } from './Career.js';
+import { ITEMS, itemMesh } from '../inventory/Items.js';
 import { Nav } from '../ai/Nav.js';
 import { AI } from '../ai/Bots.js';
 import { Settings, Input } from './Settings.js';
@@ -62,7 +65,7 @@ export class Game {
     this.progress(0.9, 'Drawing the map'); await nextFrame();
     this.mapCanvas = renderMap(this.world, 1024);
     this.progress(0.95, 'Briefing 98 opponents'); await nextFrame();
-    this.fx = new FX(this); this.env = new Environment(this); this.loot = new Loot(this); this.animals = new Animals(this); this.combat = new Combat(this); this.vehicles = new Vehicles(this); this.zone = new Zone(this);
+    this.fx = new FX(this); this.env = new Environment(this); this.loot = new Loot(this); this.animals = new Animals(this); this.activities = new Activities(this); this.career = new Career(this); this.combat = new Combat(this); this.vehicles = new Vehicles(this); this.zone = new Zone(this);
     this.ai = new AI(this); this.player = new Player(this); this.chars = [this.player, ...this.ai.create(TOTAL - 1)];
     this.match = new Match(this); this.ui = new UI(this); this.pet = new Pet(this);
     this._events();
@@ -70,7 +73,7 @@ export class Game {
     this.progress(1, 'Ready'); await nextFrame();
     this.clock = performance.now();
     // pre-compile shaders while the boot screen is still up
-    this.progress(1, 'Warming up shaders'); await nextFrame(); this.warmup(); await nextFrame();
+    this.progress(1, 'Warming up shaders'); await nextFrame(); await this.warmup(); await nextFrame();
     this.frame(0.016); await nextFrame();
     document.getElementById('boot').classList.add('done');
     const loop = (t) => { requestAnimationFrame(loop); const dt = Math.min(0.05, Math.max(0.001, (t - this.clock) / 1000)); this.clock = t; try { this.frame(dt); } catch (e) { if (!this._err) { this._err = true; console.error(e); } } };
@@ -79,12 +82,14 @@ export class Game {
 
   // Render one frame with every hidden object forced visible from above the island, so every shader program
   // (LODs, impostors, props, vehicles, effects, shadow passes) compiles and every buffer uploads now, not mid-flight.
-  warmup() {
-    const scene = this.gfx.scene, cam = this.gfx.camera, hidden = [];
-    scene.traverse(o => { if (!o.visible && o !== this.zone.mesh) { hidden.push(o); o.visible = true; } });
+  async warmup() {
+    const scene = this.gfx.scene, cam = this.gfx.camera, hidden = [], shadowOff = [];
+    scene.traverse(o => { if (!o.visible && o !== this.zone.mesh) { hidden.push(o); o.visible = true; } if (o.isMesh && !o.castShadow && (o.userData._cs || o.userData.cast)) { shadowOff.push(o); o.castShadow = true; } });
+    this.gfx._noDyn = true;
     const pos = cam.position.clone(), quat = cam.quaternion.clone(), fov = cam.fov, far = cam.far;
     cam.position.set(0, 900, 300); cam.lookAt(0, 0, 0); cam.fov = 70; cam.far = 5200; cam.updateProjectionMatrix();
-    try { this.gfx.renderer.compile(scene, cam); this.gfx.render(0.016, cam.position); } catch (e) { console.warn('warmup', e); }
+    try { const r = this.gfx.renderer; if (r.compileAsync) await r.compileAsync(scene, cam); else r.compile(scene, cam); this.gfx.render(0.016, cam.position); } catch (e) { console.warn('warmup', e); }
+    this.gfx._noDyn = false; for (const o of shadowOff) o.castShadow = false;
     for (const o of hidden) o.visible = false;
     cam.position.copy(pos); cam.quaternion.copy(quat); cam.fov = fov; cam.far = far; cam.updateProjectionMatrix();
   }
@@ -119,6 +124,19 @@ export class Game {
   startMatch() {
     this.audio.unlock(); this.env.start();
     this.pet.reset(); this.match.start(); this.state = 'play'; this.input.enabled = true; this.input.lock();
+    setTimeout(() => this.warmupMatch(), 400);
+  }
+  // Second warm-up while the player rides the plane: objects that only exist once a match runs (each enemy model with
+  // its gun, loot of every kind, animals, activity markers) get their shaders compiled in parallel, without a hitch.
+  async warmupMatch() {
+    const r = this.gfx.renderer; if (!r.compileAsync) return; const temp = [], shown = [], shadowOff = [];
+    const byKey = new Map(); for (const b of this.ai.bots) if (!byKey.has(b.modelKey)) byKey.set(b.modelKey, b);
+    for (const b of byKey.values()) { const S = b.ensureSoldier(); if (!S.group.visible) { S.group.visible = true; shown.push(S.group); } }
+    const g = new THREE.Group(); g.position.set(0, -500, 0); this.gfx.scene.add(g); let i = 0;
+    for (const id in ITEMS) { try { const m = itemMesh(this, { id, rot: 0.3, w: null, model: ITEMS[id].model || null, float: false }); m.position.x = (i++ % 20) * 2; g.add(m); } catch (e) { /* item without a mesh */ } }
+    this.gfx.scene.traverse(o => { if (!o.visible && o !== this.zone.mesh) { shown.push(o); o.visible = true; } if (o.isMesh && !o.castShadow && (o.userData._cs || o.userData.cast)) { shadowOff.push(o); o.castShadow = true; } });
+    try { await r.compileAsync(this.gfx.scene, this.gfx.camera); } catch (e) { console.warn('match warmup', e); }
+    for (const o of shadowOff) o.castShadow = false; for (const o of shown) o.visible = false; this.gfx.scene.remove(g); temp.length = 0;
   }
   pause() { if (this.state !== 'play') return; this.state = 'paused'; this.ui.open('pause'); }
   resume() { if (this.state !== 'paused') return; this.state = 'play'; this.input.lock(); }
@@ -131,7 +149,7 @@ export class Game {
       if (I.pressed('map') && this.ui.panel !== 'end') { if (this.ui.panel === 'map') this.ui.close(); else if (!this.ui.panel) this.ui.open('map'); }
       this.ui.wheelUpdate(I, p);
       p.update(dt);
-      this.vehicles.update(dt); this.ai.update(dt); this.animals.update(dt); this.combat.update(dt); this.match.update(dt);
+      this.vehicles.update(dt); this.ai.update(dt); this.animals.update(dt); this.activities.update(dt); this.combat.update(dt); this.match.update(dt);
       for (let k = 1; k < (this.timeScale || 1); k++) { I.mx = 0; I.my = 0; p.update(dt); this.vehicles.update(dt); this.ai.update(dt); this.combat.update(dt); this.match.update(dt); } // debug fast-forward
       if (p.mode !== 'plane') p.syncVisual(dt, p.yaw); else p.hideSoldier();
       if (p.soldier && (p.hideBody || (p.mode === 'seat' && p.vehicle && p.vehicle.closed))) p.soldier.group.visible = false;

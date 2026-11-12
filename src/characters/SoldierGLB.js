@@ -35,10 +35,12 @@ export const ENEMY_KEYS = ['enemies/soldier', 'enemies/swat_enemy', 'enemies/sci
 // animal characters: no arms, so they carry no weapon; their own walk / run / hit / death clips drive them
 const ANIMAL = new Set(['enemies/animal_panda', 'enemies/animal_bee', 'enemies/animal_flamingo', 'enemies/animal_frog']);
 const ANIMAL_CLIPS = { Idle: 'Idle', Idle_Gun: 'Idle', Idle_Gun_Pointing: 'Idle', Idle_Gun_Shoot: 'Idle', Idle_Neutral: 'Idle', Idle_Sword: 'Idle', Gun_Shoot: 'Shoot_Small', Walk: 'Walk', Run: 'Run', Run_Back: 'Walk', Run_Left: 'Walk', Run_Right: 'Walk', Run_Shoot: 'Run', Death: 'Death', HitRecieve: 'HitRecieve_1', HitRecieve_2: 'HitRecieve_2', Interact: 'Pickup', Roll: 'Jump', Wave: 'Hello', Punch_Left: 'Kick', Punch_Right: 'Kick', Kick_Left: 'Kick', Kick_Right: 'Kick', Sword_Slash: 'Kick' };
-const UNIVERSAL = new Set(['enemies/astro_a', 'enemies/astro_b', 'enemies/astro_c', 'enemies/hazmat', 'enemies/char_enemy']);
+// the Swarm (Ultimate Monsters Bundle, CC0): humanoid-rigged creatures that share the universal clip set
+export const ALIEN_KEYS = ['monsters/alien_free_model_b', 'monsters/alien_free_model_b', 'monsters/alien_free_model_b', 'monsters/blue_demon_free_model', 'monsters/demon_free_model_b', 'monsters/yeti_free_model_b', 'monsters/orc_free_model', 'monsters/ninja_free_model_b'];
+const UNIVERSAL = new Set(['enemies/astro_a', 'enemies/astro_b', 'enemies/astro_c', 'enemies/hazmat', 'enemies/char_enemy', ...ALIEN_KEYS]);
 const TPLS = new Map();
 // Universal-rig clip fallbacks for every clip name the soldier uses
-const UNI = { Idle: ['Idle'], Idle_Gun: ['Idle_Gun', 'Idle_Shoot', 'Idle'], Idle_Gun_Pointing: ['Idle_Shoot', 'Idle_Gun', 'Idle'], Idle_Gun_Shoot: ['Idle_Shoot', 'Idle_Gun', 'Idle'], Gun_Shoot: ['Idle_Shoot', 'Idle_Gun', 'Idle'],
+const UNI = { Idle: ['Idle'], Idle_Gun: ['Idle_Gun', 'Idle_Shoot', 'Weapon', 'Idle'], Idle_Gun_Pointing: ['Idle_Shoot', 'Idle_Gun', 'Weapon', 'Idle'], Idle_Gun_Shoot: ['Idle_Shoot', 'Idle_Gun', 'Idle'], Gun_Shoot: ['Idle_Shoot', 'Idle_Gun', 'Idle'],
   Walk: ['Walk', 'Walk_Gun', 'Walk_Shoot'], Run: ['Run', 'Run_Gun'], Run_Back: ['Run', 'Run_Gun'], Run_Left: ['Run', 'Run_Gun'], Run_Right: ['Run', 'Run_Gun'], Run_Shoot: ['Run_Gun_Shoot', 'Run_Shoot', 'Run_Gun', 'Run'],
   Death: ['Death'], HitRecieve: ['HitReact'], HitRecieve_2: ['HitReact'], Interact: ['Wave'], Roll: ['Duck'], Punch_Left: ['Punch'], Punch_Right: ['Punch'], Kick_Left: ['Punch'], Kick_Right: ['Punch'], Sword_Slash: ['Punch'], Idle_Sword: ['Idle'], Idle_Neutral: ['Idle'], Wave: ['Wave'] };
 // every clip in the character file; SHOTS are one-shot actions triggered by game events

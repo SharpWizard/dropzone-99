@@ -295,7 +295,7 @@ export function buildTown(G, b, L, group, api) {
         k.w.group.position.set(x, G.world.heightAt(x, z), z); k.w.group.rotation.y = Math.atan2(base.dx * sg, base.dz * sg);
         k.w.animate({ dt, mode: 'ground', speed: Math.abs(k.sp) * 512, moveAng: 0, stance: 0, aiming: false, pitch: 0, weapon: 'none', reload: -1, sprint: false, fired: false, hurt: false, bank: 0, handL: null, handR: null }); } }
     for (const T of life.trains) { // run, brake for the stop, dwell, pull away
-      if (T.state === 'wait') { T.wait -= dt; if (T.wait <= 0) { T.state = 'run'; T.leave = 60; } }
+      if (T.state === 'wait') { T.wait -= dt; if (T.wait <= 0) { T.state = 'run'; T.leave = 60; const c0 = T.cars[0].g.position; G.audio.horn && G.audio.horn(c0.x, c0.y + 3, c0.z); if (T.steam) G.audio.steam && G.audio.steam(c0.x, c0.y + 1, c0.z); } }
       else { const d = life.ahead(T); const braking = T.leave <= 0 && d < 220; const vt = braking ? Math.min(T.vmax, Math.sqrt(2 * 0.7 * Math.max(0, d - 0.3)) + 0.4) : T.vmax; T.v += Math.max(-1.6 * dt, Math.min(0.7 * dt, vt - T.v)); const ds = T.v * dt; T.s += ds; if (T.leave > 0) T.leave -= ds;
         if (braking && d < 0.6) { T.s = T.stop; T.v = 0; T.state = 'wait'; T.wait = 14; } }
       life.placeTrain(T);
@@ -306,6 +306,8 @@ export function buildTown(G, b, L, group, api) {
       { const Pq = G.player, c0 = T.cars[0]; if (Pq && Pq.alive && T.v > 2 && c0 && Pq.shakeCam) { let dm = 1e9; for (const c of T.cars) dm = Math.min(dm, Math.hypot(Pq.pos.x - c.g.position.x, Pq.pos.z - c.g.position.z)); if (dm < 38) Pq.shakeCam((1 - dm / 38) * 0.5 * Math.min(1, T.v / 10)); } }
       // nobody stands inside a moving train: push the player clear of the cars
       const Pl = G.player; if (Pl && Pl.alive && T.v > 0.5) for (const c of T.cars) { const dx = Pl.pos.x - c.g.position.x, dz = Pl.pos.z - c.g.position.z; if (Math.abs(Pl.pos.y - c.g.position.y) > 4 || dx * dx + dz * dz > (c.len * 0.6) ** 2) continue;
-        const ya = c.g.rotation.y, fx = Math.sin(ya), fz = Math.cos(ya), along = dx * fx + dz * fz, side = dx * fz - dz * fx; if (Math.abs(along) < c.len / 2 && Math.abs(side) < 1.9) { const push = (1.95 - Math.abs(side)) * Math.sign(side || 1); Pl.pos.x += fz * push; Pl.pos.z -= fx * push; } } }
+        const ya = c.g.rotation.y, fx = Math.sin(ya), fz = Math.cos(ya), along = dx * fx + dz * fz, side = dx * fz - dz * fx; if (Math.abs(along) < c.len / 2 && Math.abs(side) < 1.9) { const push = (1.95 - Math.abs(side)) * Math.sign(side || 1); Pl.pos.x += fz * push; Pl.pos.z -= fx * push;
+          // struck by a moving train: damage grows with speed, and you are thrown clear
+          if (T.v > 4 && (Pl._trainT || 0) < life.t) { Pl._trainT = life.t + 1.2; Pl.damage(T.v * 5.5, null, 'body', 'train', fz * Math.sign(side || 1), -fx * Math.sign(side || 1)); Pl.vel.x += fz * Math.sign(side || 1) * T.v * 0.7 + fx * T.v * 0.4; Pl.vel.z += -fx * Math.sign(side || 1) * T.v * 0.7 + fz * T.v * 0.4; Pl.vel.y = Math.max(Pl.vel.y || 0, 3.5); Pl.shakeCam(1.4); G.ui.toast('HIT BY A TRAIN'); G.audio.vehicleHit && G.audio.vehicleHit(Pl.pos.x, Pl.pos.y, Pl.pos.z); } } } }
   };
 }

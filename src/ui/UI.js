@@ -47,7 +47,7 @@ export class UI {
   // ---------- menus ----------
   showMenu() {
     this.panel = null; this.pan.classList.add('hidden'); this.hud.classList.add('hidden'); this.menu.classList.remove('hidden');
-    this.menu.innerHTML = `<div class="m-left"><div class="logo">DROPZONE <b>99</b></div><div class="tag">DROP IN. GEAR UP. OUTLAST THEM ALL.</div><div class="tag" style="max-width:430px;opacity:.75;letter-spacing:.06em;line-height:1.5;text-transform:none;margin-top:6px">They fell from the sky and the city went dark. Ninety-nine dropped in to take it back. Explore every street, save who you can, and be the last one standing.</div>
+    this.menu.innerHTML = `<div class="m-left"><div class="logo">DROPZONE <b>99</b></div><div class="tag">DROP IN. GEAR UP. OUTLAST THEM ALL.</div><div class="tag" style="max-width:430px;opacity:.75;letter-spacing:.06em;line-height:1.5;text-transform:none;margin-top:6px">${this.G.career ? '<div class="career">RANK <b>' + this.G.career.summary().rank + '</b> · ' + this.G.career.summary().points + ' career pts · ' + this.G.career.summary().next + '</div>' : ''}They fell from the sky and the city went dark. Ninety-nine dropped in to take it back. Explore every street, save who you can, and be the last one standing.</div>
       <div class="m-btns"><button class="btn big" data-act="start"><span>START GAME</span><em>SOLO · MISSION 1 · RESCUE THE SURVIVORS</em></button><button class="btn" data-act="open" data-arg="character">CHARACTER</button><button class="btn" data-act="open" data-arg="settings">SETTINGS</button><button class="btn" data-act="open" data-arg="howto">HOW TO PLAY</button><button class="btn ghost" data-act="exit">EXIT</button></div></div>
       <div class="m-foot"><span>DROPZONE ISLAND · ${this.G.settings.d.difficulty} · ${this.G.gfx.presetName} GRAPHICS</span><span>v0.1 · WebGL2</span></div>`;
   }
@@ -123,6 +123,7 @@ export class UI {
       ctx.save(); ctx.translate(this._w2m(M.plane.pos.x, size), this._w2m(M.plane.pos.z, size)); ctx.rotate(Math.PI - M.plane.yaw); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.moveTo(0, -lw * 6); ctx.lineTo(lw * 5, lw * 5); ctx.lineTo(0, lw * 2); ctx.lineTo(-lw * 5, lw * 5); ctx.fill(); ctx.restore(); }
     if (Z.active || M.state !== 'idle') { if (Z.active) { ctx.strokeStyle = '#3aa0ff'; ctx.lineWidth = lw * 1.6; ctx.beginPath(); ctx.arc(this._w2m(Z.cx, size), this._w2m(Z.cz, size), Z.r * s, 0, 6.283); ctx.stroke(); ctx.fillStyle = 'rgba(40,110,255,.16)'; ctx.beginPath(); ctx.rect(0, 0, size, size); ctx.arc(this._w2m(Z.cx, size), this._w2m(Z.cz, size), Z.r * s, 0, 6.283, true); ctx.fill('evenodd'); }
       if (Z.active && Z.nr > 1) { ctx.strokeStyle = '#fff'; ctx.lineWidth = lw; ctx.beginPath(); ctx.arc(this._w2m(Z.nx, size), this._w2m(Z.nz, size), Z.nr * s, 0, 6.283); ctx.stroke(); } }
+    if (G.activities) G.activities.drawMap(ctx, (v) => this._w2m(v, size), lw);
     if (this.marker) { const mx = this._w2m(this.marker.x, size), mz = this._w2m(this.marker.z, size); ctx.fillStyle = '#ffb02e'; ctx.beginPath(); ctx.moveTo(mx, mz); ctx.lineTo(mx - lw * 4, mz - lw * 9); ctx.lineTo(mx + lw * 4, mz - lw * 9); ctx.fill(); }
   }
   _bigmap() {
@@ -154,6 +155,7 @@ export class UI {
     const mark = (wx, wz, col) => { const b = ((Math.atan2(wx - p.pos.x, -(wz - p.pos.z)) * 180 / Math.PI) + 360) % 360; let dl = b - hdg; if (dl > 180) dl -= 360; if (dl < -180) dl += 360; if (Math.abs(dl) < 76) { ctx.globalAlpha = 1; ctx.fillStyle = col; const x = W / 2 + dl * ppd; ctx.beginPath(); ctx.moveTo(x, 44); ctx.lineTo(x - 5, 35); ctx.lineTo(x + 5, 35); ctx.fill(); } };
     if (this.marker) mark(this.marker.x, this.marker.z, '#ffb02e'); if (G.zone.active && G.zone.outside(p.pos.x, p.pos.z)) mark(G.zone.cx, G.zone.cz, '#3aa0ff'); else if (G.zone.active && Math.hypot(p.pos.x - G.zone.nx, p.pos.z - G.zone.nz) > G.zone.nr) mark(G.zone.nx, G.zone.nz, '#ffffff');
     for (const t of this.threats) mark(t.x, t.z, `rgba(255,70,50,${clamp(t.t / 2.2, 0, 1)})`);
+    if (G.activities) for (const m of G.activities.marks()) mark(m.x, m.z, m.col);
     ctx.globalAlpha = 1; ctx.fillStyle = '#ff5a1f'; ctx.fillRect(W / 2 - 1, 22, 2, 14); ctx.fillStyle = '#ece8dc'; ctx.font = '700 11px Consolas, monospace'; ctx.fillText(Math.round(hdg) + '°', W / 2, 44);
   }
 
@@ -198,7 +200,7 @@ export class UI {
     this.G.input.unlock(); this.panel = 'end'; this.pan.classList.remove('hidden');
     this.pan.innerHTML = `<div class="end ${r.win ? 'win' : 'lose'}"><div class="e-top">DROPZONE <b>99</b></div><h1>${r.win ? (this.G.mission && this.G.mission.won ? 'MISSION COMPLETE' : 'WINNER!') : (this.G.mission ? 'MISSION FAILED' : 'ELIMINATED')}</h1><div class="e-sub">${r.win ? (this.G.mission && this.G.mission.won ? 'THE RESISTANCE PREVAILS' : 'YOU ARE THE LAST SURVIVOR') : 'THE MACHINES HAVE YOU'}</div>
       <div class="e-rank"><b>#${r.rank}</b><span>/ ${TOTAL}</span></div>
-      <div class="e-stats"><div><b>${r.kills}</b><span>KILLS</span></div><div><b>${r.points || 0}</b><span>POINTS</span></div><div><b>${r.damage}</b><span>DAMAGE DEALT</span></div><div><b>${fmtTime(r.time)}</b><span>SURVIVAL TIME</span></div><div><b>${r.accuracy}%</b><span>ACCURACY</span></div><div><b>${r.headshots}</b><span>HEADSHOTS</span></div></div>
+      ${r.rankUp ? '<div class="rankup">RANK UP · ' + r.rankUp + '</div>' : ''}${r.career ? '<div class="career">RANK <b>' + r.career.rank + '</b> · ' + r.career.points + ' career pts · ' + r.career.next + '</div>' : ''}<div class="e-stats"><div><b>${r.kills}</b><span>KILLS</span></div><div><b>${r.points || 0}</b><span>POINTS</span></div><div><b>${r.damage}</b><span>DAMAGE DEALT</span></div><div><b>${fmtTime(r.time)}</b><span>SURVIVAL TIME</span></div><div><b>${r.accuracy}%</b><span>ACCURACY</span></div><div><b>${r.headshots}</b><span>HEADSHOTS</span></div></div>
       <div class="e-btns"><button class="btn big" data-act="again"><span>PLAY AGAIN</span></button><button class="btn" data-act="tomenu">MAIN MENU</button></div></div>`;
   }
 

@@ -81,6 +81,14 @@ export class AudioSys {
   land() { const sp = this._spatial(); if (sp) { this._tone(sp.t, 0.14, sp.out, 'sine', 120, 45, 0.8); this._noise(this.noise, sp.t, 0.12, sp.out, 'lowpass', 1200, 300, 0.5, 0.5); } }
   vehicleHit(x, y, z) { const sp = this._spatial(x, y, z, 6, 120); if (sp) { this._noise(this.noise, sp.t, 0.25, sp.out, 'lowpass', 2600, 300, 0.6, 1); this._tone(sp.t, 0.2, sp.out, 'triangle', 260, 120, 0.5); } }
 
+  // train: two-tone air horn, and a hiss of steam
+  horn(x, y, z) { const sp = this._spatial(x, y, z, 40, 900); if (!sp) return; const t = sp.t; for (const f of [311, 370]) { this._tone(t, 1.6, sp.out, 'sawtooth', f, f * 0.985, 0.11, 0.06); this._tone(t + 1.9, 0.7, sp.out, 'sawtooth', f, f * 0.98, 0.1, 0.04); } }
+  steam(x, y, z) { const sp = this._spatial(x, y, z, 10, 200); if (sp) this._noise(this.noise, sp.t, 0.9, sp.out, 'highpass', 2600, 1800, 0.7, 0.35, 0.03); }
+  // animals: bear roar (growl + rumble), deer alarm bark
+  roar(x, y, z) { const sp = this._spatial(x, y, z, 14, 260); if (!sp) return; const t = sp.t; this._noise(this.brown, t, 1.3, sp.out, 'lowpass', 420, 160, 2, 1.6, 0.12); this._tone(t, 1.2, sp.out, 'sawtooth', 96, 64, 0.22, 0.1); this._noise(this.noise, t + 0.05, 0.9, sp.out, 'bandpass', 700, 380, 3, 0.45, 0.1); }
+  bleat(x, y, z) { const sp = this._spatial(x, y, z, 8, 160); if (!sp) return; this._tone(sp.t, 0.22, sp.out, 'square', 760, 520, 0.08, 0.01); this._noise(this.noise, sp.t, 0.18, sp.out, 'bandpass', 1500, 900, 4, 0.25, 0.01); }
+  // alien: rising chittering screech when one of the Swarm locks onto you
+  screech(x, y, z) { const sp = this._spatial(x, y, z, 10, 200); if (!sp) return; const t = sp.t; this._tone(t, 0.55, sp.out, 'sawtooth', 340, 1250, 0.13, 0.02); this._tone(t + 0.04, 0.5, sp.out, 'square', 520, 1700, 0.06, 0.02); for (let i = 0; i < 5; i++) this._noise(this.noise, t + i * 0.08, 0.06, sp.out, 'bandpass', 2400 + i * 300, 1800, 8, 0.35, 0.005); }
   _ambience() {
     const c = this.ctx; const mk = (buf, type, freq, q, gain) => { const s = c.createBufferSource(); s.buffer = buf; s.loop = true; const f = c.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q; const g = c.createGain(); g.gain.value = gain; s.connect(f); f.connect(g); g.connect(this.master); s.start(); return { f, g }; };
     this.amb = { wind: mk(this.noise, 'bandpass', 420, 0.5, 0.0), rush: mk(this.noise, 'bandpass', 900, 0.4, 0.0), sea: mk(this.brown, 'lowpass', 500, 0.3, 0.0) };

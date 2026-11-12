@@ -10,7 +10,7 @@ const K = (n) => 'animals/' + n + '_free_model';
 // len: body length (m), hp, pts: points for a kill, walk / run speeds (m/s), flee: distance at which it bolts, gait: stride frequency per m/s
 const SPECIES = {
   deer: { key: K('deer'), len: 1.8, hp: 60, pts: 50, walk: 1.5, run: 11, flee: 26, legs: 0.5, gait: 1.2, name: 'DEER' },
-  stag: { key: K('deer_b'), len: 2.2, hp: 85, pts: 75, walk: 1.5, run: 10.5, flee: 30, legs: 0.48, gait: 1.1, name: 'STAG' },
+  stag: { key: 'animals/deer_free_model_b', len: 2.2, hp: 85, pts: 75, walk: 1.5, run: 10.5, flee: 30, legs: 0.48, gait: 1.1, name: 'STAG' },
   fox: { key: K('fox'), len: 1.1, hp: 40, pts: 60, walk: 1.8, run: 9.5, flee: 20, legs: 0.42, gait: 1.8, name: 'FOX' },
   rabbit: { key: K('rabbit'), len: 0.5, hp: 20, pts: 30, walk: 1.2, run: 8, flee: 12, legs: 0.38, gait: 3.0, hop: 1, name: 'RABBIT' },
   bison: { key: K('bizon'), len: 3.0, hp: 220, pts: 100, walk: 1.2, run: 8, flee: 22, legs: 0.36, gait: 0.9, name: 'BISON' },
@@ -87,7 +87,7 @@ export class Animals {
   // a hit from a bullet or a blow. returns true when it killed the animal
   hurt(a, dmg, attacker, head = false) {
     if (!a.alive) return false; a.hp -= dmg * (head ? 2 : 1);
-    if (a.hp <= 0) { a.alive = false; a.state = 'dead'; a.deadT = 0; a.speed = 0; this.G.fx.kill(a.x, a.y, a.z, a.H * 0.6); if (attacker && attacker.isPlayer) this.G.ui.pointsPop(a.S.pts + (head ? 20 : 0), a.S.name); if (attacker && attacker.isPlayer) { attacker.points = (attacker.points || 0) + a.S.pts + (head ? 20 : 0); this.G.ui.toast('+' + (a.S.pts + (head ? 20 : 0)) + ' · ' + a.S.name + (head ? ' · HEADSHOT' : '')); this.G.audio.ui && this.G.audio.ui('win'); attacker.shakeCam && attacker.shakeCam(0.25); }
+    if (a.hp <= 0) { a.alive = false; a.state = 'dead'; a.deadT = 0; a.speed = 0; this.G.fx.kill(a.x, a.y, a.z, a.H * 0.6); if (this.G.activities && attacker && attacker.isPlayer) this.G.activities.onAnimalKill(a.sp); if (attacker && attacker.isPlayer) this.G.ui.pointsPop(a.S.pts + (head ? 20 : 0), a.S.name); if (attacker && attacker.isPlayer) { attacker.points = (attacker.points || 0) + a.S.pts + (head ? 20 : 0); this.G.ui.toast('+' + (a.S.pts + (head ? 20 : 0)) + ' · ' + a.S.name + (head ? ' · HEADSHOT' : '')); this.G.audio.ui && this.G.audio.ui('win'); attacker.shakeCam && attacker.shakeCam(0.25); }
       // the rest of the herd bolts
       for (const o of this.list) if (o !== a && o.alive && !o.S.hunt && Math.hypot(o.x - a.x, o.z - a.z) < 45) { o.state = 'flee'; o.t = this.R.range(6, 10); o.fleeFrom = { x: a.x, z: a.z }; }
       return true; }
@@ -105,8 +105,8 @@ export class Animals {
         if (a.deadT > 26) { this.group.remove(a.g); a.removed = true; } continue; }
       const S = a.S, dp = P && P.alive ? Math.hypot(a.x - P.pos.x, a.z - P.pos.z) : 1e9; a.t -= dt; let want = 0, tx = null, tz = null;
       // ---- decide
-      if (S.hunt && P && P.alive && P.mode === 'ground' && (a.state === 'hunt' || dp < S.hunt)) { if (a.state !== 'hunt') a.t = 10; a.state = 'hunt'; }
-      else if (!S.hunt && P && P.alive && P.mode === 'ground' && a.state !== 'flee' && (dp < S.flee * 0.45 || (dp < S.flee && (P.sprinting || P.speedNow > 4.5)))) { a.state = 'flee'; a.t = this.R.range(5, 8); a.fleeFrom = { x: P.pos.x, z: P.pos.z }; }
+      if (S.hunt && P && P.alive && P.mode === 'ground' && (a.state === 'hunt' || dp < S.hunt)) { if (a.state !== 'hunt') { a.t = 10; G.audio.roar && G.audio.roar(a.x, a.y + 1, a.z); } a.state = 'hunt'; }
+      else if (!S.hunt && P && P.alive && P.mode === 'ground' && a.state !== 'flee' && (dp < S.flee * 0.45 || (dp < S.flee && (P.sprinting || P.speedNow > 4.5)))) { if (this.R.f() < 0.5 && (a.sp === 'deer' || a.sp === 'stag')) G.audio.bleat && G.audio.bleat(a.x, a.y + 1.2, a.z); a.state = 'flee'; a.t = this.R.range(5, 8); a.fleeFrom = { x: P.pos.x, z: P.pos.z }; }
       if (a.state === 'hunt') { if (!P || !P.alive || a.t <= 0 && dp > S.hunt * 1.6) { a.state = 'graze'; a.t = 4; } else { tx = P.pos.x; tz = P.pos.z; want = dp > 2.2 ? S.run : 0;
           a.atkT -= dt; if (dp < 2.6 && a.atkT <= 0) { a.atkT = 1.4; P.damage(S.bite * (diff.dmgToPlayer || 1) * 1.2, null, 'body', 'animal', Math.sin(a.yaw), Math.cos(a.yaw)); G.fx.impact(P.pos.x, P.pos.y + 1.1, P.pos.z, -Math.sin(a.yaw), 0.3, -Math.cos(a.yaw), 5); G.ui.toast(S.name + ' ATTACK'); P.shakeCam(0.9); } } }
       else if (a.state === 'flee') { if (a.t <= 0) { a.state = 'graze'; a.t = this.R.range(2, 5); a.home = { x: a.x, z: a.z }; } else { const f = a.fleeFrom || a; let ax = a.x - f.x, az = a.z - f.z; const l = Math.hypot(ax, az) || 1; tx = a.x + ax / l * 20; tz = a.z + az / l * 20; want = S.run; } }

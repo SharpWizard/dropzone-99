@@ -292,3 +292,11 @@ body.falling::before { content: ''; position: fixed; inset: -25%; pointer-events
 .ptpop { position: fixed; left: 50%; top: 44%; margin-left: 46px; pointer-events: none; z-index: 6; font: 800 26px var(--f, system-ui); color: #ffd27a; text-shadow: 0 0 14px rgba(255, 170, 60, .8), 0 2px 3px rgba(0, 0, 0, .6); animation: ptpop 1.25s cubic-bezier(.2, .9, .3, 1) forwards; white-space: nowrap; }
 .ptpop span { display: block; font-size: 11px; letter-spacing: .22em; color: #fff; opacity: .85; }
 @keyframes ptpop { 0% { opacity: 0; transform: translateY(14px) scale(.6); } 14% { opacity: 1; transform: translateY(0) scale(1.18); } 26% { transform: translateY(-4px) scale(1); } 75% { opacity: 1; } 100% { opacity: 0; transform: translateY(-58px) scale(.96); } }
+
+/* ---- free-roam side panel, career line, rank up ---- */
+#sidejobs { position: fixed; left: 20px; top: 112px; font: 600 11px/1.55 system-ui, sans-serif; letter-spacing: .1em; color: #e8f1f7; text-shadow: 0 1px 3px rgba(0, 0, 0, .8); pointer-events: none; z-index: 4; padding: 6px 12px 6px 10px; border-left: 3px solid #ffcc55; background: linear-gradient(90deg, rgba(10, 16, 24, .55), transparent); }
+#sidejobs b { color: #ffd27a; } #sidejobs .hot { color: #ff7a5a; animation: lowhp 1s ease-in-out infinite; }
+#sidejobs.pulse { animation: jolt .3s ease-out; }
+.career { font: 600 12px/1.5 system-ui, sans-serif; letter-spacing: .12em; color: #ffd27a; margin: 10px 0 8px; text-transform: uppercase; }
+.career b { color: #fff; }
+.rankup { font: 800 22px system-ui, sans-serif; letter-spacing: .16em; color: #ffd27a; text-shadow: 0 0 18px rgba(255, 170, 60, .9); margin: 8px 0; animation: logoglow 1.6s ease-in-out infinite; }

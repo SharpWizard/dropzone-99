@@ -479,3 +479,39 @@ asphalt_02, brick_wall_005, concrete_wall_004 (cladding), concrete_wall_008, aer
 | Sheep - Free Model | madtrollstudio | CC-BY 3.0 | https://poly.pizza/m/KTViIBTJDo |
 | Shovel - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/oNBQSf87ZJ |
 | Water Bottle - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/KpxDpidn1Z |
+
+## Ultimate Monsters Bundle (the alien Swarm) and Ultimate Guns Pack (Poly Pizza)
+
+| Model | Author | Licence | Source |
+|---|---|---|---|
+| Alien - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/RRliSQBP7r |
+| Assault Rifle - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/Bgvuu4CUMV |
+| Assault Rifle - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/K2lXTYFSLC |
+| Assault Rifle - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/fpLucho45C |
+| Bayonet - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/D81P2smzCy |
+| Bipod - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/Ugy8tjR3Ju |
+| Blue Demon - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/S7jYW6Amye |
+| Bullpup - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/iKAlIbHUFD |
+| Demon - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/LnfIziKv4o |
+| Ninja - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/xGYmeDpfTu |
+| Orc - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/5vO2YJsPEf |
+| Pistol - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/52kQzphmeF |
+| Pistol - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/J3i9KDQ3kt |
+| Pistol - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/Jyn9qex4ba |
+| Pistol - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/Z7aOjJu583 |
+| Revolver - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/9C26wSpMS0 |
+| Revolver - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/E7IaG9TptR |
+| Revolver - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/XrnLUz6kQj |
+| Scope - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/Y9DSevnvGq |
+| Shotgun - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/DcNE0HVdW8 |
+| Shotgun - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/ZmPTnh7njL |
+| Shotgun Sawed Off - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/29FXKu7G91 |
+| Shotgun Short Stock - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/MHv3uOV6ja |
+| Sniper Rifle - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/ASOMZIErq3 |
+| Sniper Rifle - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/TKaBjAEofL |
+| Sniper Rifle - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/XCIC2Ae4Rb |
+| Sniper Rifle - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/i65hEldsw6 |
+| Submachine Gun - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/7ehatxr7FY |
+| Submachine Gun - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/nsP3JukU73 |
+| Tripod - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/sVTKUSz3m2 |
+| Yeti - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/ceRHrn8HHE |

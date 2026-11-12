@@ -2,7 +2,7 @@
 // weapon handling, plus a cheap far-away simulation tier so 98 opponents stay alive on the island.
 import * as THREE from 'three';
 import { Character, SPEED } from '../characters/Character.js';
-import { ENEMY_KEYS, PEOPLE_KEYS } from '../characters/SoldierGLB.js';
+import { ENEMY_KEYS, PEOPLE_KEYS, ALIEN_KEYS } from '../characters/SoldierGLB.js';
 import { WEAPONS } from '../weapons/Weapons.js';
 import { ITEMS, rollLoot } from '../inventory/Items.js';
 import { RNG, clamp, dampAngle, wrapAngle } from '../utils/math.js';
@@ -12,7 +12,7 @@ const PRE = ['Ghost', 'Viper', 'Rogue', 'Ash', 'Nova', 'Echo', 'Raven', 'Onyx', 
 const SUF = ['', '_7', 'X', '99', '_TV', 'zz', '_K', '47', 'HD', '_Pro', '13', 'ko', '_II', '88', 'xD'];
 
 export class Bot extends Character {
-  constructor(G, id, name, R) { super(G, id, name); this.R = R; this.modelKey = R.chance(0.75) ? R.pick(PEOPLE_KEYS) : R.pick(ENEMY_KEYS); this.path = []; this.skill = R.range(0.7, 1.3); this.outfit = R.int(0, 5); this.resetAI(); }
+  constructor(G, id, name, R) { super(G, id, name); this.R = R; this.modelKey = R.chance(0.72) ? R.pick(ALIEN_KEYS) : R.pick(ENEMY_KEYS.slice(0, 8)); /* hostiles are the Swarm; civilians are re-skinned as people by the mission */ this.path = []; this.skill = R.range(0.7, 1.3); this.outfit = R.int(0, 5); this.resetAI(); }
   resetAI() {
     this.state = 'loot'; this.target = null; this.seenT = 9; this.lastSeen = { x: 0, z: 0 }; this.goal = null; this.path.length = 0; this.pathI = 0; this.wantPath = false; this.pathT = 0;
     this.thinkT = this.R.f() * 0.2; this.react = 0; this.burstT = 0; this.pauseT = 0; this.strafe = 1; this.strafeT = 0; this.lod = 'far'; this.farT = this.R.f() * 0.5; this.fightT = this.R.f();
@@ -118,7 +118,7 @@ export class AI {
   }
   _rescue(b) {
     const G = this.G; b.alive = false; b.rescued = true; b.hideSoldier(); b.speedNow = 0;
-    G.fx.sparkle(b.pos.x, b.pos.y + 1, b.pos.z, 0.3, 1, 0.5, 26); G.player.points = (G.player.points || 0) + 75; G.ui.pointsPop(75, 'RESCUED'); G.ui.shakeHud(1);
+    G.fx.sparkle(b.pos.x, b.pos.y + 1, b.pos.z, 0.3, 1, 0.5, 26); G.player.points = (G.player.points || 0) + 75; G.ui.pointsPop(75, 'RESCUED'); G.ui.shakeHud(1); if (G.career) G.career.add('rescues', 1);
     const M = G.mission; if (M) { M.got++; G.ui.toast('SURVIVOR RESCUED · ' + M.got + ' / ' + M.need); }
   }
 
@@ -190,7 +190,7 @@ export class AI {
     }
     if (best) bd = Math.hypot(best.pos.x - p.x, best.pos.z - p.z);
     if (best && b.target !== best && D.squad > 0 && b.callT <= 0) { b.callT = 6; for (const o of this.bots) { if (o === b || !o.alive || o.civ || o.lod !== 'near' || o.mode !== 'ground') continue; if ((o.target && o.seenT < 3) || Math.hypot(o.pos.x - p.x, o.pos.z - p.z) > D.squad) continue; o.alert = { x: best.pos.x + o.R.range(-5, 5), z: best.pos.z + o.R.range(-5, 5), t: 0, src: best }; } }
-    if (best) { if (b.target !== best) { b.react = D.react * b.R.range(0.7, 1.4) / b.skill; b.acq = 0; } b.target = best; b.seenT = 0; b.lastSeen.x = best.pos.x; b.lastSeen.z = best.pos.z; b.alert = null; }
+    if (best) { if (b.target !== best) { b.react = D.react * b.R.range(0.7, 1.4) / b.skill; b.acq = 0; if (best.isPlayer && /^monsters\//.test(b.modelKey) && (b.screechT || 0) < performance.now()) { b.screechT = performance.now() + 9000; G.audio.screech && G.audio.screech(p.x, p.y + 1.6, p.z); } } b.target = best; b.seenT = 0; b.lastSeen.x = best.pos.x; b.lastSeen.z = best.pos.z; b.alert = null; }
     else if (b.target && (!b.target.alive || b.seenT > Math.max(4, D.search || 9))) b.target = null;
     if (!best && b.target && b.seenT > 0.35 && b.seenT < 0.55) b.supp = b.R.chance(D.suppress || 0); // just lost sight: decide whether to keep suppressing
     const T = b.target, armed = b.hasGun(); const out = !this._inZone(p.x, p.z, 4), outNext = !this._inNext(p.x, p.z, 6);

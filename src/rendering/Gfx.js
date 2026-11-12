@@ -331,7 +331,7 @@ export class Gfx {
     } else if (focus) {
       this.sun.position.copy(focus).addScaledVector(this.sunDir, 400); this.sun.target.position.copy(focus);
     }
-    this._dynLOD();
+    if (!this._noDyn) this._dynLOD();
     r.info.reset();
     r.setRenderTarget(this.rtScene); r.render(this.scene, cam);
     const fx = this.fx;

@@ -18,6 +18,8 @@ const BUNDLES = [
   ['city2', 'https://poly.pizza/bundle/City-Pack-q11onRvPoJ'],
   ['survival', 'https://poly.pizza/bundle/Survival-Pack-XzvQPP0yWB'],
   ['animals', 'https://poly.pizza/bundle/Animal-Kit-J1PqAonfYb'],
+  ['monsters', 'https://poly.pizza/bundle/Ultimate-Monsters-Bundle-5oyGWAmOB6'],
+  ['guns', 'https://poly.pizza/bundle/Ultimate-Guns-Pack-cpgUfI4t2F'],
 ];
 const UA = { 'User-Agent': 'Mozilla/5.0 (asset fetch)' };
 const root = 'public/assets/models', mfPath = path.join(root, 'manifest.json');

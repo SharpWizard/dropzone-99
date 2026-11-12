@@ -60,6 +60,10 @@ public/assets/models/   GLB models (see CREDITS.md)
 - Photo textures are the 2K Poly Haven originals (`node tools/upgrade-textures.mjs` finds each source and downloads it); pack textures are 1024 px WebP (`TEX=1024 node tools/optimize-packs.mjs`).
 - The town layer (src/world/Town.js) builds the City Pack downtown, small towns, roadside hamlets, the railway loop with its station and running trains, and the Eagle Peak fort.
 - Floating pickups (first aid, bandages, water, food cans, an axe, a knife, a shovel and VIPER pistols) hover across the island; melee tools are carried in the hand and swung with the melee key. Wildlife (src/world/Animals.js) grazes the woods and the farm; hunting scores POINTS (bears fight back).
+- STORY mode (default) is free roam: a hidden cache in every location, supply drops that fall near you, rolling bounties and location discovery (src/battleRoyale/Activities.js). BATTLE ROYALE mode in Settings brings back the shrinking zone.
+- Career (src/core/Career.js) saves lifetime points in the browser; seven ranks unlock a better starting loadout.
+- Hostiles are the alien Swarm (Ultimate Monsters Bundle) with guns from the Ultimate Guns Pack; civilians flee them.
+- Models are meshopt-compressed (`node tools/compress-meshes.mjs`); the loader decodes and unpacks them. Shaders compile during loading and again in parallel during the plane ride, so arriving somewhere new does not stall.
 - Difficulty (EASY, NORMAL, HARD, EXPERT in `DIFFS`, src/core/Settings.js) sets the bots' aim, hearing, field of view, squad callouts, flanking, search time, suppressive fire, dodging and how strongly they focus on you.
 - 98 bots are simulated. Those near you run full perception, path finding and ballistics; distant ones use a cheaper abstract simulation.
 - `window.__dz` exposes the game object for debugging (`__dz.timeScale = 8` fast-forwards a match).

@@ -3,6 +3,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
 const C = (n) => 'city/' + n, O = (n) => 'office/' + n, S = (n) => 'single/' + n;
 // downloaded people models (CC0 1.0, Quaternius via Poly Pizza): rigged, with the same clip set as the hero
@@ -61,7 +62,11 @@ ASSET_KEYS.push(...['apartment_building', 'building', 'town_house', 'large_build
 
 // Survival Pack (floating supplies, melee tools) and Animal Kit (wildlife)
 ASSET_KEYS.push(...['axe', 'knife', 'shovel', 'first_aid_kit', 'water_bottle', 'can', 'can_red'].map(n => 'survival/' + n + '_free_model'), 'survival/first_aid_kit_free_model_b');
-ASSET_KEYS.push(...['deer', 'deer_b', 'fox', 'rabbit', 'bizon', 'bear', 'horse', 'cow', 'sheep', 'chicken'].map(n => 'animals/' + n + '_free_model'));
+ASSET_KEYS.push(...['deer', 'fox', 'rabbit', 'bizon', 'bear', 'horse', 'cow', 'sheep', 'chicken'].map(n => 'animals/' + n + '_free_model'), 'animals/deer_free_model_b');
+
+// Ultimate Guns Pack + Ultimate Monsters Bundle (Quaternius, CC0): weapon models and the alien Swarm
+ASSET_KEYS.push(...[['assault_rifle', ''], ['assault_rifle', '_b'], ['assault_rifle', '_b_b'], ['bullpup', ''], ['submachine_gun', ''], ['submachine_gun', '_b'], ['sniper_rifle', ''], ['sniper_rifle', '_b'], ['sniper_rifle', '_b_b'], ['sniper_rifle', '_b_b_b'], ['shotgun', ''], ['shotgun', '_b'], ['shotgun_short_stock', ''], ['pistol', ''], ['pistol', '_b'], ['pistol', '_b_b'], ['pistol', '_b_b_b'], ['revolver', ''], ['revolver', '_b']].map(([n, s]) => 'guns/' + n + '_free_model' + s));
+ASSET_KEYS.push(...['alien_free_model_b', 'blue_demon_free_model', 'demon_free_model_b', 'yeti_free_model_b', 'orc_free_model', 'ninja_free_model_b'].map(n => 'monsters/' + n));
 
 export class Assets {
   constructor(G) { this.G = G; this.gltf = {}; this.parts = {}; }
@@ -72,7 +77,7 @@ export class Assets {
   async load(keys, onProgress) {
     // Poly Haven nature models are listed by the build tool (tools/build-nature.mjs)
     this.nature = {}; keys = keys.slice();
-    const loader = new GLTFLoader(); let done = 0; const queue = keys.slice();
+    const loader = new GLTFLoader(); loader.setMeshoptDecoder(MeshoptDecoder); /* models are meshopt-compressed (tools/compress-meshes.mjs) */ let done = 0; const queue = keys.slice();
     const worker = async () => { while (queue.length) { const k = queue.shift(); try { const g = await loader.loadAsync('assets/models/' + k + '.glb' + (k.startsWith('nature/') && this.stamp ? '?v=' + this.stamp : '')); this._fix(g.scene); this.gltf[k] = g; } catch (e) { console.warn('asset missing', k); this.gltf[k] = null; } done++; if (onProgress) onProgress(done / keys.length, k); } };
     await Promise.all(Array.from({ length: 8 }, worker));
   }
@@ -82,6 +87,10 @@ export class Assets {
     const gfx = this.G.gfx;
     scene.traverse(o => {
       if (!o.isMesh) return; o.castShadow = true; o.receiveShadow = true;
+      // compressed models store positions / normals / uvs as packed integers; the game bakes transforms into vertices,
+      // so unpack them to plain floats once here (skin indices and weights stay as they are)
+      const g = o.geometry; if (g && !g.userData.dequant) { g.userData.dequant = true; for (const k of ['position', 'normal', 'uv', 'uv1', 'color', 'tangent']) { const at = g.attributes[k]; if (!at || (!at.isInterleavedBufferAttribute && at.array instanceof Float32Array)) continue;
+        const n = at.count, sz = at.itemSize, out = new Float32Array(n * sz), get = [at.getX, at.getY, at.getZ, at.getW]; for (let i = 0; i < n; i++) for (let c = 0; c < sz; c++) out[i * sz + c] = get[c].call(at, i); g.setAttribute(k, new THREE.BufferAttribute(out, sz)); } }
       const fix = (m) => { if (m.userData.dz) return m; m.userData.dz = true; if (m.metalness !== undefined && !m.metalnessMap) m.metalness = Math.min(m.metalness, 0.6); if (m.roughness !== undefined) m.roughness = Math.max(m.roughness, 0.35); for (const k of ['map', 'normalMap', 'roughnessMap', 'emissiveMap']) if (m[k]) m[k].anisotropy = 16; if (m.map) m.map.generateMipmaps = true; if (m.transparent && m.opacity > 0.98) m.transparent = false; return gfx.mat(m); };
       if (Array.isArray(o.material)) o.material = o.material.map(fix); else o.material = fix(o.material);
     });
