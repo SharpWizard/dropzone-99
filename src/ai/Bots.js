@@ -12,7 +12,7 @@ const PRE = ['Ghost', 'Viper', 'Rogue', 'Ash', 'Nova', 'Echo', 'Raven', 'Onyx', 
 const SUF = ['', '_7', 'X', '99', '_TV', 'zz', '_K', '47', 'HD', '_Pro', '13', 'ko', '_II', '88', 'xD'];
 
 export class Bot extends Character {
-  constructor(G, id, name, R) { super(G, id, name); this.R = R; this.modelKey = R.chance(0.72) ? R.pick(ALIEN_KEYS) : R.pick(ENEMY_KEYS.slice(0, 8)); /* hostiles are the Swarm; civilians are re-skinned as people by the mission */ this.path = []; this.skill = R.range(0.7, 1.3); this.outfit = R.int(0, 5); this.resetAI(); }
+  constructor(G, id, name, R) { super(G, id, name); this.R = R; this.modelKey = R.chance(0.72) ? R.pick(ALIEN_KEYS) : R.pick(['enemies/scifi_char', 'enemies/astro_a', 'enemies/astro_b', 'enemies/astro_c', 'enemies/hazmat', 'enemies/char_enemy']); /* the commando and operator models are heroes now */ /* hostiles are the Swarm; civilians are re-skinned as people by the mission */ this.path = []; this.skill = R.range(0.7, 1.3); this.outfit = R.int(0, 5); this.resetAI(); }
   resetAI() {
     this.state = 'loot'; this.target = null; this.seenT = 9; this.lastSeen = { x: 0, z: 0 }; this.goal = null; this.path.length = 0; this.pathI = 0; this.wantPath = false; this.pathT = 0;
     this.thinkT = this.R.f() * 0.2; this.react = 0; this.burstT = 0; this.pauseT = 0; this.strafe = 1; this.strafeT = 0; this.lod = 'far'; this.farT = this.R.f() * 0.5; this.fightT = this.R.f();

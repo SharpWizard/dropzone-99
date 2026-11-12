@@ -182,7 +182,7 @@ export class Character {
   muzzle(out) { if (this.soldier && this.soldier.weapon && this.soldier.group.visible) { this.soldier.group.updateMatrixWorld(true); return out.copy(this.soldier.weapon.userData.muzzle).applyMatrix4(this.soldier.weapon.matrixWorld); } this.eye(out); out.x += Math.sin(this.yaw) * 0.6; out.z += Math.cos(this.yaw) * 0.6; out.y -= 0.15; return out; }
 
   // ---- visuals ----
-  ensureSoldier() { if (!this.soldier) { this.soldier = this.G.assets && SoldierGLB.available(this.G) ? new SoldierGLB(this.G, this.outfit, this.modelKey) : new Soldier(this.G, this.outfit); this.G.gfx.scene.add(this.soldier.group); } return this.soldier; }
+  ensureSoldier() { if (!this.soldier) { this.soldier = this.G.assets && SoldierGLB.available(this.G) ? new SoldierGLB(this.G, this.outfit, this.modelKey, this.heroId) : new Soldier(this.G, this.outfit); this.G.gfx.scene.add(this.soldier.group); } return this.soldier; }
   hideSoldier() { if (this.soldier) this.soldier.group.visible = false; }
   syncVisual(dt, visYaw) {
     const S = this.ensureSoldier(); S.group.visible = true;

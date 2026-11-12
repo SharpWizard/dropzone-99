@@ -28,6 +28,7 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 export const GLB_OUTFITS = [0x4d5c3a, 0xa38c5c, 0x6c737c, 0x23272e, 0xd9dddd, 0x7c2f29];
 export const HERO_KEY = 'single/hero';
 import { PEOPLE_KEYS } from '../assets/Assets.js';
+import { applyHero } from './Heroes.js';
 export { PEOPLE_KEYS };
 const BODY_MAT = ['SciFi_Main', 'Swat', 'Astronaut', 'Hazmat', 'Body', 'Main'];
 // enemy pool: the SWAT-style rigs share the hero's clip names; the Universal-rig characters need their names mapped
@@ -119,7 +120,7 @@ const _q = new THREE.Quaternion(), _q2 = new THREE.Quaternion(), _q3 = new THREE
 
 export class SoldierGLB {
   static available(G) { return !!template(G, HERO_KEY); }
-  constructor(G, outfit = 0, key = HERO_KEY) {
+  constructor(G, outfit = 0, key = HERO_KEY, hero = null) {
     this.G = G; const T = template(G, key) || template(G, HERO_KEY); this.T = T;
     this.group = new THREE.Group(); this.pivot = new THREE.Group(); this.group.add(this.pivot);
     this.model = SkeletonUtils.clone(T.scene); this.model.scale.setScalar(T.scale); this.pivot.add(this.model);
@@ -147,6 +148,7 @@ export class SoldierGLB {
     this.k = { crouch: 0, prone: 0, aim: 0, fall: 0, chute: 0, seat: 0, swim: 0, kick: 0, dead: 0, armed: 0, air: 0, sprint: 0, lean: 0, bash: 0, turn: 0, stroke: 0, dive: 0, jet: 0 }; this._ly = 0; this.swimPh = 0;
     this.wp = new THREE.Vector3(-0.16, 1.15, 0.22); this.wq = new THREE.Quaternion(); this.idle = Math.random() * 10;
     this.setOutfit(outfit);
+    if (hero !== null && hero !== undefined) applyHero(this, hero);
   }
   // play a one-shot clip from the character file (fire, interact, roll, melee, idle variants, hit reactions)
   play(name, speed = 1) {
@@ -228,6 +230,7 @@ export class SoldierGLB {
 
   animate(st) {
     const dt = st.dt, k = this.k, b = this.b, W = this.w, mode = st.mode; this.idle += dt;
+    if (this.aura) { const G0 = this.G; this.aura.visible = G0.state === 'menu' || !!(G0.ui && G0.ui.panel === 'character'); } if (this.heroU) this.heroU.uBaseY.value = this.group.position.y;
     const tg = (n, v, r = 10) => { k[n] = damp(k[n], v, r, dt); };
     const dead = mode === 'dead'; const armed = st.weapon !== 'none' && !dead, pistol = st.weapon === 'pistol';
     tg('crouch', st.stance === 1 && mode === 'ground' ? 1 : 0, 9); tg('prone', st.stance === 2 && mode === 'ground' ? 1 : 0, 6); tg('aim', st.aiming && !dead ? 1 : 0, 12);

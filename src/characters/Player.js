@@ -4,17 +4,22 @@ import * as THREE from 'three';
 import { Character, SPEED } from './Character.js';
 import { WEAPONS } from '../weapons/Weapons.js';
 import { ITEMS, itemName } from '../inventory/Items.js';
+import { HEROES, heroIndex, heroScan } from './Heroes.js';
 import { clamp, damp, dampAngle, lerp, wrapAngle } from '../utils/math.js';
 
 const _eye = new THREE.Vector3(), _f = new THREE.Vector3(), _p = new THREE.Vector3(), _c = new THREE.Vector3();
 
 export class Player extends Character {
   constructor(G) {
-    super(G, 0, G.settings.d.name || 'YOU'); this.isPlayer = true; this.outfit = G.settings.d.outfit || 0;
+    super(G, 0, G.settings.d.name || 'YOU'); this.isPlayer = true; this.outfit = G.settings.d.outfit || 0; this.setHero(G.settings.d.hero || 0);
     this.camYaw = 0; this.camPitch = -0.1; this.camDist = 3.1; this.camDistNow = 3.1; this.shoulder = 1; this.fpp = false; this.scoped = false; this.aimK = 0; this.pivotY = 1.55;
     this.recover = 0; this.shake = 0; this.stamina = 100; this.suppress = 0; this.prompt = null; this._auto = 0; this._near = []; this.throwCd = 0; this.idleLook = 0;
   }
-  reset() { super.reset(); this.points = 0; this.stamina = 100; this.scoped = false; this.aimK = 0; this.recover = 0; this.suppress = 0; this.prompt = null; this.throwCd = 0; const SD = this.G.settings.d; this.fpp = SD.view === 'first'; this.camDist = clamp(SD.camDist || 3.1, 1.2, 8); this.meleeCd = 0; this.meleeHit = -1; }
+  reset() { super.reset(); this.setHero(this.G.settings.d.hero || 0); this.points = 0; this.stamina = 100; this.scoped = false; this.aimK = 0; this.recover = 0; this.suppress = 0; this.prompt = null; this.throwCd = 0; const SD = this.G.settings.d; this.fpp = SD.view === 'first'; this.camDist = clamp(SD.camDist || 3.1, 1.2, 8); this.meleeCd = 0; this.meleeHit = -1; }
+  // choose a hero: swap the model (rebuilt on the next visual sync) and play the scan-line reveal
+  setHero(i) { i = heroIndex(i); const changed = this.heroId !== i; this.heroId = i; this.modelKey = HEROES[i].key;
+    if (changed && this.soldier) { if (this.soldier.group.parent) this.soldier.group.parent.remove(this.soldier.group); this.soldier = null; this._wkey = ''; }
+    this._scanNext = true; }
   shakeCam(a) { this.shake = Math.max(this.shake, a); }
   onHurt(amount, attacker, zone, fx, fz) { const G = this.G; G.ui.shakeHud(amount > 25 ? 2 : 1); G.audio.hurt(); G.ui.hurt(amount, attacker ? attacker.pos.x : this.pos.x - fx, attacker ? attacker.pos.z : this.pos.z - fz); this.shake = Math.max(this.shake, 0.25 + amount * 0.012); }
 
@@ -213,6 +218,7 @@ export class Player extends Character {
   }
 
   _camera(dt) {
+    if (this._scanNext && this.soldier && this.soldier.heroU) { this._scanNext = false; heroScan(this.soldier); }
     const G = this.G, cam = G.gfx.camera, S = G.settings.d; const p = this.pos;
     this.shake = Math.max(0, this.shake - dt * 3.2); const sh = this.shake + G.fx.shake;
     const st = performance.now() / 1000, sk = Math.min(1.6, sh), s2 = sk * (0.35 + 0.65 * sk); const nz = (f, o) => (Math.sin(st * f + o) + Math.sin(st * f * 1.71 + o * 2.3) * 0.6 + Math.sin(st * f * 2.93 + o * 0.7) * 0.3) / 1.9;

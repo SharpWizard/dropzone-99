@@ -115,7 +115,7 @@ export class Match {
   _celebrate() { const G = this.G, p = G.player.pos; G.fx.burst(p.x, p.y + 7, p.z); G.player.shakeCam(0.5); G.ui.shakeHud(1); }
   _planePos() { const P = this.plane; P.pos.set(this.org.x + this.dir.x * P.s, 440, this.org.z + this.dir.z * P.s); P.mesh.position.copy(P.pos); }
   onPlayerJump() { this.G.ui.toast('FREEFALL - LOOK DOWN TO DIVE'); }
-  onPlayerLand() { this.landed = true; }
+  onPlayerLand() { this.landed = true; this.G.player._scanNext = true; }
 
   update(dt) {
     const G = this.G; if (this.state === 'idle') return; this.time += dt;

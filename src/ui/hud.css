@@ -300,3 +300,14 @@ body.falling::before { content: ''; position: fixed; inset: -25%; pointer-events
 .career { font: 600 12px/1.5 system-ui, sans-serif; letter-spacing: .12em; color: #ffd27a; margin: 10px 0 8px; text-transform: uppercase; }
 .career b { color: #fff; }
 .rankup { font: 800 22px system-ui, sans-serif; letter-spacing: .16em; color: #ffd27a; text-shadow: 0 0 18px rgba(255, 170, 60, .9); margin: 8px 0; animation: logoglow 1.6s ease-in-out infinite; }
+
+/* ---- hero select ---- */
+.heroes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 6px 0 10px; }
+.herocard { position: relative; text-align: left; padding: 10px 12px 11px; background: linear-gradient(160deg, rgba(20, 26, 34, .92), rgba(10, 12, 16, .92)); border: 1px solid rgba(255, 255, 255, .08); border-left: 3px solid var(--hc); color: #e8eef2; cursor: pointer; overflow: hidden; transition: transform .15s, box-shadow .2s, border-color .2s; }
+.herocard::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 85% 15%, var(--hc), transparent 55%); opacity: .14; transition: opacity .2s; }
+.herocard:hover { transform: translateY(-2px); box-shadow: 0 6px 22px -8px var(--hc); }
+.herocard.on { border-color: var(--hc); box-shadow: 0 0 0 1px var(--hc), 0 0 26px -6px var(--hc); }
+.herocard.on::before { opacity: .32; }
+.herocard b { position: relative; display: block; font: 800 18px/1.1 Bahnschrift, 'Arial Narrow', sans-serif; letter-spacing: .14em; color: #fff; text-shadow: 0 0 12px var(--hc); }
+.herocard span { position: relative; display: block; font: 700 10px/1.4 system-ui, sans-serif; letter-spacing: .22em; color: var(--hc); margin: 3px 0 5px; }
+.herocard em { position: relative; display: block; font: 400 11px/1.4 system-ui, sans-serif; font-style: normal; color: rgba(232, 238, 242, .72); }
