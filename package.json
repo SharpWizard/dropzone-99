@@ -1,0 +1,23 @@
+{
+  "name": "dropzone-99",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DROPZONE 99 - 3D third-person battle royale (Three.js)",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5199",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 5199"
+  },
+  "dependencies": {
+    "three": "^0.187.0"
+  },
+  "devDependencies": {
+    "@gltf-transform/core": "^4.5.1",
+    "@gltf-transform/extensions": "^4.5.1",
+    "@gltf-transform/functions": "^4.5.1",
+    "meshoptimizer": "^1.3.0",
+    "sharp": "^0.35.5",
+    "vite": "^8.3.8"
+  }
+}
