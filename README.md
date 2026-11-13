@@ -2,6 +2,8 @@
 
 **99 drop in. One survives.** A single-player third-person battle royale for the browser, built with Three.js (WebGL2).
 
+**Play online:** https://sharpwizard.github.io/dropzone-99/ (deployed from master by .github/workflows/deploy.yml)
+
 ## Run
 
 ```
