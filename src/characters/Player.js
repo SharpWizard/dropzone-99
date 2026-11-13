@@ -25,6 +25,7 @@ export class Player extends Character {
 
   update(dt) {
     const G = this.G, I = G.input, S = G.settings.d;
+    if (S.cheats && this.alive) this._cheat();
     // ---- look
     const zoom = this.scoped ? Math.max(1.3, this.zoomOf(this.weapon())) : 1 + this.aimK * 0.35;
     const sens = 0.0022 * S.sens * (this.aimK > 0.5 ? S.adsSens : 1) / (this.scoped ? zoom * 0.5 : 1);
@@ -160,6 +161,12 @@ export class Player extends Character {
     this._interact(dt, ui);
   }
 
+  // cheats: full health / boost / stamina / armour, magazine always full (no reloads), grenades and meds, jetpack and vehicle fuel
+  _cheat() { this.hp = 100; this.boost = 100; this.stamina = 100; this.jetFuel = 100; this.suppress = 0;
+    if (this.helmet.lvl) this.helmet.dur = 999; if (this.vest.lvl) this.vest.dur = 999;
+    for (const w of this.weapons) if (w) { const d = WEAPONS[w.id]; if (d) w.ammo = d.mag; } if (this.reloadT >= 0) this.reloadT = -1;
+    this.bag.frag = Math.max(this.bag.frag || 0, 3); this.bag.bandage = Math.max(this.bag.bandage || 0, 5); this.bag.medkit = Math.max(this.bag.medkit || 0, 2); this.bag.drink = Math.max(this.bag.drink || 0, 2);
+    if (this.vehicle) { this.vehicle.fuel = 100; this.vehicle.hp = this.vehicle.def.hp; } if (this.G.match) this.G.match.cheated = true; }
   tryHeal(id) { if (this.useHeal(id)) { this.G.audio.heal(); } else if (!this.bag[id]) this.G.ui.toast('NO ' + itemName(id).toUpperCase()); }
 
   throwGrenade() {

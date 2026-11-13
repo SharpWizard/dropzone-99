@@ -312,3 +312,19 @@ body.falling::before { content: ''; position: fixed; inset: -25%; pointer-events
 .herocard b { position: relative; display: block; font: 800 18px/1.1 Bahnschrift, 'Arial Narrow', sans-serif; letter-spacing: .14em; color: #fff; text-shadow: 0 0 12px var(--hc); }
 .herocard span { position: relative; display: block; font: 700 10px/1.4 system-ui, sans-serif; letter-spacing: .22em; color: var(--hc); margin: 3px 0 5px; }
 .herocard em { position: relative; display: block; font: 400 11px/1.4 system-ui, sans-serif; font-style: normal; color: rgba(232, 238, 242, .72); }
+
+/* ---- corner toggles: sound and cheats ---- */
+#quick { position: fixed; top: 16px; right: 258px; z-index: 30; display: flex; gap: 6px; pointer-events: auto; }
+.q-btn { position: relative; height: 38px; min-width: 38px; padding: 0 10px; display: flex; align-items: center; gap: 6px; background: rgba(12, 16, 20, .78); border: 1px solid rgba(236, 232, 220, .28); color: #ece8dc; font: 700 12px/1 Bahnschrift, 'Arial Narrow', sans-serif; letter-spacing: .14em; cursor: pointer; transition: background .15s, border-color .15s, box-shadow .15s; }
+.q-btn:hover { border-color: rgba(236, 232, 220, .7); background: rgba(24, 30, 36, .9); }
+.q-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.q-btn svg .spk { fill: currentColor; stroke: none; }
+.q-btn svg .x { display: none; }
+.q-btn.off { color: #ff6b5a; border-color: rgba(255, 107, 90, .6); }
+.q-btn.off svg .wav { display: none; } .q-btn.off svg .x { display: inline; }
+.q-btn kbd { background: none; box-shadow: none; min-width: 0; height: auto; font: 600 9px/1 Consolas, monospace; color: rgba(236, 232, 220, .6); border: 1px solid rgba(236, 232, 220, .25); padding: 2px 3px; letter-spacing: 0; }
+.q-cheat b { font-size: 19px; line-height: 1; font-weight: 700; }
+.q-cheat.on { color: #1a1300; background: linear-gradient(135deg, #ffd34d, #ff8a1f); border-color: #ffe08a; box-shadow: 0 0 18px rgba(255, 170, 40, .65); animation: cheatglow 1.6s ease-in-out infinite; }
+.q-cheat.on kbd { color: rgba(26, 19, 0, .7); border-color: rgba(26, 19, 0, .4); }
+@keyframes cheatglow { 50% { box-shadow: 0 0 28px rgba(255, 190, 60, .95); } }
+@media (max-width: 1100px) { #quick { right: 252px; } .q-cheat span { display: none; } }

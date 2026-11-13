@@ -19,6 +19,7 @@ export class UI {
   constructor(G) {
     this.G = G; this.root = $('#ui'); this.panel = null; this.feedItems = []; this.threats = []; this.dmgInd = []; this.cache = {}; this._mmT = 0; this._invT = 0; this.marker = null; this.hurtK = 0; this.hitT = 0; this.toastT = 0; this.bannerT = 0; this.killT = 0; this.locName = ''; this.locT = 0;
     this.root.innerHTML = `
+    <div id="quick"><button class="q-btn" id="q-sound" data-act="qsound"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M3 9h4l5-4v14l-5-4H3z"/><path class="wav" d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/><path class="x" d="M16 9l6 6M22 9l-6 6"/></svg><kbd id="q-sk"></kbd></button><button class="q-btn q-cheat" id="q-cheat" data-act="qcheat"><b>∞</b><span>CHEATS</span><kbd id="q-ck"></kbd></button></div>
     <div id="hud" class="hidden">
       <div class="tl"><div class="alive"><b id="h-alive">99</b><span>ALIVE</span></div><div class="kills"><b id="h-kills">0</b><span>KILLS</span></div><div class="kills"><b id="h-pts">0</b><span>POINTS</span></div></div>
       <canvas id="compass" width="560" height="44"></canvas>
@@ -48,6 +49,7 @@ export class UI {
 
   // ---------- menus ----------
   showMenu() {
+    this.quick();
     this.panel = null; this.pan.classList.add('hidden'); this.hud.classList.add('hidden'); this.menu.classList.remove('hidden');
     this.menu.innerHTML = `<div class="m-left"><div class="logo">DROPZONE <b>99</b></div><div class="tag">DROP IN. GEAR UP. OUTLAST THEM ALL.</div><div class="tag" style="max-width:430px;opacity:.75;letter-spacing:.06em;line-height:1.5;text-transform:none;margin-top:6px">${this.G.career ? '<div class="career">RANK <b>' + this.G.career.summary().rank + '</b> · ' + this.G.career.summary().points + ' career pts · ' + this.G.career.summary().next + '</div>' : ''}They fell from the sky and the city went dark. Ninety-nine dropped in to take it back. Explore every street, save who you can, and be the last one standing.</div>
       <div class="m-btns">${this._startButtons()}<button class="btn" data-act="open" data-arg="character">CHARACTER</button><button class="btn" data-act="open" data-arg="settings">SETTINGS</button><button class="btn" data-act="open" data-arg="howto">HOW TO PLAY</button><button class="btn ghost" data-act="exit">EXIT</button></div></div>
@@ -57,6 +59,10 @@ export class UI {
   _startButtons() { const S = this.G.settings.d, br = S.mode === 'BATTLE ROYALE', cp = !br && loadCheckpoint();
     if (cp) return '<button class="btn big" data-act="continue" data-arg="' + cp.stage + '"><span>CONTINUE</span><em>MISSION ' + cp.stage + ' · ' + STAGES[cp.stage][0] + '</em></button><button class="btn" data-act="start">NEW CAMPAIGN</button>';
     return '<button class="btn big" data-act="start"><span>START GAME</span><em>' + (br ? 'SOLO · BATTLE ROYALE · LAST ONE STANDING' : 'SOLO · MISSION 1 · ' + STAGES[1][0]) + '</em></button>'; }
+  // corner toggles: reflect the current state and the bound keys
+  quick() { const S = this.G.settings.d, s = $('#q-sound'), c = $('#q-cheat'); if (!s) return;
+    s.classList.toggle('off', !!S.muted); c.classList.toggle('on', !!S.cheats); $('#q-sk').textContent = this.G.settings.label('mute'); $('#q-ck').textContent = this.G.settings.label('cheats');
+    s.title = (S.muted ? 'Sound is OFF' : 'Sound is ON') + ' · click or press ' + this.G.settings.label('mute'); c.title = (S.cheats ? 'Cheats ON: unlimited health, ammo, grenades, meds, stamina and fuel' : 'Cheats OFF') + ' · click or press ' + this.G.settings.label('cheats'); }
   hideMenu() { this.menu.classList.add('hidden'); }
   open(name) {
     const G = this.G, S = G.settings.d; this.panel = name; this.pan.classList.remove('hidden'); this.pan.classList.toggle('clear', name === 'character'); G.input.unlock(); let h = '';
@@ -80,7 +86,7 @@ export class UI {
     } else if (name === 'inventory') h = `<div class="p-box wide inv">${head('INVENTORY', 'Left click: use / equip / attach &nbsp;·&nbsp; Right click: drop')}<div class="inv3"><div><h3>VICINITY</h3><div id="i-near" class="ilist"></div></div><div><h3>BACKPACK <small id="i-cap"></small></h3><div class="capbar"><u id="i-capfill"></u></div><div id="i-bag" class="ilist"></div></div><div><h3>LOADOUT</h3><div id="i-load"></div></div></div></div>`;
     else if (name === 'map') h = `<div class="p-box mapbox">${head('DROPZONE ISLAND', 'Click to place a marker')}<canvas id="bigmap" width="760" height="760"></canvas></div>`;
     this.pan.innerHTML = h;
-    if (name === 'settings') { const bind = (id, key, f) => { const e = $('#' + id); e.addEventListener('input', () => { S[key] = parseFloat(e.value); $('#' + id + '-v').textContent = e.value; G.settings.save(); if (f) f(S[key]); }); }; bind('s-fov', 'fov'); bind('s-cam', 'camDist', v => { G.player.camDist = v; }); bind('s-sens', 'sens'); bind('s-ads', 'adsSens'); bind('s-vol', 'volume', v => G.audio.setVolume(v)); }
+    if (name === 'settings') { const bind = (id, key, f) => { const e = $('#' + id); e.addEventListener('input', () => { S[key] = parseFloat(e.value); $('#' + id + '-v').textContent = e.value; G.settings.save(); if (f) f(S[key]); }); }; bind('s-fov', 'fov'); bind('s-cam', 'camDist', v => { G.player.camDist = v; }); bind('s-sens', 'sens'); bind('s-ads', 'adsSens'); bind('s-vol', 'volume', v => { if (!S.muted) G.audio.setVolume(v); }); }
     if (name === 'character') { const n = $('#c-name'); n.addEventListener('input', () => { S.name = n.value.trim().toUpperCase() || 'YOU'; G.settings.save(); }); }
     if (name === 'inventory') this._inv();
     if (name === 'map') { const c = $('#bigmap'); c.addEventListener('click', (e) => { const r = c.getBoundingClientRect(); this.marker = { x: (e.clientX - r.left) / r.width * WORLD - HALF, z: (e.clientY - r.top) / r.height * WORLD - HALF }; this._bigmap(); }); c.addEventListener('contextmenu', () => { this.marker = null; this._bigmap(); }); this._bigmap(); }
@@ -89,6 +95,7 @@ export class UI {
 
   act(a, arg, btn) {
     const G = this.G, S = G.settings.d;
+    if (a === 'qsound') { G.toggleSound(); return; } if (a === 'qcheat') { G.toggleCheats(); return; }
     if (a === 'start' || a === 'again') G.startMatch(); else if (a === 'continue') G.startMatch({ stage: +arg }); else if (a === 'open') { if (arg === 'character') G.setMenuCam(1); this.open(arg); } else if (a === 'close') { if (this.panel && this.panel !== 'pause' && G.state === 'paused') this.open('pause'); else this.close(); }
     else if (a === 'quit' || a === 'tomenu') G.toMenu(); else if (a === 'exit') { this.menu.innerHTML = `<div class="m-left"><div class="logo">DROPZONE <b>99</b></div><div class="tag">THANKS FOR PLAYING</div><div class="m-btns"><button class="btn big" data-act="back"><span>RETURN</span></button></div></div>`; }
     else if (a === 'back') this.showMenu();
@@ -100,7 +107,7 @@ export class UI {
     else if (a === 'gmode') { S.mode = arg; G.settings.save(); if (G.state === 'play' || G.state === 'paused') this.toast('GAME MODE CHANGES NEXT MATCH'); this.open('settings'); }
     else if (a === 'diff') { S.difficulty = arg; G.settings.save(); this.open('settings'); }
     else if (a === 'toggle') { S[arg] = !S[arg]; G.settings.save(); this.open('settings'); }
-    else if (a === 'bind') { btn.textContent = 'PRESS KEY'; btn.classList.add('on'); G.input.capture = (code) => { if (code !== 'Escape') { S.keys[arg] = code; G.settings.save(); } this.open('settings'); }; }
+    else if (a === 'bind') { btn.textContent = 'PRESS KEY'; btn.classList.add('on'); G.input.capture = (code) => { if (code !== 'Escape') { S.keys[arg] = code; G.settings.save(); this.quick(); } this.open('settings'); }; }
     else if (a === 'resetkeys') { for (const [k, , c] of ACTIONS) S.keys[k] = c; G.settings.save(); this.open('settings'); }
     else if (a === 'pet') { S.pet = arg; G.settings.save(); if (G.pet && G.pet.unlocked) G.pet.setKind(arg); this.open('character'); }
     else if (a === 'hero') { S.hero = arg; G.settings.save(); G.player.setHero(S.hero); this.open('character'); }
@@ -209,7 +216,7 @@ export class UI {
     this.G.input.unlock(); this.panel = 'end'; this.pan.classList.remove('hidden');
     this.pan.innerHTML = `<div class="end ${r.win ? 'win' : 'lose'}"><div class="e-top">DROPZONE <b>99</b></div><h1>${r.win ? (this.G.mission && this.G.mission.won ? 'MISSION COMPLETE' : 'WINNER!') : (this.G.mission ? 'MISSION FAILED' : 'ELIMINATED')}</h1><div class="e-sub">${r.win ? (this.G.mission && this.G.mission.won ? 'THE RESISTANCE PREVAILS' : 'YOU ARE THE LAST SURVIVOR') : 'THE MACHINES HAVE YOU'}</div>
       <div class="e-rank"><b>#${r.rank}</b><span>/ ${TOTAL}</span></div>
-      ${r.rankUp ? '<div class="rankup">RANK UP · ' + r.rankUp + '</div>' : ''}${r.career ? '<div class="career">RANK <b>' + r.career.rank + '</b> · ' + r.career.points + ' career pts · ' + r.career.next + '</div>' : ''}<div class="e-stats"><div><b>${r.kills}</b><span>KILLS</span></div><div><b>${r.points || 0}</b><span>POINTS</span></div><div><b>${r.damage}</b><span>DAMAGE DEALT</span></div><div><b>${fmtTime(r.time)}</b><span>SURVIVAL TIME</span></div><div><b>${r.accuracy}%</b><span>ACCURACY</span></div><div><b>${r.headshots}</b><span>HEADSHOTS</span></div></div>
+      ${r.rankUp ? '<div class="rankup">RANK UP · ' + r.rankUp + '</div>' : ''}${r.cheated ? '<div class="career">CHEATS USED · career progress not saved</div>' : ''}${r.career ? '<div class="career">RANK <b>' + r.career.rank + '</b> · ' + r.career.points + ' career pts · ' + r.career.next + '</div>' : ''}<div class="e-stats"><div><b>${r.kills}</b><span>KILLS</span></div><div><b>${r.points || 0}</b><span>POINTS</span></div><div><b>${r.damage}</b><span>DAMAGE DEALT</span></div><div><b>${fmtTime(r.time)}</b><span>SURVIVAL TIME</span></div><div><b>${r.accuracy}%</b><span>ACCURACY</span></div><div><b>${r.headshots}</b><span>HEADSHOTS</span></div></div>
       <div class="e-btns"><button class="btn big" data-act="again"><span>PLAY AGAIN</span></button><button class="btn" data-act="tomenu">MAIN MENU</button></div></div>`;
   }
 

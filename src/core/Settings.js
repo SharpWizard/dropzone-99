@@ -13,11 +13,11 @@ export const DIFFS = {
 export const ACTIONS = [['forward', 'Move forward', 'KeyW'], ['back', 'Move back', 'KeyS'], ['left', 'Move left', 'KeyA'], ['right', 'Move right', 'KeyD'], ['sprint', 'Sprint', 'ShiftLeft'], ['jump', 'Jump', 'Space'],
   ['crouch', 'Crouch', 'KeyC'], ['prone', 'Prone', 'KeyZ'], ['reload', 'Reload', 'KeyR'], ['interact', 'Pick up / Interact', 'KeyF'], ['slot1', 'Primary weapon', 'Digit1'], ['slot2', 'Secondary weapon', 'Digit2'],
   ['slot3', 'Sidearm', 'Digit3'], ['slot4', 'Grenade', 'Digit4'], ['heal1', 'Use bandage', 'Digit5'], ['heal2', 'Use first aid kit', 'Digit6'], ['heal3', 'Use energy drink', 'Digit7'], ['firemode', 'Fire mode', 'KeyB'],
-  ['shoulder', 'Switch shoulder', 'KeyQ'], ['roll', 'Roll / dodge', 'ControlLeft'], ['melee', 'Melee strike (unarmed)', 'KeyG'], ['camera', 'Camera mode (TPP/FPP)', 'KeyV'], ['zoomIn', 'Camera zoom in', 'Equal'], ['zoomOut', 'Camera zoom out', 'Minus'], ['wheel', 'Weapon wheel (hold)', 'KeyX'], ['inventory', 'Inventory', 'Tab'], ['map', 'Map', 'KeyM']];
+  ['shoulder', 'Switch shoulder', 'KeyQ'], ['roll', 'Roll / dodge', 'ControlLeft'], ['melee', 'Melee strike (unarmed)', 'KeyG'], ['camera', 'Camera mode (TPP/FPP)', 'KeyV'], ['mute', 'Sound on / off', 'KeyN'], ['cheats', 'Cheats on / off', 'KeyK'], ['zoomIn', 'Camera zoom in', 'Equal'], ['zoomOut', 'Camera zoom out', 'Minus'], ['wheel', 'Weapon wheel (hold)', 'KeyX'], ['inventory', 'Inventory', 'Tab'], ['map', 'Map', 'KeyM']];
 
 export class Settings {
   constructor() {
-    this.d = { preset: '', sens: 1, adsSens: 0.75, invertY: false, volume: 0.8, difficulty: 'NORMAL', fov: 72, autoPickup: true, showFps: false, outfit: 0, view: 'third', camDist: 3.1, name: 'YOU', pet: 'dragon', keys: {} };
+    this.d = { preset: '', sens: 1, adsSens: 0.75, invertY: false, volume: 0.8, difficulty: 'NORMAL', fov: 72, autoPickup: true, showFps: false, outfit: 0, view: 'third', camDist: 3.1, name: 'YOU', pet: 'dragon', muted: false, cheats: false, keys: {} };
     for (const [a, , k] of ACTIONS) this.d.keys[a] = k;
     try { const s = JSON.parse(localStorage.getItem('dz.settings') || '{}'); Object.assign(this.d, s, { keys: { ...this.d.keys, ...(s.keys || {}) } }); } catch (e) { /* defaults */ }
   }

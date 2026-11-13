@@ -25,6 +25,8 @@ Open http://127.0.0.1:5199/ — or `npm run build` and serve the `dist/` folder.
 | Bandage / first aid / energy drink | 5 / 6 / 7 |
 | Switch shoulder / first-person | Q / V |
 | Inventory / map | Tab / M |
+| Sound on / off | N (or the speaker button, top right) |
+| Cheats on / off | K (or the CHEATS button, top right) |
 | Pause | Esc |
 
 All keys can be rebound in Settings. Graphics presets (LOW, MEDIUM, HIGH, ULTRA) are in Settings too; the game picks one from your GPU on first launch and scales resolution to hold frame rate.
@@ -66,6 +68,7 @@ public/assets/models/   GLB models (see CREDITS.md)
 - Your companion (dragon or ghost skull) is picked in CHARACTER and joins after 3 kills; it never attacks civilians.
 - The STORY campaign has six missions (STAGES in src/battleRoyale/Match.js). Each mission's objective is marked on the compass, minimap and map and by a cyan light beam. Survivors you find follow you and count once you lead them into the Civilian Survival Zone; mission 3 sends three Swarm patrols to the bunker, and the hive cores, the Titan and the Citadel points are guarded. Reaching a mission saves a checkpoint, and the menu offers CONTINUE from it.
 - Loading: models download while textures are synthesised, and three.js is a separate cached chunk (vite.config.js). On LOW and MEDIUM, shadow maps refresh every other frame.
+- CHEATS (top-right button or K): unlimited health (no damage), a magazine that never empties, endless grenades and meds, full stamina, jetpack and vehicle fuel. A match played with cheats on is not banked into the career.
 - Career (src/core/Career.js) saves lifetime points in the browser; seven ranks unlock a better starting loadout.
 - Hostiles are the alien Swarm (Ultimate Monsters Bundle) with guns from the Ultimate Guns Pack; civilians flee them.
 - Models are meshopt-compressed (`node tools/compress-meshes.mjs`); the loader decodes and unpacks them. Shaders compile during loading and again in parallel during the plane ride, so arriving somewhere new does not stall.

@@ -82,7 +82,7 @@ export class Match {
     this.time = 0; this.alive = TOTAL; this.canJump = false; this.forceJump = false; this.endT = -1; this.result = null; }
 
   start(opts = {}) {
-    const G = this.G, R = this.R = new RNG((Date.now() % 1e9) | 0); this.state = 'plane'; this.mode = G.settings.d.mode; this.win = false; this.time = 0; this.endT = -1; this.result = null; this.canJump = false; this.forceJump = false; this.landed = false;
+    const G = this.G, R = this.R = new RNG((Date.now() % 1e9) | 0); this.state = 'plane'; this.mode = G.settings.d.mode; this.cheated = !!G.settings.d.cheats; this.win = false; this.time = 0; this.endT = -1; this.result = null; this.canJump = false; this.forceJump = false; this.landed = false;
     G.combat.reset(); G.fx.clear(); G.loot.clear(); G.loot.spawnAll(R.int(1, 1e9)); if (G.animals) G.animals.spawn(); G.vehicles.reset(R);
     G.player.reset(); G.player.outfit = G.settings.d.outfit; G.player.name = G.settings.d.name || 'YOU'; if (G.player.soldier) G.player.soldier.setOutfit(G.player.outfit); G.ai.reset();
     G.zone.reset(R);
@@ -251,7 +251,8 @@ export class Match {
     const G = this.G, p = G.player; this.state = 'over';
     this._bankResult = true;
     this.result = { win: !!this.win, rank: this.win ? 1 : p.rank || this.alive + 1, kills: p.kills, points: p.points || 0, damage: Math.round(p.dmgDealt), time: this.time, accuracy: p.shots ? Math.round(p.hits / p.shots * 100) : 0, headshots: p.headshots };
-    if (this.G.career) { const up = this.G.career.bank(this.result); this.result.rankUp = up ? up[1] + (up[2] ? ' · ' + up[2] : '') : null; this.result.career = this.G.career.summary(); }
+    this.result.cheated = !!this.cheated; // a match played with cheats is not banked into the career
+    if (this.G.career && !this.cheated) { const up = this.G.career.bank(this.result); this.result.rankUp = up ? up[1] + (up[2] ? ' · ' + up[2] : '') : null; this.result.career = this.G.career.summary(); }
     if (this.win) { G.audio.ui('win'); this._celebrate(); } G.ui.showEnd(this.result);
   }
   stop() { this.state = 'idle'; this.plane.mesh.visible = false; this.beacon.visible = false; this.obj = []; this.G.zone.active = false; this.G.zone.mesh.visible = false; }

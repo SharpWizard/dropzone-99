@@ -108,6 +108,7 @@ export class Character {
   // ---- damage ----
   damage(amount, attacker, zone = 'body', wid = '', fx = 0, fz = 0) {
     if (!this.alive || this.mode === 'plane') return 0;
+    if (this.isPlayer && this.G.settings.d.cheats) return 0; // cheats: the player takes no damage
     if (zone === 'head') { amount *= 2.3; if (this.helmet.lvl && this.helmet.dur > 0) { const r = ARMOR_RED[this.helmet.lvl]; this.helmet.dur -= amount * r; amount *= 1 - r; if (this.helmet.dur <= 0) this.helmet.lvl = 0; } }
     else if (zone === 'body') { if (this.vest.lvl && this.vest.dur > 0) { const r = ARMOR_RED[this.vest.lvl]; this.vest.dur -= amount * r; amount *= 1 - r; if (this.vest.dur <= 0) this.vest.lvl = 0; } }
     else if (zone === 'limb') amount *= 0.85;

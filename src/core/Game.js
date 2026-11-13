@@ -44,7 +44,7 @@ export class Game {
     this.gfx = new Gfx(this.canvas, preset);
     this.gfx.onLost = () => this.progress(0, 'Graphics device lost — restoring…');
     this.gfx.onAutoLower = (lower) => { this.pendingLower = lower; this.toast && this.toast('Quality lowered to ' + lower + ' for smoother play'); };
-    this.input = new Input(this.canvas, this.settings); this.audio = new AudioSys(this); this.audio.vol = this.settings.d.volume;
+    this.input = new Input(this.canvas, this.settings); this.audio = new AudioSys(this); this.audio.vol = this.settings.d.muted ? 0 : this.settings.d.volume;
     this.progress(0.04, 'Mixing paint, rust and dirt'); await nextFrame();
     // models download while the textures are being synthesised (the two used to run one after the other)
     this.assets = new Assets(this); let mp = 0, modelsDone = false; const models = this.assets.load(ASSET_KEYS, (p) => { mp = p; }).then(() => { modelsDone = true; });
@@ -99,10 +99,15 @@ export class Game {
     this.input.onLock = (locked) => { if (!locked && this.state === 'play' && !this.ui.panel && !this.noLock) this.pause(); };
     this.canvas.addEventListener('mousedown', () => { this.audio.unlock(); if (this.state === 'play' && !this.input.locked && !this.ui.panel) this.input.lock(); });
     addEventListener('keydown', (e) => {
+      if (!e.repeat && !(e.target && e.target.tagName === 'INPUT')) { const K = this.settings.d.keys; if (e.code === K.mute) this.toggleSound(); else if (e.code === K.cheats) this.toggleCheats(); }
       if (e.code === 'Escape') { if (this.ui.panel === 'end') return; if (this.ui.panel) { if (this.state === 'paused' && this.ui.panel !== 'pause') this.ui.open('pause'); else this.ui.close(); } else if (this.state === 'play' && !this.input.locked) this.pause(); }
     });
     document.addEventListener('visibilitychange', () => { if (document.hidden && this.state === 'play' && !this.noLock) this.pause(); });
   }
+
+  // ---- corner toggles: sound on / off and cheats (unlimited power) ----
+  toggleSound() { const S = this.settings.d; S.muted = !S.muted; this.settings.save(); this.audio.setVolume(S.muted ? 0 : S.volume); if (this.ui) { this.ui.quick(); this.ui.toast(S.muted ? 'SOUND OFF' : 'SOUND ON'); } }
+  toggleCheats() { const S = this.settings.d; S.cheats = !S.cheats; this.settings.save(); if (S.cheats && this.match && this.match.state !== 'idle') this.match.cheated = true; if (this.ui) { this.ui.quick(); this.ui.toast(S.cheats ? 'CHEATS ON · UNLIMITED POWER' : 'CHEATS OFF'); } }
 
   // ---- state transitions ----
   toMenu(first) {
