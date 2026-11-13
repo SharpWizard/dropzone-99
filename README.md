@@ -64,6 +64,8 @@ public/assets/models/   GLB models (see CREDITS.md)
 - STORY mode (default) is free roam: a hidden cache in every location, supply drops that fall near you, rolling bounties and location discovery (src/battleRoyale/Activities.js). BATTLE ROYALE mode in Settings brings back the shrinking zone.
 - Vehicles burn fuel; jerrycans (loot) add 50%: stand next to the vehicle and press F, or use one from the inventory.
 - Your companion (dragon or ghost skull) is picked in CHARACTER and joins after 3 kills; it never attacks civilians.
+- The STORY campaign has six missions (STAGES in src/battleRoyale/Match.js). Each mission's objective is marked on the compass, minimap and map and by a cyan light beam. Survivors you find follow you and count once you lead them into the Civilian Survival Zone; mission 3 sends three Swarm patrols to the bunker, and the hive cores, the Titan and the Citadel points are guarded. Reaching a mission saves a checkpoint, and the menu offers CONTINUE from it.
+- Loading: models download while textures are synthesised, and three.js is a separate cached chunk (vite.config.js). On LOW and MEDIUM, shadow maps refresh every other frame.
 - Career (src/core/Career.js) saves lifetime points in the browser; seven ranks unlock a better starting loadout.
 - Hostiles are the alien Swarm (Ultimate Monsters Bundle) with guns from the Ultimate Guns Pack; civilians flee them.
 - Models are meshopt-compressed (`node tools/compress-meshes.mjs`); the loader decodes and unpacks them. Shaders compile during loading and again in parallel during the plane ride, so arriving somewhere new does not stall.

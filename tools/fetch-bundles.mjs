@@ -23,7 +23,8 @@ const BUNDLES = [
 ];
 const UA = { 'User-Agent': 'Mozilla/5.0 (asset fetch)' };
 const root = 'public/assets/models', mfPath = path.join(root, 'manifest.json');
-const manifest = JSON.parse(fs.readFileSync(mfPath, 'utf8')); const have = new Set(manifest.map(m => m.url));
+// a model counts as downloaded only while its file is on disk, so deleted models can be fetched again
+const manifest = JSON.parse(fs.readFileSync(mfPath, 'utf8')).filter(m => fs.existsSync(path.join(root, m.key + '.glb'))); const have = new Set(manifest.map(m => m.url));
 const get = async (u) => { const r = await fetch(u, { headers: UA }); if (!r.ok) throw new Error(r.status + ' ' + u); return r; };
 const slug = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 40);
 let total = 0; const added = [];

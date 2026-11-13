@@ -46,10 +46,11 @@ export class Game {
     this.gfx.onAutoLower = (lower) => { this.pendingLower = lower; this.toast && this.toast('Quality lowered to ' + lower + ' for smoother play'); };
     this.input = new Input(this.canvas, this.settings); this.audio = new AudioSys(this); this.audio.vol = this.settings.d.volume;
     this.progress(0.04, 'Mixing paint, rust and dirt'); await nextFrame();
-    this.T = await buildTextures(this.gfx.q.tex, this.gfx.maxAniso, (p, n) => this.progress(0.04 + p * 0.3, 'Synthesising ' + n));
-    this.mats = buildMaterials(this.gfx, this.T);
-    this.assets = new Assets(this); this.props = new Props(this);
-    await this.assets.load(ASSET_KEYS, (p, n) => this.progress(0.3 + p * 0.06, 'Loading models ' + Math.round(p * 100) + '%'));
+    // models download while the textures are being synthesised (the two used to run one after the other)
+    this.assets = new Assets(this); let mp = 0, modelsDone = false; const models = this.assets.load(ASSET_KEYS, (p) => { mp = p; }).then(() => { modelsDone = true; });
+    this.T = await buildTextures(this.gfx.q.tex, this.gfx.maxAniso, (p, n) => this.progress(0.04 + p * 0.3, 'Synthesising ' + n + '  ·  models ' + Math.round(mp * 100) + '%'));
+    this.mats = buildMaterials(this.gfx, this.T); this.props = new Props(this);
+    while (!modelsDone) { this.progress(0.34 + mp * 0.02, 'Loading models ' + Math.round(mp * 100) + '%'); await Promise.race([models, nextFrame()]); }
     this.progress(0.36, 'Raising Dropzone Island'); await nextFrame();
     this.world = new WorldData(); this.world.generate();
     this.colliders = new Colliders(this.world);
@@ -122,9 +123,9 @@ export class Game {
     this.ui.showMenu();
   }
   setMenuCam(i) { this.menuCam = i; }
-  startMatch() {
+  startMatch(opts) {
     this.audio.unlock(); this.env.start();
-    this.pet.reset(); this.match.start(); this.state = 'play'; this.input.enabled = true; this.input.lock();
+    this.pet.reset(); this.match.start(opts); this.state = 'play'; this.input.enabled = true; this.input.lock();
     setTimeout(() => this.warmupMatch(), 400);
   }
   // Second warm-up while the player rides the plane: objects that only exist once a match runs (each enemy model with

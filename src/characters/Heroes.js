@@ -19,7 +19,8 @@ export const HEROES = [
   { id: 'scarlet', name: 'SCARLET', role: 'RUNNER', blurb: 'Red top and green trainers. Fastest feet in the city.', key: 'people_f/animated_woman_free_model', accent: 0xff4a4a, pal: {} },
   { id: 'sunny', name: 'SUNNY', role: 'MEDIC', blurb: 'Blonde, bright and steady. Patches you up and pulls you out.', key: 'people_f/animated_woman_free_model_b', accent: 0xff9b3d, pal: {} },
 ];
-export const heroIndex = (i) => Math.max(0, Math.min(HEROES.length - 1, i | 0));
+// the saved hero is its id ('ghost', 'wren'...); a number is an old save from when heroes were stored by position
+export const heroIndex = (i) => { if (typeof i === 'string') { const k = HEROES.findIndex(h => h.id === i); return k < 0 ? 0 : k; } return Math.max(0, Math.min(HEROES.length - 1, i | 0)); };
 
 // one material set per hero, shared by every use of that hero
 const CACHE = new Map();

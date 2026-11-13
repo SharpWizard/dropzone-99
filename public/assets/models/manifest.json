@@ -920,22 +920,6 @@
   "size": 25280
  },
  {
-  "key": "interior/jasons_room",
-  "title": "Jason's Isometric Room",
-  "by": "Jason Toff",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/8NsrLwbXhfl",
-  "size": 0
- },
- {
-  "key": "interior/apartment_2",
-  "title": "Apartment 2",
-  "by": "Gabriele Romagnoli",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/dtgO5dwwtkk",
-  "size": 0
- },
- {
   "key": "building/large_building_a",
   "title": "Large Building",
   "by": "Kenney",
@@ -1344,36 +1328,12 @@
   "size": 1530616
  },
  {
-  "key": "house/square_plate_free_model",
-  "title": "Square Plate - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/Gi5sAML9iw",
-  "size": 6376
- },
- {
   "key": "house/shelf_large_free_model",
   "title": "Shelf Large - Free Model",
   "by": "Quaternius",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/3FmjkLClVE",
   "size": 13436
- },
- {
-  "key": "house/shelf_small_free_model",
-  "title": "Shelf Small - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/0REJqMlmSW",
-  "size": 8828
- },
- {
-  "key": "house/shelf_small_free_model_b",
-  "title": "Shelf Small - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/TfdgUV2RYe",
-  "size": 6668
  },
  {
   "key": "house/table_round_small_free_model",
@@ -1384,36 +1344,12 @@
   "size": 25236
  },
  {
-  "key": "house/trashcan_free_model",
-  "title": "Trashcan - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/XSwahu252t",
-  "size": 24452
- },
- {
-  "key": "house/bunk_bed_free_model",
-  "title": "Bunk Bed - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/XpysaEDXJQ",
-  "size": 31692
- },
- {
   "key": "house/bed_king_free_model",
   "title": "Bed King - Free Model",
   "by": "Quaternius",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/3kiLmRcb1o",
   "size": 25676
- },
- {
-  "key": "house/stool_free_model",
-  "title": "Stool - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/TvaOenUAni",
-  "size": 18068
  },
  {
   "key": "house/table_round_large_free_model",
@@ -1448,14 +1384,6 @@
   "size": 24232
  },
  {
-  "key": "house/trashcan_large_free_model",
-  "title": "Trashcan Large - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/eYNKnGlhon",
-  "size": 21140
- },
- {
   "key": "house/trashcan_small_free_model",
   "title": "Trashcan Small - Free Model",
   "by": "Quaternius",
@@ -1488,14 +1416,6 @@
   "size": 15996
  },
  {
-  "key": "house/drawer_free_model_b_b",
-  "title": "Drawer - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/T4uDbyP90C",
-  "size": 33912
- },
- {
   "key": "house/drawer_free_model_b_b_b",
   "title": "Drawer - Free Model",
   "by": "Quaternius",
@@ -1526,14 +1446,6 @@
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/Kr4kr7OCCQ",
   "size": 17960
- },
- {
-  "key": "house/toilet_paper_stack_free_model",
-  "title": "Toilet Paper stack - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/6jlZSAxsYb",
-  "size": 14292
  },
  {
   "key": "house/towel_rack_free_model",
@@ -1592,52 +1504,12 @@
   "size": 13644
  },
  {
-  "key": "house/column_round_free_model",
-  "title": "Column Round - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/n8ZvVFcJhl",
-  "size": 10748
- },
- {
-  "key": "house/door_free_model",
-  "title": "Door - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/LI93WgnjyS",
-  "size": 24320
- },
- {
   "key": "house/kitchen_sink_free_model",
   "title": "Kitchen Sink - Free Model",
   "by": "Quaternius",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/VZCFQj3C7Q",
   "size": 27220
- },
- {
-  "key": "house/door_free_model_b",
-  "title": "Door - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/ihXwSN12P1",
-  "size": 30724
- },
- {
-  "key": "house/door_free_model_b_b",
-  "title": "Door - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/b0AIfzp6VL",
-  "size": 67044
- },
- {
-  "key": "house/door_free_model_b_b_b",
-  "title": "Door - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/xuFNaNLzfE",
-  "size": 61568
  },
  {
   "key": "house/cactus_free_model",
@@ -1664,92 +1536,12 @@
   "size": 16636
  },
  {
-  "key": "house/light_icosahedron_free_model",
-  "title": "Light Icosahedron - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/KGq88JUIJo",
-  "size": 61884
- },
- {
-  "key": "house/ceiling_light_free_model",
-  "title": "Ceiling Light - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/sRNcgQFbLB",
-  "size": 8840
- },
- {
-  "key": "house/dead_houseplant_free_model",
-  "title": "Dead Houseplant - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/YH4OBMzAGM",
-  "size": 19568
- },
- {
-  "key": "house/door_free_model_b_b_b_b",
-  "title": "Door - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/atrxVW0q9N",
-  "size": 42852
- },
- {
-  "key": "house/door_free_model_b_b_b_b_b",
-  "title": "Door - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/KGt4ztcKrM",
-  "size": 11228
- },
- {
-  "key": "house/curtains_double_free_model",
-  "title": "Curtains Double - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/kkeII96j9N",
-  "size": 13312
- },
- {
   "key": "house/houseplant_free_model_b_b_b",
   "title": "Houseplant - Free Model",
   "by": "Quaternius",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/f6GPjbEgg0",
   "size": 10696
- },
- {
-  "key": "house/light_cube_free_model",
-  "title": "Light Cube - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/gJpALEpLcy",
-  "size": 24384
- },
- {
-  "key": "house/door_free_model_b_b_b_b_b_b",
-  "title": "Door - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/TOMs7NG2FG",
-  "size": 41636
- },
- {
-  "key": "house/light_ceiling_free_model",
-  "title": "Light Ceiling - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/S3HkX8iTl2",
-  "size": 10312
- },
- {
-  "key": "house/light_cube_free_model_b",
-  "title": "Light Cube - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/oyyy82ElHM",
-  "size": 23532
  },
  {
   "key": "house/light_stand_free_model",
@@ -1760,52 +1552,12 @@
   "size": 10920
  },
  {
-  "key": "house/bathroom_toilet_paper_free_model",
-  "title": "Bathroom Toilet Paper - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/pZojeda7ye",
-  "size": 13428
- },
- {
-  "key": "house/light_floor_free_model",
-  "title": "Light Floor - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/sRBBvofo58",
-  "size": 9964
- },
- {
-  "key": "house/light_desk_free_model",
-  "title": "Light Desk - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/uJDWrSJGVH",
-  "size": 12832
- },
- {
-  "key": "house/light_ceiling_single_free_model",
-  "title": "Light Ceiling Single - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/JT44JUXU2d",
-  "size": 10360
- },
- {
   "key": "house/kitchen_fridge_free_model",
   "title": "Kitchen Fridge - Free Model",
   "by": "Quaternius",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/8sjRm8fnHh",
   "size": 17360
- },
- {
-  "key": "house/door_free_model_b_b_b_b_b_b_b",
-  "title": "Door - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/8it1hH1oRu",
-  "size": 43820
  },
  {
   "key": "house/table_lamp_free_model",
@@ -1832,14 +1584,6 @@
   "size": 10500
  },
  {
-  "key": "house/window_large_free_model",
-  "title": "Window Large - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/EipzkrS9nG",
-  "size": 20180
- },
- {
   "key": "house/lamp_free_model",
   "title": "Lamp - Free Model",
   "by": "Quaternius",
@@ -1856,60 +1600,12 @@
   "size": 14364
  },
  {
-  "key": "house/light_ceiling_free_model_b",
-  "title": "Light Ceiling - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/ToOLJDO5FI",
-  "size": 26564
- },
- {
-  "key": "house/window_round_free_model",
-  "title": "Window Round - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/WROtq6kA7t",
-  "size": 8528
- },
- {
-  "key": "house/door_double_free_model",
-  "title": "Door Double - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/blrNJIEdns",
-  "size": 63624
- },
- {
-  "key": "house/window_small_free_model",
-  "title": "Window Small - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/n88WAcjzTv",
-  "size": 8992
- },
- {
   "key": "house/houseplant_free_model_b_b_b_b",
   "title": "Houseplant - Free Model",
   "by": "Quaternius",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/dveIJ0xNpX",
   "size": 25884
- },
- {
-  "key": "house/light_chandelier_free_model",
-  "title": "Light Chandelier - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/q3k8I8YYX9",
-  "size": 25380
- },
- {
-  "key": "house/light_ceiling_free_model_b_b",
-  "title": "Light Ceiling - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/NNlnaiDJIh",
-  "size": 26540
  },
  {
   "key": "house/couch_large_free_model",
@@ -1920,84 +1616,12 @@
   "size": 30800
  },
  {
-  "key": "house/houseplant_free_model_b_b_b_b_b",
-  "title": "Houseplant - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/IBLX2Jz90O",
-  "size": 20796
- },
- {
   "key": "house/bathtub_free_model",
   "title": "Bathtub - Free Model",
   "by": "Quaternius",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/wrOzCX3k48",
   "size": 10900
- },
- {
-  "key": "props/computer_mouse_free_model",
-  "title": "Computer Mouse - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/V2Ebx3pvo4",
-  "size": 16280
- },
- {
-  "key": "props/stapler_free_model",
-  "title": "Stapler - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/mQ9uliJkPK",
-  "size": 19632
- },
- {
-  "key": "props/toolbox_free_model",
-  "title": "Toolbox - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/3ImQcIK0Gp",
-  "size": 18656
- },
- {
-  "key": "props/wine_glass_free_model",
-  "title": "Wine Glass - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/2WpCzR5tff",
-  "size": 30696
- },
- {
-  "key": "props/monitor_free_model",
-  "title": "Monitor - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/PvSjEbz11k",
-  "size": 15288
- },
- {
-  "key": "props/painting_free_model",
-  "title": "Painting - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/Pi6oReAizt",
-  "size": 24092
- },
- {
-  "key": "props/present_free_model",
-  "title": "Present - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/LVg3ynJDxa",
-  "size": 24604
- },
- {
-  "key": "props/printer_free_model",
-  "title": "Printer - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/77K2TCL5Lz",
-  "size": 22692
  },
  {
   "key": "props/refrigirator_free_model",
@@ -2008,28 +1632,12 @@
   "size": 21884
  },
  {
-  "key": "props/rubber_duck_free_model",
-  "title": "Rubber Duck - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/oH3dEdlDpB",
-  "size": 56764
- },
- {
   "key": "props/safe_free_model",
   "title": "Safe - Free Model",
   "by": "CreativeTrio",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/N4egHD2Vms",
   "size": 24208
- },
- {
-  "key": "props/screwdriver_free_model",
-  "title": "Screwdriver - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/qBFMjkrKzH",
-  "size": 34428
  },
  {
   "key": "props/trash_bin_free_model",
@@ -2056,84 +1664,12 @@
   "size": 44456
  },
  {
-  "key": "props/table_free_model",
-  "title": "Table - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/KndwzSWSHR",
-  "size": 14844
- },
- {
-  "key": "props/watering_can_free_model",
-  "title": "Watering Can - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/b2R90QehIt",
-  "size": 46736
- },
- {
-  "key": "props/hand_saw_free_model",
-  "title": "Hand Saw - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/rbZHkFchEk",
-  "size": 64572
- },
- {
-  "key": "props/hoe_free_model",
-  "title": "Hoe - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/qSLKS3hk81",
-  "size": 49436
- },
- {
-  "key": "props/jar_free_model",
-  "title": "Jar - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/XGe3q5zQ5s",
-  "size": 29748
- },
- {
-  "key": "props/tissue_box_free_model",
-  "title": "Tissue Box - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/dS4MQQH5EM",
-  "size": 16624
- },
- {
   "key": "props/headphones_free_model",
   "title": "Headphones - Free Model",
   "by": "CreativeTrio",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/PSsWSIAYIL",
   "size": 42780
- },
- {
-  "key": "props/stool_free_model",
-  "title": "Stool - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/VZw6xzQbOb",
-  "size": 51280
- },
- {
-  "key": "props/mailbox_free_model",
-  "title": "Mailbox - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/2olZ0G8iur",
-  "size": 25264
- },
- {
-  "key": "props/wall_corkboard_free_model",
-  "title": "Wall Corkboard - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/U8yQZ9l0HZ",
-  "size": 23764
  },
  {
   "key": "props/toilet_free_model",
@@ -2152,52 +1688,12 @@
   "size": 69344
  },
  {
-  "key": "props/propane_tank_free_model",
-  "title": "Propane Tank - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/Fsk9PE6o74",
-  "size": 79728
- },
- {
-  "key": "props/wrench_free_model",
-  "title": "Wrench - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/POJHQLnLvB",
-  "size": 37860
- },
- {
-  "key": "props/telescope_free_model",
-  "title": "Telescope - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/RjyTCQvA8b",
-  "size": 62720
- },
- {
-  "key": "props/piggy_bank_free_model",
-  "title": "Piggy Bank - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/1KAexv0Erv",
-  "size": 52732
- },
- {
   "key": "props/ladder_free_model",
   "title": "Ladder - Free Model",
   "by": "CreativeTrio",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/p1RR8Ls9EH",
   "size": 24100
- },
- {
-  "key": "props/pumpkin_free_model",
-  "title": "Pumpkin - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/XYPzyxSw3c",
-  "size": 63508
  },
  {
   "key": "props/rocking_chair_free_model",
@@ -2224,28 +1720,12 @@
   "size": 63624
  },
  {
-  "key": "props/chair_free_model",
-  "title": "Chair - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/RQZxIYo4Io",
-  "size": 14924
- },
- {
   "key": "props/cup_of_tea_free_model",
   "title": "Cup Of Tea - Free Model",
   "by": "CreativeTrio",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/6QBscrL7D3",
   "size": 40520
- },
- {
-  "key": "props/end_table_free_model",
-  "title": "End Table - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/8gAkbKs1ii",
-  "size": 19152
  },
  {
   "key": "props/dresser_free_model",
@@ -2256,14 +1736,6 @@
   "size": 38744
  },
  {
-  "key": "props/desk_fan_free_model",
-  "title": "Desk Fan - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/OlTLyyXoXY",
-  "size": 30668
- },
- {
   "key": "props/grandfathers_clock_free_model",
   "title": "Grandfathers Clock - Free Model",
   "by": "CreativeTrio",
@@ -2272,60 +1744,12 @@
   "size": 51056
  },
  {
-  "key": "props/dumbbell_free_model",
-  "title": "Dumbbell - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/PW9q10xh5g",
-  "size": 43692
- },
- {
-  "key": "props/hamburger_free_model",
-  "title": "Hamburger - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/CI3WufjOIN",
-  "size": 39652
- },
- {
   "key": "props/bathroom_sink_free_model",
   "title": "Bathroom Sink - Free Model",
   "by": "CreativeTrio",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/7yXd2z5Kvp",
   "size": 19224
- },
- {
-  "key": "props/frying_pan_free_model",
-  "title": "Frying Pan - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/JeVqTzcwUT",
-  "size": 46212
- },
- {
-  "key": "props/empty_box_free_model",
-  "title": "Empty Box - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/pZBpmjtvw8",
-  "size": 13900
- },
- {
-  "key": "props/bird_house_free_model",
-  "title": "Bird House - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/xFKC7GxgdL",
-  "size": 14572
- },
- {
-  "key": "props/mallet_free_model",
-  "title": "Mallet - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/OwK7SlAysq",
-  "size": 15640
  },
  {
   "key": "props/globe_free_model",
@@ -2360,14 +1784,6 @@
   "size": 63684
  },
  {
-  "key": "props/hair_dryer_free_model",
-  "title": "Hair Dryer - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/B5nWfdzHzO",
-  "size": 43084
- },
- {
   "key": "props/books_free_model",
   "title": "Books - Free Model",
   "by": "CreativeTrio",
@@ -2392,54 +1808,6 @@
   "size": 37868
  },
  {
-  "key": "props/hand_rake_free_model",
-  "title": "Hand Rake - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/svzOLCZ74s",
-  "size": 33628
- },
- {
-  "key": "props/closed_umbrella_free_model",
-  "title": "Closed Umbrella - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/o0CUgpt8pm",
-  "size": 38988
- },
- {
-  "key": "props/ceiling_fan_free_model",
-  "title": "Ceiling Fan - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/pRMxaQQXha",
-  "size": 22256
- },
- {
-  "key": "props/barbecue_free_model",
-  "title": "Barbecue - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/ZZyQvAYY5L",
-  "size": 58440
- },
- {
-  "key": "props/chips_free_model",
-  "title": "Chips - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/uF1dGn3HXi",
-  "size": 41224
- },
- {
-  "key": "props/baseball_bat_free_model",
-  "title": "Baseball Bat - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/i2JCd3w8gh",
-  "size": 31240
- },
- {
   "key": "props/flowers_free_model",
   "title": "Flowers - Free Model",
   "by": "CreativeTrio",
@@ -2448,28 +1816,12 @@
   "size": 53324
  },
  {
-  "key": "props/computer_free_model",
-  "title": "Computer - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/7KNoiQlSxi",
-  "size": 27420
- },
- {
   "key": "props/alarm_clock_free_model",
   "title": "Alarm Clock - Free Model",
   "by": "CreativeTrio",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/y5f363OS9C",
   "size": 43116
- },
- {
-  "key": "props/doll_free_model",
-  "title": "Doll - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/YUAwclCDrF",
-  "size": 96880
  },
  {
   "key": "props/desk_lamp_free_model",
@@ -2488,14 +1840,6 @@
   "size": 66548
  },
  {
-  "key": "props/bathtub_free_model",
-  "title": "Bathtub - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/2MbbdwbTjt",
-  "size": 42848
- },
- {
   "key": "props/couch_free_model",
   "title": "Couch - Free Model",
   "by": "CreativeTrio",
@@ -2512,100 +1856,12 @@
   "size": 35552
  },
  {
-  "key": "props/caldron_free_model",
-  "title": "Caldron - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/P36cOeZHyX",
-  "size": 77980
- },
- {
-  "key": "props/chandelier_free_model",
-  "title": "Chandelier - Free Model",
-  "by": "CreativeTrio",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/RPLTkXHOOM",
-  "size": 63780
- },
- {
-  "key": "town/flower_pot_free_model",
-  "title": "Flower Pot - Free Model",
-  "by": "Zsky",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/Kgt363WkKd",
-  "size": 56460
- },
- {
-  "key": "town/debris_papers_free_model",
-  "title": "Debris Papers - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/MujITy1NRR",
-  "size": 2616
- },
- {
-  "key": "town/manhole_cover_free_model",
-  "title": "Manhole Cover - Free Model",
-  "by": "J-Toastie",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/S6aGVNF1Iz",
-  "size": 13084
- },
- {
-  "key": "town/bus_stop_sign_free_model",
-  "title": "Bus stop sign - Free Model",
-  "by": "dook",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/ECdbKwxoLa",
-  "size": 99648
- },
- {
-  "key": "town/fence_piece_free_model",
-  "title": "Fence Piece - Free Model",
-  "by": "J-Toastie",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/Y6D3Sbc85w",
-  "size": 30096
- },
- {
-  "key": "town/fence_end_free_model",
-  "title": "Fence End - Free Model",
-  "by": "J-Toastie",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/tQ5zhPd5UC",
-  "size": 40836
- },
- {
-  "key": "town/floor_hole_free_model",
-  "title": "Floor Hole - Free Model",
-  "by": "J-Toastie",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/FbJAtOQ8pb",
-  "size": 5128
- },
- {
-  "key": "town/tree_free_model",
-  "title": "Tree - Free Model",
-  "by": "Poly by Google",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/6pwiq7hSrHr",
-  "size": 5396
- },
- {
   "key": "town/gb_blank_free_model",
   "title": "Gb Blank - Free Model",
   "by": "J-Toastie",
   "lic": "CC-BY 3.0",
   "url": "https://poly.pizza/m/bBFgKEQoUq",
   "size": 117336
- },
- {
-  "key": "town/greenhouse_free_model",
-  "title": "Greenhouse - Free Model",
-  "by": "J-Toastie",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/exys3emjr1",
-  "size": 31800
  },
  {
   "key": "town/rb_blank_free_model",
@@ -2616,14 +1872,6 @@
   "size": 117328
  },
  {
-  "key": "town/road_bits_free_model",
-  "title": "Road Bits - Free Model",
-  "by": "Kay Lousberg",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/5BPCPOycxC",
-  "size": 68128
- },
- {
   "key": "town/pizza_corner_free_model",
   "title": "Pizza Corner - Free Model",
   "by": "J-Toastie",
@@ -2632,100 +1880,12 @@
   "size": 169160
  },
  {
-  "key": "town/fire_exit_free_model",
-  "title": "Fire Exit - Free Model",
-  "by": "J-Toastie",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/ugX9DZ0wlI",
-  "size": 78404
- },
- {
-  "key": "town/fence_free_model",
-  "title": "Fence - Free Model",
-  "by": "J-Toastie",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/ZSQMyIqPTz",
-  "size": 52836
- },
- {
   "key": "town/building_red_corner_free_model",
   "title": "Building Red Corner - Free Model",
   "by": "J-Toastie",
   "lic": "CC-BY 3.0",
   "url": "https://poly.pizza/m/9JuFwnivP0",
   "size": 145076
- },
- {
-  "key": "town/roof_exit_free_model",
-  "title": "Roof Exit - Free Model",
-  "by": "J-Toastie",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/GEB4pWBI8l",
-  "size": 19556
- },
- {
-  "key": "town/rock_band_poster_free_model",
-  "title": "Rock band poster - Free Model",
-  "by": "jeremy",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/fTsh4nKZ9iK",
-  "size": 12676
- },
- {
-  "key": "town/yellow_post_it_free_model",
-  "title": "Yellow Post-it - Free Model",
-  "by": "Zack Huang",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/1-ZStsi8S91",
-  "size": 2336
- },
- {
-  "key": "town/washing_line_free_model",
-  "title": "Washing Line - Free Model",
-  "by": "J-Toastie",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/nGU4m9V7ez",
-  "size": 39396
- },
- {
-  "key": "town/animated_woman_free_model",
-  "title": "Animated Woman - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/9kF7eTDbhO",
-  "size": 1379768
- },
- {
-  "key": "town/man_free_model",
-  "title": "Man - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/HMnuH5geEG",
-  "size": 493196
- },
- {
-  "key": "town/motorcycle_free_model",
-  "title": "Motorcycle - Free Model",
-  "by": "Poly by Google",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/dse64pqMKAR",
-  "size": 109608
- },
- {
-  "key": "town/bicycle_free_model",
-  "title": "Bicycle - Free Model",
-  "by": "Poly by Google",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/19VoUuA2pcN",
-  "size": 2394132
- },
- {
-  "key": "town/sports_car_free_model",
-  "title": "Sports Car - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/Gzj704DXdr",
-  "size": 252528
  },
  {
   "key": "natk/bush_free_model",
@@ -2742,14 +1902,6 @@
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/IQ9NVyVpUw",
   "size": 694432
- },
- {
-  "key": "natk/clover_free_model_b",
-  "title": "Clover - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/u5SOgBFiut",
-  "size": 703820
  },
  {
   "key": "natk/bush_with_flowers_free_model",
@@ -2848,14 +2000,6 @@
   "size": 97188
  },
  {
-  "key": "natk/grass_wispy_free_model_b",
-  "title": "Grass Wispy - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/6EzB7VA6vb",
-  "size": 101412
- },
- {
   "key": "natk/flower_petal_free_model",
   "title": "Flower Petal - Free Model",
   "by": "Quaternius",
@@ -2872,124 +2016,12 @@
   "size": 531684
  },
  {
-  "key": "natk/flower_petal_free_model_b_b",
-  "title": "Flower Petal - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/niuBUEJdvM",
-  "size": 532064
- },
- {
-  "key": "natk/flower_petal_free_model_b_b_b",
-  "title": "Flower Petal - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/LqvxG9OBOU",
-  "size": 531608
- },
- {
-  "key": "natk/flower_petal_free_model_b_b_b_b",
-  "title": "Flower Petal - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/tzG4JcqYWs",
-  "size": 531684
- },
- {
   "key": "natk/fern_free_model",
   "title": "Fern - Free Model",
   "by": "Quaternius",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/jqcanvH7D6",
   "size": 692724
- },
- {
-  "key": "natk/pebble_square_free_model",
-  "title": "Pebble Square - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/2YtLzwgsWp",
-  "size": 813288
- },
- {
-  "key": "natk/pebble_round_free_model",
-  "title": "Pebble Round - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/icVsN3lmVy",
-  "size": 814208
- },
- {
-  "key": "natk/pebble_round_free_model_b",
-  "title": "Pebble Round - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/kAMfq1uJUY",
-  "size": 814628
- },
- {
-  "key": "natk/pebble_square_free_model_b",
-  "title": "Pebble Square - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/s71L3q1nXN",
-  "size": 814756
- },
- {
-  "key": "natk/pebble_square_free_model_b_b",
-  "title": "Pebble Square - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/iwxxjMtXRF",
-  "size": 812940
- },
- {
-  "key": "natk/pebble_round_free_model_b_b",
-  "title": "Pebble Round - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/KYtJ6JNXh2",
-  "size": 813788
- },
- {
-  "key": "natk/pebble_round_free_model_b_b_b",
-  "title": "Pebble Round - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/jecVTh3aQV",
-  "size": 813872
- },
- {
-  "key": "natk/pebble_square_free_model_b_b_b",
-  "title": "Pebble Square - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/Mm4RMgwNO8",
-  "size": 815108
- },
- {
-  "key": "natk/pebble_square_free_model_b_b_b_b",
-  "title": "Pebble Square - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/6juX57sLHe",
-  "size": 816036
- },
- {
-  "key": "natk/pebble_square_free_model_b_b_b_b_b",
-  "title": "Pebble Square - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/l5XiYQj1oD",
-  "size": 814232
- },
- {
-  "key": "natk/pebble_round_free_model_b_b_b_b",
-  "title": "Pebble Round - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/nMf8LHOsbM",
-  "size": 815064
  },
  {
   "key": "natk/flower_single_free_model",
@@ -3078,94 +2110,6 @@
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/MbhbP7JrTI",
   "size": 698784
- },
- {
-  "key": "natk/plant_free_model_b",
-  "title": "Plant - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/xH5gNlQxAZ",
-  "size": 681168
- },
- {
-  "key": "natk/rock_path_square_smal_free_model",
-  "title": "Rock Path Square Smal - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/w4TKZMjjcw",
-  "size": 847876
- },
- {
-  "key": "natk/rock_path_square_smal_free_model_b",
-  "title": "Rock Path Square Smal - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/cI9XBpVijV",
-  "size": 862728
- },
- {
-  "key": "natk/rock_path_square_smal_free_model_b_b",
-  "title": "Rock Path Square Smal - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/ClCOmVUtWx",
-  "size": 848472
- },
- {
-  "key": "natk/rock_path_square_thin_free_model",
-  "title": "Rock Path Square Thin - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/HAux7BIMfm",
-  "size": 931564
- },
- {
-  "key": "natk/rock_path_round_small_free_model",
-  "title": "Rock Path Round Small - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/QnRnpe7dd0",
-  "size": 876836
- },
- {
-  "key": "natk/rock_path_round_small_free_model_b",
-  "title": "Rock Path Round Small - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/yHEdadj5I0",
-  "size": 876940
- },
- {
-  "key": "natk/rock_path_round_thin_free_model",
-  "title": "Rock Path Round Thin - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/L1GeXpXEPY",
-  "size": 961044
- },
- {
-  "key": "natk/rock_path_round_small_free_model_b_b",
-  "title": "Rock Path Round Small - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/GMttpOEFKT",
-  "size": 885132
- },
- {
-  "key": "natk/rock_path_round_wide_free_model",
-  "title": "Rock Path Round Wide - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/mWb3XxOctl",
-  "size": 1044552
- },
- {
-  "key": "natk/rock_path_square_wide_free_model",
-  "title": "Rock Path Square Wide - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/8wDmuvrSya",
-  "size": 963296
  },
  {
   "key": "natk/rock_medium_free_model",
@@ -3328,14 +2272,6 @@
   "size": 1120784
  },
  {
-  "key": "natu/dead_trees_free_model_b",
-  "title": "Dead Trees - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/26H2UlEtWA",
-  "size": 2469436
- },
- {
   "key": "natu/pine_trees_free_model",
   "title": "Pine Trees - Free Model",
   "by": "Quaternius",
@@ -3350,22 +2286,6 @@
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/XL70IUDIrZ",
   "size": 27188
- },
- {
-  "key": "food/egg_fried_free_model",
-  "title": "Egg Fried - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/NVrB2yd66v",
-  "size": 7840
- },
- {
-  "key": "food/egg_free_model",
-  "title": "Egg - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/ngjyRi84lk",
-  "size": 22040
  },
  {
   "key": "food/eggplant_free_model",
@@ -3400,44 +2320,12 @@
   "size": 33396
  },
  {
-  "key": "food/mushroom_sliced_free_model",
-  "title": "Mushroom Sliced - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/VjFoJav3v7",
-  "size": 7424
- },
- {
-  "key": "food/pizza_slice_free_model",
-  "title": "Pizza Slice - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/CA4HtaaMJn",
-  "size": 23420
- },
- {
   "key": "food/plate_square_free_model",
   "title": "Plate Square - Free Model",
   "by": "Quaternius",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/ihA4bF34hK",
   "size": 11856
- },
- {
-  "key": "food/popsicle_chocolate_free_model",
-  "title": "Popsicle Chocolate - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/qrC48Q3c4s",
-  "size": 7052
- },
- {
-  "key": "food/popsicle_free_model",
-  "title": "Popsicle - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/6aHvdiwamh",
-  "size": 11076
  },
  {
   "key": "food/pumpkin_free_model",
@@ -3448,44 +2336,12 @@
   "size": 37424
  },
  {
-  "key": "food/sushi_nigiri_free_model",
-  "title": "Sushi Nigiri - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/ea93ie9bKj",
-  "size": 13236
- },
- {
-  "key": "food/sushi_free_model",
-  "title": "Sushi - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/zuyXw1xgeE",
-  "size": 12208
- },
- {
   "key": "food/tomato_free_model",
   "title": "Tomato - Free Model",
   "by": "Quaternius",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/ByggGxctjw",
   "size": 27128
- },
- {
-  "key": "food/tomato_slice_free_model",
-  "title": "Tomato Slice - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/xM9Pzf5V64",
-  "size": 35964
- },
- {
-  "key": "food/spoon_free_model",
-  "title": "Spoon - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/eqvrf6TrB6",
-  "size": 10372
  },
  {
   "key": "food/steak_free_model",
@@ -3504,14 +2360,6 @@
   "size": 49256
  },
  {
-  "key": "food/frying_pan_free_model",
-  "title": "Frying Pan - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/PjpER4wost",
-  "size": 14064
- },
- {
   "key": "food/cheeseburger_free_model",
   "title": "Cheeseburger - Free Model",
   "by": "Quaternius",
@@ -3526,14 +2374,6 @@
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/3VXWnjDOEw",
   "size": 35740
- },
- {
-  "key": "food/bacon_free_model",
-  "title": "Bacon - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/c5Zja0PV6W",
-  "size": 35412
  },
  {
   "key": "food/bottle_free_model",
@@ -3592,22 +2432,6 @@
   "size": 20484
  },
  {
-  "key": "food/corndog_free_model",
-  "title": "Corndog - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/X3DZz8qI7t",
-  "size": 17884
- },
- {
-  "key": "food/bread_slice_free_model",
-  "title": "Bread Slice - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/OkkMwZSFTb",
-  "size": 29136
- },
- {
   "key": "food/avocado_free_model",
   "title": "Avocado - Free Model",
   "by": "Quaternius",
@@ -3624,38 +2448,6 @@
   "size": 52496
  },
  {
-  "key": "food/ice_cream_free_model",
-  "title": "Ice Cream - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/iZiAPq7Sne",
-  "size": 74968
- },
- {
-  "key": "food/tentacle_free_model",
-  "title": "Tentacle - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/8CPgEpyXo3",
-  "size": 35084
- },
- {
-  "key": "food/double_cheeseburger_free_model",
-  "title": "Double Cheeseburger - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/g1WU2innWN",
-  "size": 53364
- },
- {
-  "key": "food/burger_free_model",
-  "title": "Burger - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/Jb6JuSjNYy",
-  "size": 57116
- },
- {
   "key": "food/bottle_free_model_b",
   "title": "Bottle - Free Model",
   "by": "Quaternius",
@@ -3670,14 +2462,6 @@
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/OsWdy3VWFS",
   "size": 58392
- },
- {
-  "key": "food/cooking_pot_free_model_b",
-  "title": "Cooking Pot - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/lMEdEOMg9L",
-  "size": 14972
  },
  {
   "key": "food/soda_free_model",
@@ -3702,14 +2486,6 @@
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/6exp0qAEVd",
   "size": 20688
- },
- {
-  "key": "food/chopsticks_free_model",
-  "title": "Chopsticks - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/UOhOqQvF9y",
-  "size": 25184
  },
  {
   "key": "food/pepper_green_free_model",
@@ -3984,46 +2760,6 @@
   "size": 174468
  },
  {
-  "key": "cbits/base_free_model",
-  "title": "Base - Free Model",
-  "by": "Kay Lousberg",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/dKUTIIPVT8",
-  "size": 25420
- },
- {
-  "key": "cbits/streetlight_free_model",
-  "title": "Streetlight - Free Model",
-  "by": "Kay Lousberg",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/vPFSLYh6sg",
-  "size": 29148
- },
- {
-  "key": "cbits/fire_hydrant_free_model",
-  "title": "Fire Hydrant - Free Model",
-  "by": "Kay Lousberg",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/thffn9bO75",
-  "size": 30068
- },
- {
-  "key": "cbits/dumpster_free_model",
-  "title": "Dumpster - Free Model",
-  "by": "Kay Lousberg",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/QmYKHtUnxb",
-  "size": 30184
- },
- {
-  "key": "cbits/rocks_free_model",
-  "title": "Rocks - Free Model",
-  "by": "Kay Lousberg",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/kTrLxUBgxU",
-  "size": 23240
- },
- {
   "key": "cbits/watertower_free_model",
   "title": "Watertower - Free Model",
   "by": "Kay Lousberg",
@@ -4032,52 +2768,12 @@
   "size": 30340
  },
  {
-  "key": "cbits/bench_free_model",
-  "title": "Bench - Free Model",
-  "by": "Kay Lousberg",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/6d92UYCIC1",
-  "size": 24816
- },
- {
-  "key": "cbits/traffic_light_free_model",
-  "title": "Traffic light - Free Model",
-  "by": "Kay Lousberg",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/Q6k7Izx6YD",
-  "size": 52684
- },
- {
-  "key": "cbits/box_b_free_model",
-  "title": "Box B - Free Model",
-  "by": "Kay Lousberg",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/Wy4JVFMTzE",
-  "size": 23324
- },
- {
-  "key": "cbits/bush_free_model",
-  "title": "Bush - Free Model",
-  "by": "Kay Lousberg",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/rnq2i4uw3i",
-  "size": 25040
- },
- {
   "key": "cbits/traffic_light_free_model_b",
   "title": "Traffic light - Free Model",
   "by": "Kay Lousberg",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/aYC3t5ymln",
   "size": 46152
- },
- {
-  "key": "cbits/trafficlight_b_free_model",
-  "title": "Trafficlight B - Free Model",
-  "by": "Kay Lousberg",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/miIn9cCbEg",
-  "size": 57612
  },
  {
   "key": "cbits/building_free_model",
@@ -4176,60 +2872,12 @@
   "size": 139504
  },
  {
-  "key": "city2/woman_free_model",
-  "title": "Woman - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/AQsd9ngvKU",
-  "size": 510392
- },
- {
-  "key": "city2/man_free_model",
-  "title": "Man - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/fjHyMd5Wxw",
-  "size": 498160
- },
- {
-  "key": "city2/path_straight_free_model",
-  "title": "Path Straight - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/ZuRHRsKWoz",
-  "size": 38356
- },
- {
-  "key": "city2/bike_warning_road_sign_free_model",
-  "title": "Bike Warning Road Sign - Free Model",
-  "by": "artdelart",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/iz5wZmmVPQ",
-  "size": 611568
- },
- {
-  "key": "city2/billboard_free_model",
-  "title": "Billboard - Free Model",
-  "by": "Poly by Google",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/2Kl87jaGQEB",
-  "size": 115204
- },
- {
   "key": "city2/1994_nissan_180mx_free_model",
   "title": "1994 Nissan 180MX - Free Model",
   "by": "Grzybek",
   "lic": "CC-BY 3.0",
   "url": "https://poly.pizza/m/c7vlPQ8dlt",
   "size": 362468
- },
- {
-  "key": "city2/car_free_model",
-  "title": "Car - Free Model",
-  "by": "Poly by Google",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/75h3mi6uHuC",
-  "size": 40460
  },
  {
   "key": "city2/convertible_free_model",
@@ -4336,44 +2984,12 @@
   "size": 1213848
  },
  {
-  "key": "survival/pot_free_model",
-  "title": "Pot - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/Olu4b0aiiY",
-  "size": 20072
- },
- {
-  "key": "survival/torch_free_model",
-  "title": "Torch - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/WGsvr4KOZd",
-  "size": 37188
- },
- {
   "key": "survival/can_free_model",
   "title": "Can - Free Model",
   "by": "Quaternius",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/YnowJvWqxE",
   "size": 25460
- },
- {
-  "key": "survival/compass_free_model",
-  "title": "Compass - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/LlnxQPETHh",
-  "size": 40552
- },
- {
-  "key": "survival/tent_free_model",
-  "title": "Tent - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/5Q7qIrfDxA",
-  "size": 45036
  },
  {
   "key": "survival/water_bottle_free_model",
@@ -4392,38 +3008,6 @@
   "size": 16196
  },
  {
-  "key": "survival/raft_paddle_free_model",
-  "title": "Raft Paddle - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/XLwljDJQZ7",
-  "size": 16792
- },
- {
-  "key": "survival/battery_free_model",
-  "title": "Battery - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/OOvs45iGQg",
-  "size": 9024
- },
- {
-  "key": "survival/wooden_torch_free_model",
-  "title": "Wooden Torch - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/pNsfJzhXiD",
-  "size": 27932
- },
- {
-  "key": "survival/match_burnt_free_model",
-  "title": "Match Burnt - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/CndBdbFR7V",
-  "size": 5808
- },
- {
   "key": "survival/shovel_free_model",
   "title": "Shovel - Free Model",
   "by": "Quaternius",
@@ -4438,54 +3022,6 @@
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/IuoYedcdXQ",
   "size": 21304
- },
- {
-  "key": "survival/phone_free_model",
-  "title": "Phone - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/k2kgBepoMU",
-  "size": 15180
- },
- {
-  "key": "survival/match_free_model",
-  "title": "Match - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/P79Otw95no",
-  "size": 4232
- },
- {
-  "key": "survival/pan_free_model",
-  "title": "Pan - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/f9my9iJZMv",
-  "size": 16756
- },
- {
-  "key": "survival/can_broken_free_model",
-  "title": "Can Broken - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/JjC5l1gXMo",
-  "size": 25460
- },
- {
-  "key": "survival/battery_free_model_b",
-  "title": "Battery - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/MYa3uWdwPU",
-  "size": 10764
- },
- {
-  "key": "survival/matchbox_free_model",
-  "title": "Matchbox - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/22eU6FjNQ8",
-  "size": 26220
  },
  {
   "key": "survival/first_aid_kit_free_model",
@@ -4504,38 +3040,6 @@
   "size": 44444
  },
  {
-  "key": "survival/flare_gun_free_model",
-  "title": "Flare Gun - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/44H9OBUqTC",
-  "size": 31312
- },
- {
-  "key": "survival/bear_trap_free_model",
-  "title": "Bear Trap - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/UTau9hyAnm",
-  "size": 35196
- },
- {
-  "key": "survival/pot_free_model_b",
-  "title": "Pot - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/fyweVKYu0K",
-  "size": 19900
- },
- {
-  "key": "survival/wood_log_free_model",
-  "title": "Wood Log - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/L4E32Wee6C",
-  "size": 13904
- },
- {
   "key": "survival/knife_free_model",
   "title": "Knife - Free Model",
   "by": "Quaternius",
@@ -4544,76 +3048,12 @@
   "size": 28692
  },
  {
-  "key": "survival/raft_free_model",
-  "title": "Raft - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/Hgf0R8s4Uo",
-  "size": 58392
- },
- {
-  "key": "survival/bonfire_free_model",
-  "title": "Bonfire - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/k1e0cOzi8A",
-  "size": 43676
- },
- {
-  "key": "survival/backpack_free_model",
-  "title": "Backpack - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/2g9Jm7kvIU",
-  "size": 99444
- },
- {
-  "key": "animals/chick_free_model",
-  "title": "Chick - Free Model",
-  "by": "madtrollstudio",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/HNrEIheuPK",
-  "size": 97852
- },
- {
   "key": "animals/bear_free_model",
   "title": "Bear - Free Model",
   "by": "madtrollstudio",
   "lic": "CC-BY 3.0",
   "url": "https://poly.pizza/m/kLLBpmcw0w",
   "size": 120960
- },
- {
-  "key": "animals/duck_free_model",
-  "title": "Duck - Free Model",
-  "by": "madtrollstudio",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/4plJcFXhim",
-  "size": 113012
- },
- {
-  "key": "animals/giraffe_free_model",
-  "title": "Giraffe - Free Model",
-  "by": "madtrollstudio",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/jUaMl6njBh",
-  "size": 113676
- },
- {
-  "key": "animals/lizard_free_model",
-  "title": "Lizard - Free Model",
-  "by": "madtrollstudio",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/0z3NJc5zAE",
-  "size": 134512
- },
- {
-  "key": "animals/penguin_free_model",
-  "title": "Penguin - Free Model",
-  "by": "madtrollstudio",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/kvZRSJBz70",
-  "size": 103180
  },
  {
   "key": "animals/rabbit_free_model",
@@ -4632,54 +3072,6 @@
   "size": 126976
  },
  {
-  "key": "animals/bird_free_model",
-  "title": "Bird - Free Model",
-  "by": "madtrollstudio",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/F3km1zKccq",
-  "size": 97652
- },
- {
-  "key": "animals/cat_free_model",
-  "title": "Cat - Free Model",
-  "by": "madtrollstudio",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/YvVobPlTlQ",
-  "size": 119908
- },
- {
-  "key": "animals/dog_free_model",
-  "title": "Dog - Free Model",
-  "by": "madtrollstudio",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/9bqPCxOyrk",
-  "size": 155780
- },
- {
-  "key": "animals/beagle_free_model",
-  "title": "Beagle - Free Model",
-  "by": "madtrollstudio",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/AT956DeiRX",
-  "size": 143880
- },
- {
-  "key": "animals/corgi_free_model",
-  "title": "Corgi - Free Model",
-  "by": "madtrollstudio",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/2neHxHTY3t",
-  "size": 148260
- },
- {
-  "key": "animals/dog_free_model_b",
-  "title": "Dog - Free Model",
-  "by": "madtrollstudio",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/Dd9e59JWpl",
-  "size": 138716
- },
- {
   "key": "animals/chicken_free_model",
   "title": "Chicken - Free Model",
   "by": "madtrollstudio",
@@ -4688,36 +3080,12 @@
   "size": 120948
  },
  {
-  "key": "animals/frog_free_model",
-  "title": "Frog - Free Model",
-  "by": "madtrollstudio",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/R8nvw5DskS",
-  "size": 155976
- },
- {
   "key": "animals/horse_free_model",
   "title": "Horse - Free Model",
   "by": "madtrollstudio",
   "lic": "CC-BY 3.0",
   "url": "https://poly.pizza/m/axOTJ2y8TN",
   "size": 142008
- },
- {
-  "key": "animals/bird_free_model_b",
-  "title": "Bird - Free Model",
-  "by": "madtrollstudio",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/h5IzAUdltz",
-  "size": 193764
- },
- {
-  "key": "animals/shark_free_model",
-  "title": "Shark - Free Model",
-  "by": "madtrollstudio",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/Xxjjl8U8o8",
-  "size": 169316
  },
  {
   "key": "animals/cow_free_model",
@@ -4734,14 +3102,6 @@
   "lic": "CC-BY 3.0",
   "url": "https://poly.pizza/m/v1EBa7VQ7S",
   "size": 161836
- },
- {
-  "key": "animals/dog_free_model_b_b",
-  "title": "Dog - Free Model",
-  "by": "madtrollstudio",
-  "lic": "CC-BY 3.0",
-  "url": "https://poly.pizza/m/H2SkxSJCfI",
-  "size": 189460
  },
  {
   "key": "animals/bizon_free_model",
@@ -4768,292 +3128,12 @@
   "size": 207932
  },
  {
-  "key": "monsters/mushnub_free_model",
-  "title": "Mushnub - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/LWKmS30Xxl",
-  "size": 67900
- },
- {
-  "key": "monsters/pink_slime_free_model",
-  "title": "Pink Slime - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/AyP8sQmDLh",
-  "size": 62652
- },
- {
-  "key": "monsters/green_blob_free_model",
-  "title": "Green Blob - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/y4kJh8EeYS",
-  "size": 74812
- },
- {
-  "key": "monsters/orc_enemy_free_model",
-  "title": "Orc Enemy - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/Q3z8ZX4kUy",
-  "size": 146420
- },
- {
-  "key": "monsters/ninja_free_model",
-  "title": "Ninja - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/mCNoqcqpvC",
-  "size": 117740
- },
- {
-  "key": "monsters/cat_free_model",
-  "title": "Cat - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/2f54vbV0In",
-  "size": 111948
- },
- {
-  "key": "monsters/pigeon_free_model",
-  "title": "Pigeon - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/9NGlBTpDEr",
-  "size": 110548
- },
- {
-  "key": "monsters/chicken_free_model",
-  "title": "Chicken - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/ineV9pU5VL",
-  "size": 140112
- },
- {
-  "key": "monsters/cactoro_free_model",
-  "title": "Cactoro - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/66CYX5UhRK",
-  "size": 140668
- },
- {
-  "key": "monsters/alien_free_model",
-  "title": "Alien - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/sUTLXji0aL",
-  "size": 125076
- },
- {
-  "key": "monsters/mushnub_evolved_free_model",
-  "title": "Mushnub Evolved - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/0SZyA6MV51",
-  "size": 149516
- },
- {
-  "key": "monsters/yeti_free_model",
-  "title": "Yeti - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/S1E7idPFhe",
-  "size": 111224
- },
- {
-  "key": "monsters/wizard_free_model",
-  "title": "Wizard - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/o87Upt5uHX",
-  "size": 89464
- },
- {
-  "key": "monsters/fish_free_model",
-  "title": "Fish - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/7V4gaDMQV8",
-  "size": 156880
- },
- {
-  "key": "monsters/birb_free_model",
-  "title": "Birb - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/gZ2ExU9OAB",
-  "size": 170792
- },
- {
-  "key": "monsters/green_spiky_blob_free_model",
-  "title": "Green Spiky Blob - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/IoWG5F9WUc",
-  "size": 185820
- },
- {
-  "key": "monsters/glub_free_model",
-  "title": "Glub - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/x59pqJscry",
-  "size": 148332
- },
- {
-  "key": "monsters/armabee_free_model",
-  "title": "Armabee - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/42djT5zJnx",
-  "size": 143736
- },
- {
-  "key": "monsters/alpaking_free_model",
-  "title": "Alpaking - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/AQ8zbFoDln",
-  "size": 147164
- },
- {
-  "key": "monsters/armabee_evolved_free_model",
-  "title": "Armabee Evolved - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/GcttdvsqsQ",
-  "size": 183812
- },
- {
-  "key": "monsters/goleling_evolved_free_model",
-  "title": "Goleling Evolved - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/iHEuXiH6Aj",
-  "size": 310836
- },
- {
-  "key": "monsters/dragon_free_model",
-  "title": "Dragon - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/3rUm1cN3yp",
-  "size": 251540
- },
- {
-  "key": "monsters/goleling_free_model",
-  "title": "Goleling - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/71gomWolax",
-  "size": 217332
- },
- {
-  "key": "monsters/glub_evolved_free_model",
-  "title": "Glub Evolved - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/Z9lddNpM1M",
-  "size": 211496
- },
- {
-  "key": "monsters/alpaking_evolved_free_model",
-  "title": "Alpaking Evolved - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/UdJudob66v",
-  "size": 248012
- },
- {
-  "key": "monsters/ghost_free_model",
-  "title": "Ghost - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/Iip30bDHmu",
-  "size": 203360
- },
- {
-  "key": "monsters/hywirl_free_model",
-  "title": "Hywirl - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/zjr7CmWGER",
-  "size": 200868
- },
- {
-  "key": "monsters/tribal_free_model",
-  "title": "Tribal - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/t91lDHaqRW",
-  "size": 330208
- },
- {
-  "key": "monsters/demon_free_model",
-  "title": "Demon - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/Mo2ky6vkf8",
-  "size": 321140
- },
- {
-  "key": "monsters/squidle_free_model",
-  "title": "Squidle - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/54QyRcsogk",
-  "size": 308816
- },
- {
-  "key": "monsters/frog_free_model",
-  "title": "Frog - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/37wofOCOzG",
-  "size": 379892
- },
- {
-  "key": "monsters/cactoro_free_model_b",
-  "title": "Cactoro - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/IGn9lhdama",
-  "size": 471704
- },
- {
   "key": "monsters/ninja_free_model_b",
   "title": "Ninja - Free Model",
   "by": "Quaternius",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/xGYmeDpfTu",
   "size": 457204
- },
- {
-  "key": "monsters/monkroose_free_model",
-  "title": "Monkroose - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/j4rVPvxyLg",
-  "size": 421164
- },
- {
-  "key": "monsters/dino_free_model",
-  "title": "Dino - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/wuerCFCWNR",
-  "size": 404176
- },
- {
-  "key": "monsters/mushroom_king_free_model",
-  "title": "Mushroom King - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/grnFTziU8u",
-  "size": 444228
  },
  {
   "key": "monsters/alien_free_model_b",
@@ -5070,14 +3150,6 @@
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/S7jYW6Amye",
   "size": 439488
- },
- {
-  "key": "monsters/fish_free_model_b",
-  "title": "Fish - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/ypEYhCImAB",
-  "size": 461616
  },
  {
   "key": "monsters/yeti_free_model_b",
@@ -5104,52 +3176,12 @@
   "size": 512984
  },
  {
-  "key": "monsters/bunny_free_model",
-  "title": "Bunny - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/irZjWFARyl",
-  "size": 538360
- },
- {
-  "key": "guns/bipod_free_model",
-  "title": "Bipod - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/Ugy8tjR3Ju",
-  "size": 27300
- },
- {
-  "key": "guns/bayonet_free_model",
-  "title": "Bayonet - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/D81P2smzCy",
-  "size": 17448
- },
- {
-  "key": "guns/scope_free_model",
-  "title": "Scope - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/Y9DSevnvGq",
-  "size": 28488
- },
- {
   "key": "guns/shotgun_free_model",
   "title": "Shotgun - Free Model",
   "by": "Quaternius",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/DcNE0HVdW8",
   "size": 43684
- },
- {
-  "key": "guns/tripod_free_model",
-  "title": "Tripod - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/sVTKUSz3m2",
-  "size": 36396
  },
  {
   "key": "guns/assault_rifle_free_model",
@@ -5200,28 +3232,12 @@
   "size": 79648
  },
  {
-  "key": "guns/shotgun_sawed_off_free_model",
-  "title": "Shotgun Sawed Off - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/29FXKu7G91",
-  "size": 55864
- },
- {
   "key": "guns/revolver_free_model_b",
   "title": "Revolver - Free Model",
   "by": "Quaternius",
   "lic": "CC0 1.0",
   "url": "https://poly.pizza/m/XrnLUz6kQj",
   "size": 73808
- },
- {
-  "key": "guns/revolver_free_model_b_b",
-  "title": "Revolver - Free Model",
-  "by": "Quaternius",
-  "lic": "CC0 1.0",
-  "url": "https://poly.pizza/m/E7IaG9TptR",
-  "size": 58204
  },
  {
   "key": "guns/shotgun_free_model_b",

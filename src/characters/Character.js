@@ -162,7 +162,7 @@ export class Character {
   eye(out) { const h = this.stance === 2 ? 0.34 : this.stance === 1 ? 1.12 : 1.62; return out.set(this.pos.x, this.pos.y + h, this.pos.z); }
   // bullet hit volumes: [x,y,z,r,zone] x4
   _toolVisual(S, st) {
-    const want = this.meleeItem && st.weapon === 'none' && this.mode === 'ground' && this.alive ? this.meleeItem : null; const hand = S.b && (S.b.wrR || S.b.laR);
+    const want = this.meleeItem && (st.weapon === 'none' || this.toolSwingT > 0) && this.mode === 'ground' && this.alive ? this.meleeItem : null; const hand = S.b && (S.b.wrR || S.b.laR);
     if (this._toolId !== want) { if (this._tool) { this._tool.parent && this._tool.parent.remove(this._tool); this._tool = null; } this._toolId = want;
       const key = want && ITEMS[want].model; if (key && hand && this.G.assets && this.G.assets.has(key)) { // the tool models stand upright (handle along +Y); the hand bone's +Y runs down the forearm, so the handle sits in the fist and the head hangs below
         const f = this.G.assets.fitted(key, { height: want === 'knife' ? 0.3 : want === 'shovel' ? 1.0 : 0.8 }); const g = new THREE.Group(); g.add(f); f.position.set(0, -0.05, 0); this._tool = g; hand.add(g); } }
@@ -191,7 +191,7 @@ export class Character {
     S.group.position.copy(this.pos); S.group.rotation.y = visYaw === undefined ? this.yaw : visYaw;
     const d = this.def(); let mode = this.mode === 'ground' ? (this.swim ? 'swim' : this.grounded ? 'ground' : 'air') : this.mode;
     const st = this._st || (this._st = {}); st.dt = dt; st.speed = mode === 'ground' || mode === 'swim' ? this.speedNow : 0; st.moveAng = this.moveAng; st.stance = this.stance; st.aiming = this.aiming || this.aimHold > 0; st.pitch = this.pitch; st.mode = mode;
-    st.weapon = !d || this.heal ? 'none' : d.hold; st.reload = this.reloadT; st.sprint = this.sprinting; st.fired = this.fired; st.hurt = this.hurtFlag; st.handL = this.handL; st.handR = this.handR; st.bank = this.jetBank || 0; st.bash = this.bashFlag; st.vy = this.vel.y; st.hs = Math.hypot(this.vel.x, this.vel.z); this.bashFlag = false;
+    st.weapon = !d || this.heal || this.toolSwingT > 0 ? 'none' : d.hold; if (this.toolSwingT > 0) this.toolSwingT -= dt; // a tool swing lowers the gun for its duration st.reload = this.reloadT; st.sprint = this.sprinting; st.fired = this.fired; st.hurt = this.hurtFlag; st.handL = this.handL; st.handR = this.handR; st.bank = this.jetBank || 0; st.bash = this.bashFlag; st.vy = this.vel.y; st.hs = Math.hypot(this.vel.x, this.vel.z); this.bashFlag = false;
     S.setChute(mode === 'chute'); S.animate(st); if (this.isPlayer) this._toolVisual(S, st); this.fired = false; this.hurtFlag = false; if (this.aimHold > 0) this.aimHold -= dt;
   }
 }

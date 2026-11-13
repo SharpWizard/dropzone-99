@@ -143,6 +143,7 @@ export class Vegetation {
     const inst = (geo, mat, list, shadow, tilt) => {
       const im = new THREE.InstancedMesh(geo, mat, list.length);
       list.forEach((t, i) => { e.set(tilt ? Math.sin(t[4] * 7) * tilt : 0, t[4], tilt ? Math.cos(t[4] * 5) * tilt : 0); qt.setFromEuler(e); v.set(t[0], t[1], t[2]); sc.setScalar(t[3]); m4.compose(v, qt, sc); im.setMatrixAt(i, m4); const hv = Math.sin(t[4] * 12.9898 + t[0] * 0.37) * 0.5 + 0.5; if (t[6] !== undefined) im.setColorAt(i, col.set(t[6])); else im.setColorAt(i, col.setRGB(t[5] * (0.86 + hv * 0.24), t[5], t[5] * (0.78 + (1 - hv) * 0.26))); });
+      if (mat.userData.depthMat) im.customDepthMaterial = mat.userData.depthMat;
       im.castShadow = shadow; im.receiveShadow = true; im.matrixAutoUpdate = false; im.computeBoundingSphere(); this.group.add(im); return im;
     };
     this.count = 0;
@@ -205,7 +206,7 @@ export class Vegetation {
       // the per-plant numbers (height, sway, flutter) are uniforms, not baked into the source, so every plant shares one
       // shader program instead of compiling its own (that used to mean hundreds of programs and long mid-game freezes)
       const prev = m.onBeforeCompile, pk = m.customProgramCacheKey, uWind = { value: new THREE.Vector3(1 / Math.max(0.01, H), amp, flut) };
-      m.onBeforeCompile = (sh, r) => { if (prev) prev.call(m, sh, r); sh.uniforms.uTime = gfx.uTime; sh.uniforms.uWind = uWind;
+      const sway = (sh) => { sh.uniforms.uTime = gfx.uTime; sh.uniforms.uWind = uWind;
         sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nuniform float uTime; uniform vec3 uWind;').replace('#include <begin_vertex>', `#include <begin_vertex>
         #ifdef USE_INSTANCING
           vec3 wip = instanceMatrix[3].xyz; float wph = wip.x * 0.13 + wip.z * 0.17;
@@ -215,7 +216,11 @@ export class Vegetation {
           transformed.z += cos(uTime * 0.85 + wph * 1.3) * wb * uWind.y * 0.6 * wg;
           transformed += vec3(sin(uTime * 3.1 + position.z * 1.9 + wph), sin(uTime * 2.7 + position.x * 1.7) * 0.5, cos(uTime * 3.4 + position.x * 2.3 + wph)) * uWind.z * whk;
         #endif`); };
-      m.customProgramCacheKey = () => (pk ? pk.call(m) : '') + '_wind'; m.needsUpdate = true; }
+      m.onBeforeCompile = (sh, r) => { if (prev) prev.call(m, sh, r); sway(sh); };
+      m.customProgramCacheKey = () => (pk ? pk.call(m) : '') + '_wind'; m.needsUpdate = true;
+      // the shadow pass draws with this depth material, so shadows sway with the plant (leaf cut-outs kept via map + alphaTest)
+      const dm = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking, map: m.alphaTest > 0 ? m.map : null, alphaTest: m.alphaTest || 0, side: m.side });
+      dm.onBeforeCompile = sway; dm.customProgramCacheKey = () => '_windDepth'; m.userData.depthMat = dm; }
     return n;
   }
 
@@ -260,6 +265,7 @@ export class Vegetation {
     const m4 = new THREE.Matrix4(), qt = new THREE.Quaternion(), e = new THREE.Euler(), v = new THREE.Vector3(), sc = new THREE.Vector3(), col = new THREE.Color();
     const inst = (parts, list, shadow, tiltK = 0) => parts.map(p => { const im = new THREE.InstancedMesh(p.geo, p.mat, list.length);
       list.forEach((t, i) => { e.set(tiltK ? Math.sin(t[4] * 7) * tiltK : 0, t[4], tiltK ? Math.cos(t[4] * 5) * tiltK : 0); qt.setFromEuler(e); v.set(t[0], t[1], t[2]); sc.setScalar(t[3]); m4.compose(v, qt, sc); im.setMatrixAt(i, m4); im.setColorAt(i, col.setScalar(t[5])); });
+      if (p.mat.userData.depthMat) im.customDepthMaterial = p.mat.userData.depthMat;
       im.castShadow = shadow; im.receiveShadow = true; im.matrixAutoUpdate = false; im.computeBoundingSphere(); this.group.add(im); return im; });
     let seed = 7; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
     const pick = (set) => set[Math.floor(rnd() * set.length)];

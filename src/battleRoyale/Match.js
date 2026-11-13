@@ -6,6 +6,14 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { RNG, clamp, lerp } from '../utils/math.js';
 
 export const TOTAL = 99;
+// campaign: [title, briefing] per mission; the mission reached is saved so the menu can continue from it
+export const STAGES = [null, ['INTO THE RUINS', 'Find the survivors and lead them to the Civilian Survival Zone'], ['THE RESISTANCE BUNKER', 'Escort complete. Reach the bunker in the north-east and hold it'],
+  ['THE RESISTANCE AWAKENS', 'Armoury unlocked: RAVAGER-762, armour and medical supplies. Wipe out the 3 Swarm patrols closing on the bunker'], ['BURN THE ALIEN HIVES', 'Destroy the three guarded hive cores in the Industrial Warzone: stand beside each one'],
+  ['THE TITAN WALKER', 'A war machine and its escort are walking the Dead Sector. Destroy it'], ['THE FINAL ASSAULT', 'Breach the Citadel gate, then shut down the core terminal at its rear']];
+const CP_KEY = 'dz.campaign';
+export function loadCheckpoint() { try { const c = JSON.parse(localStorage.getItem(CP_KEY) || 'null'); return c && c.stage > 1 && c.stage <= 6 ? c : null; } catch (e) { return null; } }
+function saveCheckpoint(stage) { try { localStorage.setItem(CP_KEY, JSON.stringify({ stage, t: Date.now() })); } catch (e) { /* storage blocked */ } }
+function clearCheckpoint() { try { localStorage.removeItem(CP_KEY); } catch (e) { /* storage blocked */ } }
 export const PET_KILLS = 3; // kills needed to earn a companion
 // wait (s), shrink (s), radius factor of previous, damage per second
 const PHASES = [[95, 75, 0.5, 0.6], [80, 55, 0.52, 1], [65, 45, 0.52, 2], [50, 40, 0.5, 4], [40, 32, 0.45, 7], [30, 26, 0.4, 10], [20, 22, 0.001, 14]];
@@ -73,7 +81,7 @@ export class Match {
     this.beacon = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.7, 400, 12, 1, true), new THREE.MeshBasicMaterial({ color: new THREE.Color(0.35, 1.8, 2.6), transparent: true, opacity: 0.3, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false })); this.beacon.visible = false; this.beacon.renderOrder = 5; G.gfx.scene.add(this.beacon); this.obj = []; this.objT = 0;
     this.time = 0; this.alive = TOTAL; this.canJump = false; this.forceJump = false; this.endT = -1; this.result = null; }
 
-  start() {
+  start(opts = {}) {
     const G = this.G, R = this.R = new RNG((Date.now() % 1e9) | 0); this.state = 'plane'; this.mode = G.settings.d.mode; this.win = false; this.time = 0; this.endT = -1; this.result = null; this.canJump = false; this.forceJump = false; this.landed = false;
     G.combat.reset(); G.fx.clear(); G.loot.clear(); G.loot.spawnAll(R.int(1, 1e9)); if (G.animals) G.animals.spawn(); G.vehicles.reset(R);
     G.player.reset(); G.player.outfit = G.settings.d.outfit; G.player.name = G.settings.d.name || 'YOU'; if (G.player.soldier) G.player.soldier.setOutfit(G.player.outfit); G.ai.reset();
@@ -84,7 +92,7 @@ export class Match {
     { const L = G.world.locations.find(l => l.id === 'river'); G.mission = { need: 6, got: 0, won: false, stage: 1 }; this.seen = new Set(); const IRON = G.world.locations.find(l => l.id === 'iron');
       G.ai.bots.slice(0, 18).forEach((b, i) => { const L0 = L; { /* six hide by the river, the rest are caught in the streets of Iron City */ } b.civ = true; b.modelKey = PEOPLE_KEYS[(i * 5) % PEOPLE_KEYS.length]; if (b.soldier) { G.gfx.scene.remove(b.soldier.group); b.soldier = null; } b.weapons = [null, null, null]; b.cur = -1; b._wkey = ''; b.bag = {}; b.drop = null; b.mode = 'ground'; b.grounded = true; b.speedNow = 0; b.rescueT = 0; b.home = null; b.goal = null;
         const LL = i < 6 ? L0 : IRON; const a = i * 2.4 + R.f(), r = R.range(10, LL.r * 0.55), x = LL.x + Math.cos(a) * r, z = LL.z + Math.sin(a) * r; const f = G.nav.nearestFree(x, z, 20) || { x, z }; b.pos.set(f.x, G.world.heightAt(f.x, f.z), f.z); b.yaw = a; });
-      G.ui.banner('MISSION 1 · INTO THE RUINS', 'Rescue 6 survivors: follow the cyan beacon and stand beside them');
+      G.ui.banner('MISSION 1 · INTO THE RUINS', 'Find the survivors and lead them to the Civilian Survival Zone');
     }
     this.alive = G.chars.reduce((n, c) => n + (c.civ ? 0 : 1), 0);
     // flight path across the island
@@ -107,6 +115,7 @@ export class Match {
       b.jumpS = clamp(s - R.range(0, 260), 300, this.len - 300); b.drop = { tx, tz }; b.mode = 'plane';
     }
     if (G.activities) G.activities.reset(); if (G.career) G.career.applyLoadout(G.player);
+    if (opts.stage > 1 && !this.br()) this._enterStage(opts.stage, true); // continue the campaign from a checkpoint
     G.ui.onMatchStart();
   }
 
@@ -116,9 +125,11 @@ export class Match {
     const G = this.G, M = G.mission, P = G.player, out = []; if (!M || M.won || this.state === 'idle' || this.state === 'over' || !P.alive) return out;
     const pick = (list) => { let b = null, bd = 1e18; for (const o of list) { const d = (o.x - P.pos.x) ** 2 + (o.z - P.pos.z) ** 2; if (d < bd) { bd = d; b = o; } } if (b) b.main = true; return list; };
     const air = (b) => b.mode === 'plane' || b.mode === 'chute' || b.mode === 'fall';
-    if (M.stage === 1) { for (const b of G.ai.bots) if (b.civ && b.alive && !b.rescued) out.push({ x: b.pos.x, z: b.pos.z, kind: 'civ' }); return pick(out); }
+    if (M.stage === 1) { let fol = 0; for (const b of G.ai.bots) if (b.civ && b.alive && !b.rescued) { if (b.follow) fol++; else out.push({ x: b.pos.x, z: b.pos.z, kind: 'civ' }); } this.following = fol;
+      const L = G.world.locations.find(l => l.id === 'river'), zone = { x: L.x, z: L.z, kind: 'goal' }; // lead them home once enough are following (or none are left to find)
+      if (fol && (M.got + fol >= M.need || !out.length || fol >= 3)) { zone.main = true; return [...out, zone]; } if (fol) out.push(zone); pick(out.filter(o => o.kind === 'civ')); return out; }
     if (M.stage === 2) { const B = G.world.locations.find(l => l.id === 'base'); return [{ x: B.x, z: B.z, kind: 'goal', main: true }]; }
-    if (M.stage === 3) { const foes = []; for (const b of G.ai.bots) if (!b.civ && b.alive && !air(b)) foes.push({ x: b.pos.x, z: b.pos.z, kind: 'foe' }); const l = pick(foes).filter(o => o.main); return l; }
+    if (M.stage === 3 && M.patrols) { for (const q of M.patrols) for (const b of q) if (b.alive) out.push({ x: b.pos.x, z: b.pos.z, kind: 'foe' }); return pick(out); }
     if (M.stage === 4 && M.targets) { for (const t of M.targets) if (!t.done) out.push({ x: t.x, z: t.z, kind: 'goal' }); return pick(out); }
     if (M.stage === 5 && M.boss && M.boss.alive) return [{ x: M.boss.pos.x, z: M.boss.pos.z, kind: 'foe', main: true }];
     if (M.stage === 6 && M.points) { const t = M.points.find(q => !q.done); return t ? [{ x: t.x, z: t.z, kind: 'goal', main: true }] : out; }
@@ -136,12 +147,43 @@ export class Match {
       const r = lw * (o.main ? 6 : 4.5); ctx.fillStyle = o.kind === 'foe' ? '#ff5a4a' : '#5fe6ff'; ctx.strokeStyle = '#fff'; ctx.lineWidth = lw * 1.2;
       ctx.beginPath(); ctx.moveTo(x, z - r); ctx.lineTo(x + r, z); ctx.lineTo(x, z + r); ctx.lineTo(x - r, z); ctx.closePath(); if (o.main) ctx.fill(); ctx.stroke(); }
   }
+  // ---- campaign stages: one setup per mission, used both when a mission is reached and when resuming a checkpoint
+  _enterStage(n, resume = false) {
+    const G = this.G, M = G.mission; M.stage = n;
+    if (n >= 2) M.got = Math.max(M.got, M.need);
+    if (n === 3 || (resume && n > 3)) this._armoury(); // the bunker's armoury equips the player
+    if (n === 3) { // three Swarm patrols move in around the bunker
+      const B = G.world.locations.find(l => l.id === 'base'); M.patrols = []; M.cleared = 0;
+      for (let k = 0; k < 3; k++) { const a = k / 3 * 6.283 + 0.9, r = 110 + k * 25; M.patrols.push(this._recruit(3, B.x + Math.cos(a) * r, B.z + Math.sin(a) * r)); } }
+    if (n === 4) { M.done = 0; const L = G.world.locations.find(l => l.id === 'steel'); M.targets = [];
+      for (let i = 0; i < 3; i++) { const a = i / 3 * 6.283 + 0.6, r = L.r * 0.45, x0 = L.x + Math.cos(a) * r, z0 = L.z + Math.sin(a) * r; const f = G.nav.nearestFree(x0, z0, 20) || { x: x0, z: z0 }; const y = G.world.heightAt(f.x, f.z);
+        const mesh = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.4, 3.2, 14), new THREE.MeshBasicMaterial({ color: 0xff3a3a, toneMapped: false })); mesh.position.set(f.x, y + 1.6, f.z); G.gfx.scene.add(mesh);
+        M.targets.push({ x: f.x, z: f.z, mesh, hold: 0, done: false }); this._recruit(2, f.x, f.z, 14); } } // two guards on every core
+    if (n === 5) { const L = G.world.locations.find(l => l.id === 'dust'); const boss = this._recruit(1, L.x, L.z, 4)[0] || G.ai.bots.find(b => !b.civ && b.alive) || G.ai.bots[0];
+      boss.civ = false; boss.hp = 500; boss.maxHp = 500; boss.boss = true; boss.weapons = [{ id: 'ravager', ammo: 30, scope: 0, supp: false, mode: 0 }, null, null]; boss.cur = 0; boss._wkey = ''; boss.bag['ammo_762'] = 240; M.boss = boss;
+      this._recruit(3, L.x, L.z, 20); } // and its escort
+    if (n === 6) { const C = G.world.locations.find(l => l.id === 'peak'); M.points = [];
+      for (const sp of [{ name: 'BREACH THE GATE', need: 4, a: 0 }, { name: 'SHUT DOWN THE CORE TERMINAL', need: 6, a: Math.PI }]) { const x0 = C.x + Math.cos(sp.a) * 28, z0 = C.z + Math.sin(sp.a) * 28; const f = G.nav.nearestFree(x0, z0, 12) || { x: x0, z: z0 }; const y = G.world.heightAt(f.x, f.z);
+        const mesh = new THREE.Mesh(new THREE.CylinderGeometry(1.3, 1.3, 2.4, 14), new THREE.MeshBasicMaterial({ color: 0xb04dff, toneMapped: false })); mesh.position.set(f.x, y + 1.2, f.z); G.gfx.scene.add(mesh);
+        M.points.push({ name: sp.name, need: sp.need, x: f.x, z: f.z, hold: 0, done: false, mesh }); this._recruit(2, f.x, f.z, 12); } M.pi = 0; }
+    const S = STAGES[n]; G.ui.banner((resume ? 'CHECKPOINT · ' : '') + 'MISSION ' + n + ' · ' + S[0], S[1]); if (!resume) { G.audio.ui('win'); this._celebrate(); }
+    if (!this.br()) saveCheckpoint(n);
+  }
+  _armoury() { const P = this.G.player, IT = Object.keys(ITEMS), best = (type) => IT.filter(k => ITEMS[k].type === type).sort((a, b) => (ITEMS[b].lvl || 0) - (ITEMS[a].lvl || 0))[0];
+    P.give({ id: 'ravager' }); for (const t of ['helmet', 'vest']) { const k = best(t); if (k) P.give({ id: k }); } for (const k of IT.filter(k => ITEMS[k].type === 'heal').slice(0, 2)) P.give({ id: k }); P.bag.ammo_762 = (P.bag.ammo_762 || 0) + 90; }
+  // pull n hostiles (the ones furthest from the player, so no fight in progress is disturbed) to a spot on the map
+  _recruit(n, x, z, spread = 10) {
+    const G = this.G, P = G.player, out = []; const pool = G.ai.bots.filter(b => !b.civ && b.alive && !b.boss).sort((a, b) => b.pos.distanceToSquared(P.pos) - a.pos.distanceToSquared(P.pos));
+    for (const b of pool) { if (out.length >= n) break; const a = Math.random() * 6.283, r = spread * (0.4 + Math.random() * 0.6); const f = G.nav.nearestFree(x + Math.cos(a) * r, z + Math.sin(a) * r, 20); if (!f || !G.nav.isLandFree(f.x, f.z)) continue;
+      b.pos.set(f.x, G.world.heightAt(f.x, f.z), f.z); b.mode = 'ground'; b.grounded = true; b.drop = null; b.goal = null; b.target = null; b.state = 'roam'; b.home = { x: f.x, z: f.z }; if (b.cur < 0 && b.gearUp) b.gearUp(2); out.push(b); }
+    return out;
+  }
   br() { return (this.mode || this.G.settings.d.mode) === 'BATTLE ROYALE'; }
   _missionUI() {
     const G = this.G, M = G.mission; let el = document.getElementById('mission');
     if (!el) { el = document.createElement('div'); el.id = 'mission'; el.style.cssText = 'position:fixed;left:20px;top:92px;font:600 12px/1.3 system-ui,sans-serif;letter-spacing:.12em;color:#9ff4ff;text-shadow:0 0 8px rgba(95,230,255,.5);pointer-events:none;z-index:4'; document.body.appendChild(el); }
-    el.textContent = M.won ? 'MISSION COMPLETE' : M.stage === 6 && M.points ? (function () { const t = M.points.find(q => !q.done); return t ? 'MISSION 6 · THE FINAL ASSAULT — ' + t.name + ' ' + Math.min(t.need, t.hold).toFixed(1) + ' / ' + t.need : 'MISSION COMPLETE'; })() : M.stage === 5 && M.boss ? 'MISSION 5 · THE TITAN WALKER — HULL ' + Math.max(0, Math.round((M.boss.hp / M.boss.maxHp) * 100)) + '%' : M.stage === 4 ? 'MISSION 4 · BURN THE ALIEN HIVES — REACTORS ' + (M.done || 0) + ' / 3' : M.stage === 3 ? 'MISSION 3 · THE RESISTANCE AWAKENS — PATROLS ' + Math.max(0, (G.player.kills || 0) - M.killBase) + ' / 3' : M.stage === 2 ? 'MISSION 2 · THE RESISTANCE BUNKER' + (M.hold ? ' — HOLD ' + Math.max(0, 3 - M.hold).toFixed(1) : '') : 'MISSION 1 · INTO THE RUINS — SURVIVORS ' + M.got + ' / ' + M.need;
-    if (!M.won && this.objDist >= 0) el.textContent += '  ·  ' + Math.round(this.objDist) + ' M';
+    el.textContent = M.won ? 'MISSION COMPLETE' : M.stage === 6 && M.points ? (function () { const t = M.points.find(q => !q.done); return t ? 'MISSION 6 · THE FINAL ASSAULT — ' + t.name + ' ' + Math.min(t.need, t.hold).toFixed(1) + ' / ' + t.need : 'MISSION COMPLETE'; })() : M.stage === 5 && M.boss ? 'MISSION 5 · THE TITAN WALKER — HULL ' + Math.max(0, Math.round((M.boss.hp / M.boss.maxHp) * 100)) + '%' : M.stage === 4 ? 'MISSION 4 · BURN THE ALIEN HIVES — REACTORS ' + (M.done || 0) + ' / 3' : M.stage === 3 ? 'MISSION 3 · THE RESISTANCE AWAKENS — PATROLS ' + (M.cleared || 0) + ' / ' + (M.patrols ? M.patrols.length : 3) : M.stage === 2 ? 'MISSION 2 · THE RESISTANCE BUNKER' + (M.hold ? ' — HOLD ' + Math.max(0, 3 - M.hold).toFixed(1) : '') : 'MISSION 1 · INTO THE RUINS — SAVED ' + M.got + ' / ' + M.need + (this.following ? ' · FOLLOWING ' + this.following : '');
+    if (!M.won && this.objDist >= 15) el.textContent += '  ·  ' + Math.round(this.objDist) + ' M';
     el.style.display = G.state === 'play' || G.state === 'paused' ? 'block' : 'none';
   }
   _celebrate() { const G = this.G, p = G.player.pos; G.fx.burst(p.x, p.y + 7, p.z); G.player.shakeCam(0.5); G.ui.shakeHud(1); }
@@ -173,38 +215,19 @@ export class Match {
       if (L && !this.seen.has(L.id)) { this.seen.add(L.id); G.player.points = (G.player.points || 0) + 50; G.fx.sparkle(G.player.pos.x, G.player.pos.y + 1, G.player.pos.z, 1, 0.8, 0.3, 22); if (G.career) G.career.discover(L.id); G.ui.banner('DISCOVERED · ' + L.name, '+50 POINTS  ·  ' + this.seen.size + ' / ' + G.world.locations.length + ' LOCATIONS'); G.audio.ui('click'); } }
     if (G.mission) { const M = G.mission, P = G.player;
       if (M.stage === 1) { this._civT = (this._civT || 0) - dt; if (this._civT <= 0) { this._civT = 1; const left = G.ai.bots.reduce((n, b) => n + (b.civ && b.alive && !b.rescued ? 1 : 0), 0); if (M.got + left < M.need) { M.need = Math.max(1, M.got + left); if (M.got < M.need) G.ui.toast('SURVIVORS LOST · RESCUE THE ' + (M.need - M.got) + ' STILL ALIVE'); } } }
-      if (M.stage === 1 && M.got >= M.need) { M.stage = 2; G.ui.banner('MISSION 2 · THE RESISTANCE BUNKER', 'Escort complete. Reach the bunker in the north-east and hold it'); G.audio.ui('win'); G.match._celebrate(); }
+      if (M.stage === 1 && M.got >= M.need) this._enterStage(2);
       if (M.stage === 2 && !M.won && P.alive && this.state !== 'over' && this.endT < 0) { const B = G.world.locations.find(l => l.id === 'base'); M.dist = Math.hypot(P.pos.x - B.x, P.pos.z - B.z); M.hold = M.dist < 30 ? (M.hold || 0) + dt : 0;
-        if (M.hold > 3) { // bunker secured: the armoury opens and the resistance equips the player
-          M.stage = 3; M.killBase = P.kills || 0; const IT = Object.keys(ITEMS), best = (type) => IT.filter(k => ITEMS[k].type === type).sort((a, b) => (ITEMS[b].lvl || 0) - (ITEMS[a].lvl || 0))[0];
-          P.give({ id: 'ravager' }); for (const t of ['helmet', 'vest']) { const k = best(t); if (k) P.give({ id: k }); } for (const k of IT.filter(k => ITEMS[k].type === 'heal').slice(0, 2)) P.give({ id: k });
-          G.ui.banner('MISSION 3 · THE RESISTANCE AWAKENS', 'Armoury unlocked: RAVAGER-762, armour and medical supplies. Clear 3 Swarm patrols'); G.audio.ui('win'); G.match._celebrate(); } }
-      if (M.stage === 3 && P.alive && (P.kills || 0) - M.killBase >= 3) { // patrols cleared: move on to the factories
-        M.stage = 4; M.done = 0; const L = G.world.locations.find(l => l.id === 'steel'), R = this.R || Math.random; M.targets = [];
-        for (let i = 0; i < 3; i++) { const a = i / 3 * 6.283 + 0.6, r = L.r * 0.45, x0 = L.x + Math.cos(a) * r, z0 = L.z + Math.sin(a) * r; const f = G.nav.nearestFree(x0, z0, 20) || { x: x0, z: z0 }; const y = G.world.heightAt(f.x, f.z);
-          const mesh = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.4, 3.2, 14), new THREE.MeshBasicMaterial({ color: 0xff3a3a, toneMapped: false })); mesh.position.set(f.x, y + 1.6, f.z); G.gfx.scene.add(mesh);
-          M.targets.push({ x: f.x, z: f.z, mesh, hold: 0, done: false }); }
-        G.ui.banner('MISSION 4 · BURN THE ALIEN HIVES', 'Destroy the three hive cores in the Industrial Warzone: stand beside each one'); G.audio.ui('win'); G.match._celebrate(); }
-      if (M.stage === 4 && P.alive && this.state !== 'over' && this.endT < 0 && !M.won) { let progressed = false;
+        if (M.hold > 3) this._enterStage(3); }
+      if (M.stage === 3 && P.alive && M.patrols) { const cleared = M.patrols.filter(q => q.every(b => !b.alive)).length; if (cleared !== M.cleared) { M.cleared = cleared; if (cleared < M.patrols.length) G.ui.toast('PATROL DOWN · ' + cleared + ' / ' + M.patrols.length); } if (cleared >= M.patrols.length) this._enterStage(4); }
+      if (M.stage === 4 && P.alive && this.state !== 'over' && this.endT < 0 && !M.won) {
         for (const t of M.targets) { if (t.done) continue; const d = Math.hypot(P.pos.x - t.x, P.pos.z - t.z); t.hold = d < 5 ? t.hold + dt : 0;
-          if (t.hold > 3) { t.done = true; t.mesh.material.color.set(0x35ff7a); M.done++; progressed = true; G.ui.toast('HIVE CORE DESTROYED · ' + M.done + ' / 3'); } }
-        if (M.done >= 3) { // factories offline: the Titan walker drops into the Dead Sector
-          M.stage = 5; const L = G.world.locations.find(l => l.id === 'dust'); const boss = G.ai.bots.find(b => !b.civ && b.alive) || G.ai.bots[0];
-          const f = G.nav.nearestFree(L.x, L.z, 40) || { x: L.x, z: L.z }; boss.pos.set(f.x, G.world.heightAt(f.x, f.z), f.z); boss.mode = 'ground'; boss.grounded = true; boss.drop = null; boss.goal = null; boss.target = null; boss.civ = false;
-          boss.hp = 500; boss.maxHp = 500; boss.boss = true; boss.weapons = [{ id: 'ravager', ammo: 30, scope: 0, supp: false, mode: 0 }, null, null]; boss.cur = 0; boss._wkey = ''; boss.bag['ammo_762'] = 240; M.boss = boss;
-          G.ui.banner('MISSION 5 · THE TITAN WALKER', 'A war machine is walking the Dead Sector. Destroy it'); G.audio.ui('win'); G.match._celebrate(); } }
-      if (M.stage === 5 && M.boss) { const bo = M.boss; if (bo.soldier) bo.soldier.group.scale.setScalar(3.2);
-        if (!bo.alive && M.stage === 5) { // the Titan is down: the assault on the Citadel begins
-          M.stage = 6; const C = G.world.locations.find(l => l.id === 'peak'); M.points = [];
-          const spots = [{ name: 'BREACH THE GATE', need: 4, a: 0 }, { name: 'SHUT DOWN THE CORE TERMINAL', need: 6, a: Math.PI }];
-          for (const sp of spots) { const x0 = C.x + Math.cos(sp.a) * 28, z0 = C.z + Math.sin(sp.a) * 28; const f = G.nav.nearestFree(x0, z0, 12) || { x: x0, z: z0 }; const y = G.world.heightAt(f.x, f.z);
-            const mesh = new THREE.Mesh(new THREE.CylinderGeometry(1.3, 1.3, 2.4, 14), new THREE.MeshBasicMaterial({ color: 0xb04dff, toneMapped: false })); mesh.position.set(f.x, y + 1.2, f.z); G.gfx.scene.add(mesh);
-            M.points.push({ name: sp.name, need: sp.need, x: f.x, z: f.z, hold: 0, done: false, mesh }); }
-          M.pi = 0; G.ui.banner('MISSION 6 · THE FINAL ASSAULT', 'Breach the Citadel gate, then shut down the core terminal at its rear'); G.audio.ui('win'); G.match._celebrate(); } }
+          if (t.hold > 3) { t.done = true; t.mesh.material.color.set(0x35ff7a); M.done++; G.ui.toast('HIVE CORE DESTROYED · ' + M.done + ' / 3'); } }
+        if (M.done >= 3) this._enterStage(5); }
+      if (M.stage === 5 && M.boss) { const bo = M.boss; if (bo.soldier) bo.soldier.group.scale.setScalar(3.2); if (!bo.alive) this._enterStage(6); }
       if (M.stage === 6 && M.points && P.alive && this.state !== 'over' && this.endT < 0 && !M.won) {
         for (const t of M.points) { if (t.done) continue; const d = Math.hypot(P.pos.x - t.x, P.pos.z - t.z); t.hold = d < 6 ? t.hold + dt : 0;
           if (t.hold > t.need) { t.done = true; t.mesh.material.color.set(0x35ff7a); G.ui.toast(t.name + ' · DONE'); } }
-        if (M.points.every(t => t.done)) { M.won = true; this.win = true; this.endT = 3; G.ui.banner('MISSION COMPLETE', 'The Swarm is broken. The city is free'); G.audio.ui('win'); G.match._celebrate(); } }
+        if (M.points.every(t => t.done)) { M.won = true; this.win = true; this.endT = 3; clearCheckpoint(); G.ui.banner('MISSION COMPLETE', 'The Swarm is broken. The city is free'); G.audio.ui('win'); G.match._celebrate(); } }
       this._missionUI(); }
     // zone damage (1 Hz, staggered per character)
     if (G.zone.active) for (const c of G.chars) { if (!c.alive || c.mode === 'plane' || c.mode === 'chute' || c.mode === 'fall') continue; c.zoneT -= dt; if (c.zoneT <= 0) { c.zoneT = 1; if (G.zone.outside(c.pos.x, c.pos.z)) c.damage(G.zone.dps, null, 'zone', 'zone'); } }

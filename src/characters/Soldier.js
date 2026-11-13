@@ -214,14 +214,8 @@ export class Soldier {
 }
 
 let CHUTE_GEO = null, CHUTE_MAT = null, LINE_MAT = null;
+// procedural canopy (the jetpack is the usual descent rig; this is its fallback)
 export function makeChute(G) {
-  if (G.assets && G.assets.has('vehicles2/parachute')) { // Poly Pizza parachute, with suspension lines to the harness
-    const grp = new THREE.Group(); const f = G.assets.fitted('vehicles2/parachute', { length: 7.4 }); if (f) { f.position.y = 3.3; grp.add(f); }
-    const r = f ? Math.max(f.userData.size.x, f.userData.size.z) * 0.44 : 3; const pts = [];
-    for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2; pts.push(new THREE.Vector3(i % 2 ? 0.2 : -0.2, 1.5, 0), new THREE.Vector3(Math.cos(a) * r, 3.3, Math.sin(a) * r)); }
-    if (!LINE_MAT) LINE_MAT = new THREE.LineBasicMaterial({ color: 0x1a1a1a });
-    grp.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), LINE_MAT)); grp.visible = false; return grp;
-  }
   if (!CHUTE_GEO) {
     const g = new THREE.SphereGeometry(3.4, 16, 5, 0, Math.PI * 2, 0, 1.05); g.scale(1, 0.62, 1); const p = g.attributes.position, c = new Float32Array(p.count * 3), col = new THREE.Color();
     for (let i = 0; i < p.count; i++) { const a = Math.atan2(p.getZ(i), p.getX(i)); const seg = Math.floor((a + Math.PI) / (Math.PI * 2) * 16 + 0.001); col.set(seg % 2 ? 0x596b3a : 0xc8662a); c[i * 3] = col.r; c[i * 3 + 1] = col.g; c[i * 3 + 2] = col.b; }

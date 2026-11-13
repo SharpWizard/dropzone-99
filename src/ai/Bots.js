@@ -42,7 +42,7 @@ export class AI {
     for (let i = 0; i < n; i++) { let name; do { name = this.R.pick(PRE) + this.R.pick(SUF); } while (used.has(name)); used.add(name); const b = new Bot(this.G, i + 1, name, new RNG(this.R.int(1, 1e9))); this.bots.push(b); }
     return this.bots;
   }
-  reset() { for (const b of this.bots) { b.reset(); b.resetAI(); b.hideSoldier(); b.civ = false; b.rescued = false; if (b.boss) { b.boss = false; b.maxHp = 100; } if (b.soldier) b.soldier.group.scale.setScalar(1); } this.queue.length = 0; }
+  reset() { for (const b of this.bots) { b.reset(); b.resetAI(); b.hideSoldier(); b.civ = false; b.rescued = false; b.follow = false; if (b.boss) { b.boss = false; b.maxHp = 100; } if (b.soldier) b.soldier.group.scale.setScalar(1); } this.queue.length = 0; }
 
   // sound event: gunshots, footsteps, explosions
   noise(x, z, radius, src, boom = false) {
@@ -102,8 +102,17 @@ export class AI {
     b.fearT = (b.fearT || 0) - dt; b.scanT = (b.scanT || 0) - dt;
     if (b.scanT <= 0) { b.scanT = 0.35; let th = null, td = 36; for (const o of this.bots) { if (o.civ || !o.alive || o.mode !== 'ground') continue; const q = Math.hypot(o.pos.x - p.x, o.pos.z - p.z); if (q < td) { td = q; th = o; } }
       if (th) { b.fearT = 5; const ax = (p.x - th.pos.x) / (td || 1), az = (p.z - th.pos.z) / (td || 1), j = b.R.range(-0.7, 0.7), cj = Math.cos(j), sj = Math.sin(j); b.goal = { x: p.x + (ax * cj - az * sj) * 16, z: p.z + (az * cj + ax * sj) * 16 }; } }
-    const scared = b.fearT > 0; b.sprinting = scared;
-    if (scared) sp = 6.4;
+    if (b.follow) { // found: stay with the player and walk into the Civilian Survival Zone with them
+      const L = this._safe || (this._safe = G.world.locations.find(l => l.id === 'river'));
+      if (Math.hypot(p.x - L.x, p.z - L.z) < L.r * 0.75) { this._rescue(b); return; }
+      if (!P.alive) b.follow = false;
+      else if (d > 30 && P.mode !== 'plane') { const bx = P.pos.x - Math.sin(P.yaw) * 3, bz = P.pos.z - Math.cos(P.yaw) * 3; const f = G.nav.nearestFree(bx, bz, 8); if (f) { p.x = f.x; p.z = f.z; } b.goal = null; } // catches up
+      else if (d > 3.5) { b.goal = { x: P.pos.x, z: P.pos.z }; sp = d > 9 ? 6 : 3.4; } else { b.goal = null; sp = 0; }
+      b.sprinting = sp > 5; b.fearT = 0;
+    }
+    const scared = !b.follow && b.fearT > 0; if (!b.follow) b.sprinting = scared;
+    if (b.follow) { /* movement chosen above */ }
+    else if (scared) sp = 6.4;
     else if (!(P.alive && d < 16)) { // calm: wander slowly around home
       b.idleT = (b.idleT || 0) - dt;
       if (!b.goal || b.idleT <= 0) { const a = b.R.f() * 6.283, r = b.R.range(2, 8); b.goal = { x: b.home.x + Math.cos(a) * r, z: b.home.z + Math.sin(a) * r }; b.idleT = b.R.range(4, 9); }
@@ -113,7 +122,7 @@ export class AI {
       if (gd > 0.5) { const st = Math.min(gd, sp * dt), nx = p.x + gx / gd * st, nz = p.z + gz / gd * st; if (G.nav.isFree(nx, nz)) { p.x = nx; p.z = nz; b.yaw = Math.atan2(gx, gz); b.speedNow = sp; } else { b.goal = null; b.speedNow = 0; } }
       else { b.goal = null; b.speedNow = 0; } } else b.speedNow = 0;
     p.y = Math.max(G.world.heightAt(p.x, p.z), -1.3); b.grounded = true;
-    if (d < 3.2 && P.alive && P.mode === 'ground') { b.rescueT = (b.rescueT || 0) + dt; if (b.rescueT >= 1.2) this._rescue(b); }
+    if (!b.follow && d < 3.2 && P.alive && P.mode === 'ground') { b.rescueT = (b.rescueT || 0) + dt; if (b.rescueT >= 1.2) { b.follow = true; b.rescueT = 0; G.player.points = (G.player.points || 0) + 25; G.ui.pointsPop(25, 'SURVIVOR FOUND'); G.ui.toast('SURVIVOR FOUND · LEAD THEM TO THE CIVILIAN SURVIVAL ZONE'); G.audio.ui('click'); } }
     else b.rescueT = Math.max(0, (b.rescueT || 0) - dt);
   }
   _rescue(b) {

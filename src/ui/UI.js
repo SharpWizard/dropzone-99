@@ -4,10 +4,10 @@ import { ITEMS, itemName } from '../inventory/Items.js';
 import { ACTIONS, DIFFS } from '../core/Settings.js';
 import { OUTFITS } from '../characters/Soldier.js';
 import { GLB_OUTFITS, SoldierGLB } from '../characters/SoldierGLB.js';
-import { HEROES } from '../characters/Heroes.js';
+import { HEROES, heroIndex } from '../characters/Heroes.js';
 import { PETS } from '../characters/Pet.js';
 import { PRESETS } from '../rendering/Gfx.js';
-import { TOTAL } from '../battleRoyale/Match.js';
+import { TOTAL, STAGES, loadCheckpoint } from '../battleRoyale/Match.js';
 import { fmtTime, clamp, wrapAngle } from '../utils/math.js';
 import { HALF, WORLD } from '../world/WorldData.js';
 
@@ -50,9 +50,13 @@ export class UI {
   showMenu() {
     this.panel = null; this.pan.classList.add('hidden'); this.hud.classList.add('hidden'); this.menu.classList.remove('hidden');
     this.menu.innerHTML = `<div class="m-left"><div class="logo">DROPZONE <b>99</b></div><div class="tag">DROP IN. GEAR UP. OUTLAST THEM ALL.</div><div class="tag" style="max-width:430px;opacity:.75;letter-spacing:.06em;line-height:1.5;text-transform:none;margin-top:6px">${this.G.career ? '<div class="career">RANK <b>' + this.G.career.summary().rank + '</b> · ' + this.G.career.summary().points + ' career pts · ' + this.G.career.summary().next + '</div>' : ''}They fell from the sky and the city went dark. Ninety-nine dropped in to take it back. Explore every street, save who you can, and be the last one standing.</div>
-      <div class="m-btns"><button class="btn big" data-act="start"><span>START GAME</span><em>SOLO · MISSION 1 · RESCUE THE SURVIVORS</em></button><button class="btn" data-act="open" data-arg="character">CHARACTER</button><button class="btn" data-act="open" data-arg="settings">SETTINGS</button><button class="btn" data-act="open" data-arg="howto">HOW TO PLAY</button><button class="btn ghost" data-act="exit">EXIT</button></div></div>
+      <div class="m-btns">${this._startButtons()}<button class="btn" data-act="open" data-arg="character">CHARACTER</button><button class="btn" data-act="open" data-arg="settings">SETTINGS</button><button class="btn" data-act="open" data-arg="howto">HOW TO PLAY</button><button class="btn ghost" data-act="exit">EXIT</button></div></div>
       <div class="m-foot"><span>DROPZONE ISLAND · ${this.G.settings.d.difficulty} · ${this.G.gfx.presetName} GRAPHICS</span><span>v0.1 · WebGL2</span></div>`;
   }
+  // CONTINUE (from the saved mission) + NEW CAMPAIGN, or a single START GAME
+  _startButtons() { const S = this.G.settings.d, br = S.mode === 'BATTLE ROYALE', cp = !br && loadCheckpoint();
+    if (cp) return '<button class="btn big" data-act="continue" data-arg="' + cp.stage + '"><span>CONTINUE</span><em>MISSION ' + cp.stage + ' · ' + STAGES[cp.stage][0] + '</em></button><button class="btn" data-act="start">NEW CAMPAIGN</button>';
+    return '<button class="btn big" data-act="start"><span>START GAME</span><em>' + (br ? 'SOLO · BATTLE ROYALE · LAST ONE STANDING' : 'SOLO · MISSION 1 · ' + STAGES[1][0]) + '</em></button>'; }
   hideMenu() { this.menu.classList.add('hidden'); }
   open(name) {
     const G = this.G, S = G.settings.d; this.panel = name; this.pan.classList.remove('hidden'); this.pan.classList.toggle('clear', name === 'character'); G.input.unlock(); let h = '';
@@ -72,7 +76,7 @@ export class UI {
         <h3>TIPS</h3><ul class="tips"><li>Headshots deal 2.3x. Helmets and vests soak damage until they break.</li><li>Crouching or going prone tightens your spread and makes you harder to spot.</li><li>Gunfire and sprinting draw enemies. A suppressor keeps you quiet.</li><li>Vehicles are fast but loud. Watch the fuel gauge: a jerrycan adds 50% (stand by the vehicle and press ${k('interact')}, or use it from the inventory).</li><li>Bandages heal to 75. Energy drinks regenerate the rest.</li><li>Get 3 kills to earn a flying companion (dragon hurls fireballs, ghost skull fires spectral bolts).</li><li>Jetpack flies like a vehicle: W speed up, S brake, A/D turn, SPACE climb (uses fuel), SHIFT descend. Land anywhere, rooftops included.</li></ul><h3>CREDITS</h3><p class="note">3D models from poly.pizza. CC-BY 3.0: Alex Safayan, Bruno Oliveira, CMHT Oculus, Danni Bittman, Darwin Yamamoto, Francisco Hui, Ignition Labs, J-Toastie, Jakers_H, Jarlan Perez, Jens Kull, Julien Kleber (Juliusprod), Nick Slough, Poly by Google, Quaternius (Witch, Worker and Suit heroes), Zsky, dook, jeremy, madtrollstudio. CC0: CreativeTrio, Kay Lousberg, Kenney, Quaternius. Full list in CREDITS.md.</p></div>
         <div><h3>CONTROLS</h3><div class="keys">${[['Move', k('forward') + k('left') + k('back') + k('right')], ['Look / Shoot / Aim', '<kbd>MOUSE</kbd><kbd>LMB</kbd><kbd>RMB</kbd>'], ['Sprint / Jump', k('sprint') + k('jump')], ['Crouch / Prone', k('crouch') + k('prone')], ['Reload / Fire mode', k('reload') + k('firemode')], ['Interact', k('interact')], ['Weapons', k('slot1') + k('slot2') + k('slot3') + k('slot4')], ['Bandage / Kit / Drink', k('heal1') + k('heal2') + k('heal3')], ['Shoulder / Camera', k('shoulder') + k('camera')], ['Inventory / Map', k('inventory') + k('map')], ['Vehicle', k('forward') + k('back') + ' steer ' + k('left') + k('right') + ' brake ' + k('jump')]].map(([a, b]) => `<div class="krow"><span>${a}</span><div>${b}</div></div>`).join('')}</div></div></div></div>`;
     } else if (name === 'character') {
-      h = `<div class="p-box narrow right">${head('CHARACTER')}<label class="row"><span>Callsign</span><input type="text" id="c-name" maxlength="14" value="${S.name.replace(/"/g, '')}"></label><h3>HERO</h3><div class="heroes">${HEROES.map((h, i) => `<button class="herocard ${i === (S.hero || 0) ? 'on' : ''}" data-act="hero" data-arg="${i}" style="--hc:#${h.accent.toString(16).padStart(6, '0')}"><b>${h.name}</b><span>${h.role}</span><em>${h.blurb}</em></button>`).join('')}</div><h3>COMPANION <small>joins you after 3 kills</small></h3><div class="heroes">${Object.entries(PETS).map(([k, p]) => `<button class="herocard ${k === (S.pet || 'dragon') ? 'on' : ''}" data-act="pet" data-arg="${k}" style="--hc:rgb(${p.halo.map(v => Math.round(v / Math.max(...p.halo) * 255)).join(',')})"><b>${p.name}</b><em>${k === 'dragon' ? 'Hurls fireballs that burst on impact' : 'Fires fast spectral bolts'}</em></button>`).join('')}</div></div>`;
+      h = `<div class="p-box narrow right">${head('CHARACTER')}<label class="row"><span>Callsign</span><input type="text" id="c-name" maxlength="14" value="${S.name.replace(/"/g, '')}"></label><h3>HERO</h3><div class="heroes">${HEROES.map((h, i) => `<button class="herocard ${i === heroIndex(S.hero) ? 'on' : ''}" data-act="hero" data-arg="${h.id}" style="--hc:#${h.accent.toString(16).padStart(6, '0')}"><b>${h.name}</b><span>${h.role}</span><em>${h.blurb}</em></button>`).join('')}</div><h3>COMPANION <small>joins you after 3 kills</small></h3><div class="heroes">${Object.entries(PETS).map(([k, p]) => `<button class="herocard ${k === (S.pet || 'dragon') ? 'on' : ''}" data-act="pet" data-arg="${k}" style="--hc:rgb(${p.halo.map(v => Math.round(v / Math.max(...p.halo) * 255)).join(',')})"><b>${p.name}</b><em>${k === 'dragon' ? 'Hurls fireballs that burst on impact' : 'Fires fast spectral bolts'}</em></button>`).join('')}</div></div>`;
     } else if (name === 'inventory') h = `<div class="p-box wide inv">${head('INVENTORY', 'Left click: use / equip / attach &nbsp;·&nbsp; Right click: drop')}<div class="inv3"><div><h3>VICINITY</h3><div id="i-near" class="ilist"></div></div><div><h3>BACKPACK <small id="i-cap"></small></h3><div class="capbar"><u id="i-capfill"></u></div><div id="i-bag" class="ilist"></div></div><div><h3>LOADOUT</h3><div id="i-load"></div></div></div></div>`;
     else if (name === 'map') h = `<div class="p-box mapbox">${head('DROPZONE ISLAND', 'Click to place a marker')}<canvas id="bigmap" width="760" height="760"></canvas></div>`;
     this.pan.innerHTML = h;
@@ -85,7 +89,7 @@ export class UI {
 
   act(a, arg, btn) {
     const G = this.G, S = G.settings.d;
-    if (a === 'start' || a === 'again') G.startMatch(); else if (a === 'open') { if (arg === 'character') G.setMenuCam(1); this.open(arg); } else if (a === 'close') { if (this.panel && this.panel !== 'pause' && G.state === 'paused') this.open('pause'); else this.close(); }
+    if (a === 'start' || a === 'again') G.startMatch(); else if (a === 'continue') G.startMatch({ stage: +arg }); else if (a === 'open') { if (arg === 'character') G.setMenuCam(1); this.open(arg); } else if (a === 'close') { if (this.panel && this.panel !== 'pause' && G.state === 'paused') this.open('pause'); else this.close(); }
     else if (a === 'quit' || a === 'tomenu') G.toMenu(); else if (a === 'exit') { this.menu.innerHTML = `<div class="m-left"><div class="logo">DROPZONE <b>99</b></div><div class="tag">THANKS FOR PLAYING</div><div class="m-btns"><button class="btn big" data-act="back"><span>RETURN</span></button></div></div>`; }
     else if (a === 'back') this.showMenu();
     else if (a === 'view') { S.view = arg; G.settings.save(); G.player.fpp = arg === 'first'; this.open('settings'); }
@@ -99,7 +103,7 @@ export class UI {
     else if (a === 'bind') { btn.textContent = 'PRESS KEY'; btn.classList.add('on'); G.input.capture = (code) => { if (code !== 'Escape') { S.keys[arg] = code; G.settings.save(); } this.open('settings'); }; }
     else if (a === 'resetkeys') { for (const [k, , c] of ACTIONS) S.keys[k] = c; G.settings.save(); this.open('settings'); }
     else if (a === 'pet') { S.pet = arg; G.settings.save(); if (G.pet && G.pet.unlocked) G.pet.setKind(arg); this.open('character'); }
-    else if (a === 'hero') { S.hero = +arg; G.settings.save(); G.player.setHero(S.hero); this.open('character'); }
+    else if (a === 'hero') { S.hero = arg; G.settings.save(); G.player.setHero(S.hero); this.open('character'); }
     else if (a === 'outfit') { S.outfit = +arg; G.settings.save(); G.player.outfit = S.outfit; if (G.player.soldier) G.player.soldier.setOutfit(S.outfit); this.open('character'); }
     else if (a === 'take') { const it = this._nearItems && this._nearItems[+arg]; if (it && it.alive) G.player.pickup(it); this._inv(); }
     else if (a === 'use') { const p = G.player, d = ITEMS[arg]; if (d.type === 'heal') { p.tryHeal(arg); this.close(); } else if (d.type === 'scope' || d.type === 'supp') { if (!p.attach(arg)) this.toast('CANNOT ATTACH TO THIS WEAPON'); this._inv(); } else if (d.type === 'throw') { p.switchTo(3); this.close(); } else if (d.type === 'fuel') { if (p.refuel()) this._inv(); } }

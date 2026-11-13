@@ -334,6 +334,10 @@ export class Gfx {
       this.sun.position.copy(focus).addScaledVector(this.sunDir, 400); this.sun.target.position.copy(focus);
     }
     if (!this._noDyn) this._dynLOD();
+    // LOW / MEDIUM: shadow maps refresh every other frame. The cascade passes redraw every shadow caster and are a large
+    // share of the CPU frame; a skipped frame samples the previous map with its own matrix, so it stays consistent.
+    const halfShadows = this.presetName === 'LOW' || this.presetName === 'MEDIUM'; r.shadowMap.autoUpdate = !halfShadows;
+    if (halfShadows) { this._shF = (this._shF || 0) + 1; r.shadowMap.needsUpdate = (this._shF & 1) === 0; }
     r.info.reset();
     r.setRenderTarget(this.rtScene); r.render(this.scene, cam);
     const fx = this.fx;
