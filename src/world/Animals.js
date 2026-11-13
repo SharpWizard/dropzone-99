@@ -69,7 +69,7 @@ export class Animals {
     g.add(body); this.group.add(g); const a = { sp, S, g, body, mats, x, z, y: this.G.world.heightAt(x, z), yaw: this.R.f() * 6.28, hp: S.hp, alive: true, state: 'graze', t: this.R.range(1, 6), goal: null, home: home || { x, z }, ph: this.R.f() * 6.28, speed: 0, H: T.H, len: S.len, deadT: 0, atkT: 0, fleeFrom: null, graze: 0 };
     this.list.push(a); return a;
   }
-  clear() { for (const a of this.list) this.group.remove(a.g); this.list.length = 0; this.pending.length = 0; }
+  clear() { for (const a of this.list) { this.group.remove(a.g); a.body.traverse(o => { if (o.isMesh && o.material && o.material.userData.dz) this.G.gfx.unmat(o.material); }); } this.list.length = 0; this.pending.length = 0; }
 
   // sound: gunshots and explosions scare animals within the radius (bears come to investigate instead)
   noise(x, z, radius) { for (const a of this.list) { if (!a.alive) continue; const d = Math.hypot(a.x - x, a.z - z); if (d > radius * 0.8) continue; if (a.S.hunt) { if (d < 60) { a.state = 'hunt'; a.t = 8; } } else { a.state = 'flee'; a.t = this.R.range(5, 9); a.fleeFrom = { x, z }; } } }
@@ -102,7 +102,7 @@ export class Animals {
     for (const a of this.list) {
       const dc = Math.hypot(a.x - cam.x, a.z - cam.z); a.g.visible = dc < 260; if (dc > 320 && a.alive) continue;
       if (!a.alive) { a.deadT += dt; const k = clamp(a.deadT / 0.6, 0, 1); a.body.rotation.z = k * 1.45; a.g.position.y = a.y - Math.max(0, a.deadT - 20) * 0.15; for (const U of a.mats) U.uAmp.value = 0;
-        if (a.deadT > 26) { this.group.remove(a.g); a.removed = true; } continue; }
+        if (a.deadT > 26) { this.group.remove(a.g); a.removed = true; a.body.traverse(o => { if (o.isMesh && o.material && o.material.userData.dz) this.G.gfx.unmat(o.material); }); } continue; }
       const S = a.S, dp = P && P.alive ? Math.hypot(a.x - P.pos.x, a.z - P.pos.z) : 1e9; a.t -= dt; let want = 0, tx = null, tz = null;
       // ---- decide
       if (S.hunt && P && P.alive && P.mode === 'ground' && (a.state === 'hunt' || dp < S.hunt)) { if (a.state !== 'hunt') { a.t = 10; G.audio.roar && G.audio.roar(a.x, a.y + 1, a.z); } a.state = 'hunt'; }

@@ -107,6 +107,7 @@ export class Vegetation {
 
     // ---- placement
     const R = new RNG(4242); const secs = new Map();
+    const packRocks = !!(this.G.assets && this.G.assets.has('foliage/pine_q'));
     const sec = (x, z) => { const k = Math.floor((x + HALF) / SEC) + Math.floor((z + HALF) / SEC) * 64; let s = secs.get(k); if (!s) secs.set(k, s = { cx: (Math.floor((x + HALF) / SEC) + 0.5) * SEC - HALF, cz: (Math.floor((z + HALF) / SEC) + 0.5) * SEC - HALF, oak: [], oak2: [], pine: [], bush: [], rock0: [], rock1: [], rock2: [] }); return s; };
     const forest = world.locations.find(l => l.id === 'forest');
     const STEP = 6.5;
@@ -131,7 +132,7 @@ export class Vegetation {
       } else if (roll > 0.992 - (slope > 0.45 ? 0.05 : 0) - (h > 70 ? 0.03 : 0) - world.splatAt(px, pz, 1) / 255 * 0.012) {
         const s = R.chance(0.2) ? R.range(1.6, 3.4) : R.range(0.45, 1.3);
         sec(px, pz)['rock' + R.int(0, 2)].push([px, h - 0.1 * s, pz, s, R.f() * 6.28, 1]);
-        if (s > 1.0) colliders.add(px - 0.62 * s, h - 1, pz - 0.6 * s, px + 0.62 * s, h + 0.62 * s, pz + 0.6 * s, MAT.CONCRETE);
+        if (s > 1.0 && !packRocks) colliders.add(px - 0.62 * s, h - 1, pz - 0.6 * s, px + 0.62 * s, h + 0.62 * s, pz + 0.6 * s, MAT.CONCRETE); // pack rocks get colliders from their model size in _instFoliage
       }
     }
     for (const t of world.extraTrees || []) { const h = world.heightAt(t.x, t.z); const s = sec(t.x, t.z); (s.street = s.street || []).push([t.x, h - 0.1, t.z, t.s, R.f() * 6.28, 1, t.fam]); colliders.add(t.x - 0.3, h - 0.5, t.z - 0.3, t.x + 0.3, h + 5, t.z + 0.3, MAT.WOOD); }
@@ -201,18 +202,20 @@ export class Vegetation {
   _wind(n, H, amp, flut) {
     if (!n) return n; const gfx = this.G.gfx;
     for (const p of n.parts) { const m = p.mat; if (m.userData.wind) continue; m.userData.wind = true; gfx.mat(m);
-      const prev = m.onBeforeCompile, pk = m.customProgramCacheKey, tag = '_wind' + H.toFixed(2) + '_' + amp + '_' + flut;
-      m.onBeforeCompile = (sh, r) => { if (prev) prev.call(m, sh, r); sh.uniforms.uTime = gfx.uTime;
-        sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nuniform float uTime;').replace('#include <begin_vertex>', `#include <begin_vertex>
+      // the per-plant numbers (height, sway, flutter) are uniforms, not baked into the source, so every plant shares one
+      // shader program instead of compiling its own (that used to mean hundreds of programs and long mid-game freezes)
+      const prev = m.onBeforeCompile, pk = m.customProgramCacheKey, uWind = { value: new THREE.Vector3(1 / Math.max(0.01, H), amp, flut) };
+      m.onBeforeCompile = (sh, r) => { if (prev) prev.call(m, sh, r); sh.uniforms.uTime = gfx.uTime; sh.uniforms.uWind = uWind;
+        sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nuniform float uTime; uniform vec3 uWind;').replace('#include <begin_vertex>', `#include <begin_vertex>
         #ifdef USE_INSTANCING
           vec3 wip = instanceMatrix[3].xyz; float wph = wip.x * 0.13 + wip.z * 0.17;
-          float whk = clamp(position.y / ${H.toFixed(2)}, 0.0, 1.3); float wb = whk * whk;
+          float whk = clamp(position.y * uWind.x, 0.0, 1.3); float wb = whk * whk;
           float wg = 0.55 + 0.45 * sin(uTime * 0.45 + wph * 0.3);
-          transformed.x += (sin(uTime * 1.15 + wph) * 0.7 + 0.35) * wb * ${amp.toFixed(3)} * wg;
-          transformed.z += cos(uTime * 0.85 + wph * 1.3) * wb * ${(amp * 0.6).toFixed(3)} * wg;
-          transformed += vec3(sin(uTime * 3.1 + position.z * 1.9 + wph), sin(uTime * 2.7 + position.x * 1.7) * 0.5, cos(uTime * 3.4 + position.x * 2.3 + wph)) * ${flut.toFixed(3)} * whk;
+          transformed.x += (sin(uTime * 1.15 + wph) * 0.7 + 0.35) * wb * uWind.y * wg;
+          transformed.z += cos(uTime * 0.85 + wph * 1.3) * wb * uWind.y * 0.6 * wg;
+          transformed += vec3(sin(uTime * 3.1 + position.z * 1.9 + wph), sin(uTime * 2.7 + position.x * 1.7) * 0.5, cos(uTime * 3.4 + position.x * 2.3 + wph)) * uWind.z * whk;
         #endif`); };
-      m.customProgramCacheKey = () => (pk ? pk.call(m) : '') + tag; m.needsUpdate = true; }
+      m.customProgramCacheKey = () => (pk ? pk.call(m) : '') + '_wind'; m.needsUpdate = true; }
     return n;
   }
 
@@ -289,6 +292,10 @@ export class Vegetation {
       const ROCKS = this._packRocks(); const rl = ROCKS.map(() => []);
       for (let q = 0; q < 6; q++) { const px = s.cx + (rnd() - 0.5) * 120, pz = s.cz + (rnd() - 0.5) * 120; const hh = world.heightAt(px, pz); if (hh < 2.5 || hh > 120) continue; if (world.slopeAt(px, pz) < 0.22 && rnd() < 0.7) continue; { const sf = world.surfaceAt(px, pz); if (sf !== 'grass' && sf !== 'dirt' && sf !== 'rock' && sf !== 'sand') continue; } // natural ground only
         const sz = 0.6 + rnd() * 1.6; rl[Math.floor(rnd() * ROCKS.length)].push([px, hh - 0.1 * sz, pz, sz, rnd() * 6.28, 0.9 + rnd() * 0.2]); }
+      // the scattered rocks placed during the world pass are drawn with pack boulders too
+      for (let k = 0; k < 3; k++) for (const r of s['rock' + k] || []) rl[Math.floor(rnd() * ROCKS.length)].push([r[0], r[1], r[2], r[3] * 0.75, r[4], 1]);
+      // every boulder big enough to stand behind is solid (bullets and movement)
+      ROCKS.forEach((R, i) => { for (const r of rl[i]) { const sz = r[3], hgt = (R.h || 1.2) * sz * (r[5] || 1); if (hgt < 0.9) continue; const hw = (R.w || 1.2) * sz * 0.36; this.G.colliders.add(r[0] - hw, r[1] - 0.5, r[2] - hw, r[0] + hw, r[1] + hgt * 0.85, r[2] + hw, MAT.CONCRETE); } });
       ROCKS.forEach((R, i) => { if (rl[i].length) S.mid.push(...inst(R.parts || [R], rl[i], true, 0.08)); });
       GRASS.forEach((g, i) => { if (gl[i] && gl[i].length) S.grass.push(...inst(g.parts, gl[i], false)); });
       if (FLOWERS.length && fl.length) { const per = FLOWERS.map(() => []); for (const f of fl) per[Math.floor(rnd() * FLOWERS.length)].push(f); FLOWERS.forEach((F2, i) => { if (per[i].length) S.grass.push(...inst(F2.parts, per[i], false)); }); }

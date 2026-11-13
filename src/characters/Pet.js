@@ -38,7 +38,7 @@ export class Pet {
     for (const s of this.shots) this._free(s); this.shots.length = 0;
   }
   unlock(player) {
-    if (this.unlocked) return; this.setKind(Math.random() < 0.5 ? 'dragon' : 'ghost'); if (!this.root) return; this.unlocked = true;
+    if (this.unlocked) return; { const pick = this.G.settings && this.G.settings.d.pet; this.setKind(PETS[pick] ? pick : Math.random() < 0.5 ? 'dragon' : 'ghost'); } if (!this.root) return; this.unlocked = true;
     this.pos.set(player.pos.x, player.pos.y + 12, player.pos.z); this.root.position.copy(this.pos);
     this.G.ui.banner('COMPANION UNLOCKED', this.def.name + (this.kind === 'dragon' ? ' — hurls fireballs at enemies' : ' — fires spectral bolts at enemies')); this.G.audio.ui('win');
     this._burst(this.pos.x, this.pos.y, this.pos.z, 1.6); // arrival flare
@@ -49,7 +49,7 @@ export class Pet {
   }
   findTarget(P) {
     let best = null, bd = this.def.range * this.def.range;
-    for (const c of this.G.chars) { if (c.isPlayer || !c.alive || c.mode === 'plane' || c.mode === 'chute' || c.mode === 'fall') continue;
+    for (const c of this.G.chars) { if (c.isPlayer || c.civ || !c.alive || c.mode === 'plane' || c.mode === 'chute' || c.mode === 'fall') continue;
       const d2 = (c.pos.x - P.x) ** 2 + (c.pos.z - P.z) ** 2 + (c.pos.y - P.y) ** 2; if (d2 > bd) continue; if (!this.G.colliders.los(P.x, P.y, P.z, c.pos.x, c.pos.y + 1.2, c.pos.z)) continue; bd = d2; best = c; }
     return best;
   }
@@ -99,7 +99,7 @@ export class Pet {
     const d = this.def; this._burst(s.pos.x, s.pos.y, s.pos.z, direct ? 1 : 0.7); this._free(s);
     this.G.audio.impact(this.kind === 'dragon' ? 0 : 2, s.pos.x, s.pos.y, s.pos.z);
     // splash damage around the impact point
-    for (const c of this.G.chars) { if (c.isPlayer || !c.alive || c.mode === 'plane') continue; const r = Math.hypot(c.pos.x - s.pos.x, c.pos.y + 1 - s.pos.y, c.pos.z - s.pos.z);
+    for (const c of this.G.chars) { if (c.isPlayer || c.civ || !c.alive || c.mode === 'plane') continue; const r = Math.hypot(c.pos.x - s.pos.x, c.pos.y + 1 - s.pos.y, c.pos.z - s.pos.z);
       if (r > d.splash) continue; const dmg = d.dmg * (direct && c === s.target ? 1 : 0.5 * (1 - r / d.splash)); if (dmg < 1) continue; c.damage(dmg, s.player, 'body', 'pet', 0, 0);
       if (!c.alive) { this.kill = 1.8; this.target = null; this.G.ui.toast(d.name + ' DOWNED ' + c.name); this.G.audio.ui('pick'); } }
   }
@@ -107,7 +107,7 @@ export class Pet {
   update(dt, player) {
     const G = this.G; if (this.shots.length) this._updateShots(dt);
     if (!this.root || !player) return;
-    const hide = !this.unlocked || player.mode === 'plane' || player.mode === 'fall' || !player.alive || player.scoped; this.root.visible = !hide; if (hide && !this.unlocked) return;
+    const hide = !this.unlocked || player.mode === 'plane' || player.mode === 'fall' || !player.alive || player.scoped; this.root.visible = !hide; if (!this.unlocked || !player.alive) return;
     this.t += dt; this.atkT -= dt; this.kill -= dt;
     const yaw = player.camYaw; const back = Math.sin(this.t * 0.9) * 0.6;
     _v.set(player.pos.x + Math.sin(yaw - 0.9) * (2.6 + back), player.pos.y + 2.3 + Math.sin(this.t * 2.1) * 0.2, player.pos.z + Math.cos(yaw - 0.9) * (2.6 + back));

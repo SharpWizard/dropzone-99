@@ -149,7 +149,7 @@ export class Gfx {
     installFog();
     this.presetName = presetName; this.q = PRESETS[presetName] || PRESETS.MEDIUM;
     const r = this.renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance', stencil: false });
-    r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+    r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFShadowMap; // PCFSoftShadowMap was removed in r187; softness comes from shadow.radius
     canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.lost = true; if (this.onLost) this.onLost(); });
     canvas.addEventListener('webglcontextrestored', () => { location.reload(); });
     r.toneMapping = THREE.NoToneMapping; r.outputColorSpace = THREE.SRGBColorSpace;
@@ -172,7 +172,7 @@ export class Gfx {
       this.csm.fade = true;
       this.csm.lights.forEach((l, i) => { l.shadow.normalBias = 0.04 + i * 0.05; l.shadow.radius = 2.2; });
     } else {
-      const l = this.sun = new THREE.DirectionalLight(0xffffff, 3.2); l.castShadow = true;
+      const l = this.sun = new THREE.DirectionalLight(0xffffff, 3.2); l.castShadow = true; l.shadow.radius = 2.2;
       l.shadow.mapSize.set(this.q.shadowSize, this.q.shadowSize); const s = this.q.shadowFar;
       Object.assign(l.shadow.camera, { left: -s, right: s, top: s, bottom: -s, near: 1, far: 900 }); l.shadow.bias = -0.0004; l.shadow.normalBias = 0.08;
       this.scene.add(l); this.scene.add(l.target);
@@ -203,6 +203,8 @@ export class Gfx {
     window.addEventListener('resize', () => this.resize());
   }
 
+  // Forget a material registered with mat() and free its GPU program (for per-instance clones that are thrown away)
+  unmat(m) { if (!m) return; this.materials.delete(m); if (this.csm) this.csm.shaders.delete(m); m.dispose(); }
   // Register a lit material (needed for cascaded shadows) and optionally add a shader hook.
   mat(m, key, hook) {
     if (this.materials.has(m)) return m;
@@ -259,7 +261,7 @@ export class Gfx {
     if (this.csm) { this.csm.lightDirection.copy(o.dir).negate(); this.csm.lights.forEach(l => { l.color.copy(o.lightCol); l.intensity = o.inten; }); }
     else { this.sun.color.copy(o.lightCol); this.sun.intensity = o.inten; }
     this.hemi.intensity = o.hemi; this.hemi.color.copy(o.hemiSky);
-    this.scene.fog.color.copy(o.fog); this.scene.fog.density = o.fogD;
+    this.scene.fog.color.copy(o.fog); this.scene.fog.density = o.fogD; if (this.uFogD) this.uFogD.value = o.fogD; // water and particles share this uniform
     FOG_U.uFogSun.value.copy(o.dir); FOG_U.uFogSunCol.value.copy(o.disc).multiplyScalar(0.34 * Math.min(1, o.inten / 2.2) * (o.night > 0.5 ? 0.3 : 1));
     this.sunColor = (this.sunColor || new THREE.Color()).copy(o.lightCol).multiplyScalar(Math.min(1, o.inten / 2.6));
     if (o.bake !== false) { if (this.envRT) this.envRT.dispose(); this.envRT = this.pmrem.fromScene(this.envScene, 0, 1, 2000); this.scene.environment = this.envRT.texture; }

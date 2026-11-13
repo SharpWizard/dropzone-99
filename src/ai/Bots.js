@@ -42,7 +42,7 @@ export class AI {
     for (let i = 0; i < n; i++) { let name; do { name = this.R.pick(PRE) + this.R.pick(SUF); } while (used.has(name)); used.add(name); const b = new Bot(this.G, i + 1, name, new RNG(this.R.int(1, 1e9))); this.bots.push(b); }
     return this.bots;
   }
-  reset() { for (const b of this.bots) { b.reset(); b.resetAI(); b.hideSoldier(); b.civ = false; b.rescued = false; } this.queue.length = 0; }
+  reset() { for (const b of this.bots) { b.reset(); b.resetAI(); b.hideSoldier(); b.civ = false; b.rescued = false; if (b.boss) { b.boss = false; b.maxHp = 100; } if (b.soldier) b.soldier.group.scale.setScalar(1); } this.queue.length = 0; }
 
   // sound event: gunshots, footsteps, explosions
   noise(x, z, radius, src, boom = false) {
@@ -125,13 +125,14 @@ export class AI {
   // ---------- goal helpers ----------
   _setGoal(b, x, z) { b.goal = { x, z }; b.path.length = 0; b.pathI = 0; if (!b.wantPath) { b.wantPath = true; this.queue.push(b); } b.fails = 0; }
   _zoneGoal(b) { const Z = this.G.zone; const a = b.R.f() * 6.283, r = Math.sqrt(b.R.f()) * Z.nr * 0.75; let x = Z.nx + Math.cos(a) * r, z = Z.nz + Math.sin(a) * r; const s = this.G.nav.nearestFree(x, z, 20, _tmp); if (s) { x = s.x; z = s.z; } return { x, z }; }
-  _inZone(x, z, margin = 0) { const Z = this.G.zone; return Math.hypot(x - Z.cx, z - Z.cz) < Z.r - margin; }
-  _inNext(x, z, margin = 0) { const Z = this.G.zone; return Math.hypot(x - Z.nx, z - Z.nz) < Z.nr - margin; }
+  _zoneOn() { return this.G.zone.active || this.G.match.br(); }
+  _inZone(x, z, margin = 0) { const Z = this.G.zone; if (!Z.active) return true; return Math.hypot(x - Z.cx, z - Z.cz) < Z.r - margin; }
+  _inNext(x, z, margin = 0) { const Z = this.G.zone; if (!this._zoneOn()) return true; return Math.hypot(x - Z.nx, z - Z.nz) < Z.nr - margin; }
   _roamGoal(b) {
     const G = this.G, Z = G.zone;
     for (let k = 0; k < 8; k++) {
       let x, z; if (b.R.chance(0.55)) { const L = b.R.pick(G.world.locations); x = L.x + b.R.range(-L.r, L.r) * 0.8; z = L.z + b.R.range(-L.r, L.r) * 0.8; if (Math.hypot(x - b.pos.x, z - b.pos.z) > 420) continue; } else { const a = b.R.f() * 6.283, r = b.R.range(40, 160); x = b.pos.x + Math.cos(a) * r; z = b.pos.z + Math.sin(a) * r; }
-      if (Math.hypot(x - Z.nx, z - Z.nz) > Z.nr * 0.92) continue; if (!G.nav.isLandFree(x, z)) continue; return { x, z };
+      if (this._zoneOn() && Math.hypot(x - Z.nx, z - Z.nz) > Z.nr * 0.92) continue; if (!G.nav.isLandFree(x, z)) continue; return { x, z };
     }
     return this._zoneGoal(b);
   }

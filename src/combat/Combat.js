@@ -37,6 +37,7 @@ export class Combat {
     if (!shooter.isPlayer && shooter.pos.distanceTo(player.pos) < (w.supp ? 40 : 260)) G.ui.threat(shooter.pos.x, shooter.pos.z);
     // build an orthonormal basis for the spread cone
     let ux = -dz, uz = dx; const ul = Math.hypot(ux, uz) || 1; ux /= ul; uz /= ul; const vx = dy * uz, vy = dz * ux - dx * uz, vz = -dy * ux;
+    let anyHit = false;
     for (let p = 0; p < def.pellets; p++) {
       const a = Math.random() * 6.283, r = Math.tan(spreadDeg * 0.01745) * Math.sqrt(Math.random()); const ca = Math.cos(a) * r, sa = Math.sin(a) * r;
       let rx = dx + ux * ca + vx * sa, ry = dy + vy * sa, rz = dz + uz * ca + vz * sa; const l = Math.hypot(rx, ry, rz); rx /= l; ry /= l; rz /= l;
@@ -47,13 +48,13 @@ export class Combat {
       const an = G.animals ? G.animals.rayHit(ox, oy, oz, rx, ry, rz, ch ? ch.t : dist) : null;
       if (an) {
         dist = an.t; hx = ox + rx * dist; hy = oy + ry * dist; hz = oz + rz * dist;
-        const fall = lerp(1, def.range[2], clamp((dist - def.range[0]) / (def.range[1] - def.range[0]), 0, 1)); const killed = G.animals.hurt(an.a, def.dmg * fall, shooter, an.head);
+        const fall = lerp(1, def.range[2], clamp((dist - def.range[0]) / (def.range[1] - def.range[0]), 0, 1)); const killed = G.animals.hurt(an.a, def.dmg * fall, shooter, an.head); anyHit = true;
         if (shooter.isPlayer) G.ui.hitMarker(an.head, killed, def.dmg * fall); if (visible) fx.impact(hx, hy, hz, -rx, 0.2, -rz, MAT.FLESH); if (camD < 80) G.audio.impact(MAT.FLESH, hx, hy, hz);
       } else if (ch) {
         dist = ch.t; hx = ox + rx * dist; hy = oy + ry * dist; hz = oz + rz * dist;
         const fall = lerp(1, def.range[2], clamp((dist - def.range[0]) / (def.range[1] - def.range[0]), 0, 1));
         const dealt = ch.c.damage(def.dmg * fall, shooter, ch.zone, def.id, rx, rz);
-        if (dealt > 0) { if (p === 0 || def.pellets > 1) shooter.hits += p === 0 ? 1 : 0; if (ch.zone === 'head') shooter.headshots++; if (shooter.isPlayer) G.ui.hitMarker(ch.zone === 'head', !ch.c.alive, dealt); }
+        if (dealt > 0) { anyHit = true; if (ch.zone === 'head') shooter.headshots++; if (shooter.isPlayer) G.ui.hitMarker(ch.zone === 'head', !ch.c.alive, dealt); }
         if (visible) fx.impact(hx, hy, hz, -rx, 0.2, -rz, MAT.FLESH);
         if (camD < 80) G.audio.impact(MAT.FLESH, hx, hy, hz);
       } else if (hitVeh) {
@@ -63,7 +64,7 @@ export class Combat {
         hx = ox + rx * dist; hy = oy + ry * dist; hz = oz + rz * dist;
         if (wh && visible) { fx.impact(hx, hy, hz, wnx, wny, wnz, wmat); if (this._impactT <= 0) { this._impactT = 0.05; G.audio.impact(wmat, hx, hy, hz); } }
       }
-      if (visible) fx.tracer(_m.x, _m.y, _m.z, hx, hy, hz);
+      if (visible) fx.tracer(_m.x, _m.y, _m.z, hx, hy, hz); if (p === def.pellets - 1 && anyHit) shooter.hits++;
       // near miss feedback for the player
       if (!shooter.isPlayer && player.alive) { const px = player.pos.x - ox, py = player.pos.y + 1.4 - oy, pz = player.pos.z - oz; const t = px * rx + py * ry + pz * rz; if (t > 2 && t < dist) { const q = px * px + py * py + pz * pz - t * t; if (q < 2.2 * 2.2) { G.audio.whiz(ox + rx * t, oy + ry * t, oz + rz * t); player.suppress = Math.min(1, (player.suppress || 0) + 0.35); player.shakeCam(0.22); } } }
     }

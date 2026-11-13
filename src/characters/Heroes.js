@@ -1,19 +1,23 @@
-// The four playable heroes. Each is a rigged model with a hand-made look: every named material is repainted from the
+// The playable heroes: the Astronaut (main hero), the SWAT trooper and the eight women of the Ultimate Modular Women Pack. Each is a rigged model with a hand-made look: every named material is repainted from the
 // hero's palette (with its own metalness / roughness), accent parts glow, a rim light in the hero's colour outlines the
 // silhouette, and a scan line sweeps up the body when the hero is chosen or deploys. A glowing ring marks the hero on
 // the menu.
 import * as THREE from 'three';
 
-// palette entry: [colour, metalness, roughness, glow?]  (glow: 'g' strong pulsing light, 'a' soft accent light)
+// palette entry: [colour, metalness, roughness, glow?]; an empty palette keeps the model's own colours  (glow: 'g' strong pulsing light, 'a' soft accent light)
 export const HEROES = [
   { id: 'ghost', name: 'GHOST', role: 'RECON SPECIALIST', blurb: 'Prototype exo-suit: white ceramic plate over a navy weave, cyan power lines.', key: 'single/hero', accent: 0x2fd6ff,
     pal: { SciFi_Light: [0xeef2f5, 0.5, 0.28], SciFi_Main: [0x1f2a38, 0.35, 0.45], SciFi_MainDark: [0x10161e, 0.3, 0.55], SciFi_Light_Accent: [0x2fd6ff, 0, 0.3, 'g'], Grey: [0x2a3036, 0.55, 0.4] } },
-  { id: 'raven', name: 'RAVEN', role: 'INFILTRATOR', blurb: 'Night-silk hood, violet leathers, polished silver and gold fittings.', key: 'people_f/hooded_adventurer_free_model', accent: 0xa45cff,
-    pal: { Black: [0x17131f, 0, 0.72], Metal: [0xc9d0da, 0.9, 0.24], Metal_Dark: [0x3b3448, 0.75, 0.32], Brown2: [0x3b2752, 0, 0.66], LightBrown: [0x6c3fb0, 0.05, 0.55], DarkBrown: [0x22172e, 0, 0.7], Gold: [0xe8b45a, 0.95, 0.22, 'a'], White: [0xf2eaff, 0, 0.55], Brown: [0x281d33, 0, 0.72] } },
   { id: 'vanguard', name: 'VANGUARD', role: 'ASSAULT', blurb: 'Navy heavy plate, matte black webbing and a gold heads-up visor.', key: 'enemies/swat_enemy', accent: 0xffb02e,
     pal: { Swat: [0x2b3a55, 0.45, 0.38], Swat_Black: [0x14171c, 0.2, 0.6], Visor: [0xffb02e, 0.2, 0.12, 'g'] } },
-  { id: 'sable', name: 'SABLE', role: 'MARKSMAN', blurb: 'Crimson armour, black under-suit, platinum hair. Calm under fire.', key: 'enemies/soldier', accent: 0xff3b46,
-    pal: { Black: [0x111114, 0.15, 0.58], Swat: [0x9b1f2a, 0.45, 0.36], Grey: [0x2a2a30, 0.5, 0.42], Hair_Brown: [0xece6de, 0, 0.5], Brown: [0x1e1517, 0, 0.7] } },
+  { id: 'wren', name: 'WREN', role: 'SCOUT', blurb: 'Green trail jacket, leather straps and a gold buckle. First in, last out.', key: 'people_f/adventurer_free_model', accent: 0x7fd36a, pal: {} },
+  { id: 'raven', name: 'RAVEN', role: 'INFILTRATOR', blurb: 'Hooded cloak with steel and gold fittings. You will not hear her coming.', key: 'people_f/hooded_adventurer_free_model', accent: 0xa45cff, pal: {} },
+  { id: 'vex', name: 'VEX', role: 'BRAWLER', blurb: 'Pink punk jacket and heavy boots. Settles things up close.', key: 'people_f/punk_free_model', accent: 0xff5fa8, pal: {} },
+  { id: 'slate', name: 'SLATE', role: 'OPERATIVE', blurb: 'Sharp black suit and a cool head under fire.', key: 'people_f/suit_free_model', accent: 0xc9d3e0, pal: {} },
+  { id: 'rivet', name: 'RIVET', role: 'ENGINEER', blurb: 'Hi-vis vest and work boots. Keeps the squad moving.', key: 'people_f/worker_free_model', accent: 0xffc93a, pal: {} },
+  { id: 'hex', name: 'HEX', role: 'MYSTIC', blurb: 'Purple robes trimmed in gold. Nobody knows where she learned to shoot.', key: 'people_f/witch_free_model', accent: 0xb36cff, pal: {} },
+  { id: 'scarlet', name: 'SCARLET', role: 'RUNNER', blurb: 'Red top and green trainers. Fastest feet in the city.', key: 'people_f/animated_woman_free_model', accent: 0xff4a4a, pal: {} },
+  { id: 'sunny', name: 'SUNNY', role: 'MEDIC', blurb: 'Blonde, bright and steady. Patches you up and pulls you out.', key: 'people_f/animated_woman_free_model_b', accent: 0xff9b3d, pal: {} },
 ];
 export const heroIndex = (i) => Math.max(0, Math.min(HEROES.length - 1, i | 0));
 

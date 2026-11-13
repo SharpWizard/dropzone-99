@@ -14,7 +14,7 @@ class Particles {
     this.vel = new Float32Array(max * 3); this.life = new Float32Array(max); this.maxLife = new Float32Array(max); this.grow = new Float32Array(max); this.grav = new Float32Array(max); this.drag = new Float32Array(max); this.a0 = new Float32Array(max);
     const g = this.geo = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.BufferAttribute(this.pos, 3).setUsage(THREE.DynamicDrawUsage)); g.setAttribute('aColor', new THREE.BufferAttribute(this.col, 4).setUsage(THREE.DynamicDrawUsage)); g.setAttribute('aSize', new THREE.BufferAttribute(this.size, 1).setUsage(THREE.DynamicDrawUsage));
-    this.mat = new THREE.ShaderMaterial({ vertexShader: PV, fragmentShader: PF.replace('FOGK', additive ? '0.0' : '1.0'), uniforms: { tMap: { value: tex }, uScale: { value: 600 }, uFog: { value: G.gfx.scene.fog.color }, uFogD: { value: G.gfx.scene.fog.density } },
+    this.mat = new THREE.ShaderMaterial({ vertexShader: PV, fragmentShader: PF.replace('FOGK', additive ? '0.0' : '1.0'), uniforms: { tMap: { value: tex }, uScale: { value: 600 }, uFog: { value: G.gfx.scene.fog.color }, uFogD: G.gfx.uFogD || (G.gfx.uFogD = { value: G.gfx.scene.fog.density }) },
       transparent: true, depthWrite: false, blending: additive ? THREE.AdditiveBlending : THREE.NormalBlending });
     this.points = new THREE.Points(g, this.mat); this.points.frustumCulled = false; this.points.renderOrder = additive ? 6 : 5; G.gfx.scene.add(this.points);
   }

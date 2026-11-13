@@ -7,6 +7,8 @@ import { RNG } from '../utils/math.js';
 import { ROADS, RIVER } from './WorldData.js';
 import { building, wallRun, F, P, S, BASE } from './Buildings.js';
 import { SoldierGLB, PEOPLE_KEYS } from '../characters/SoldierGLB.js';
+// a parked car: the model plus a solid box slightly inside it (same as wrecks), so cars block movement and bullets
+const parkedCar = (b, key, x0, y0, z0, x1, y1, z1, o) => { const ok = b.prop(key, x0, y0, z0, x1, y1, z1, o); if (ok) b.box(null, x0 + 0.1, y0, z0 + 0.1, x1 - 0.1, y0 + (y1 - y0) * 0.86, z1 - 0.1, 0, { mat: 2 }); return ok; };
 
 // real-world sizes (m): w along the street front, d deep, h tall. flip: extra quarter turns so the shop front faces the street
 const CITY = {
@@ -128,7 +130,7 @@ export function buildTown(G, b, L, group, api) {
       for (let u = -58; u <= 58; u += 13) { if (Math.abs(u) < 9 || Math.abs(Math.abs(u) - 64) < 9) continue; tree(C.x + u, C.z + line, 0.62); tree(C.x + line, C.z + u, 0.62); }
       for (let u = -56; u <= 56; u += 19) { if (Math.abs(u) < 8) continue; P.lamp(b, C.x + u + 4, 0, C.z + line, -sg); P.lamp(b, C.x + line, 0, C.z + u + 4, -sg); } }
     for (let i = 0; i < 10; i++) { const sg = R.chance(0.5) ? 1 : -1, k = 0, u = R.range(-54, 54); /* parked on the central avenues (the ring roads carry traffic) */ if (Math.abs(u) < 10) continue; const key = R.pick(['city/car', 'city/car_2', 'city/suv', 'city/van', 'city/pickup_truck']);
-      if (R.chance(0.5)) b.prop(key, C.x + u - 2.3, 0, C.z + k * 64 + sg * 3.2 - 1.0, C.x + u + 2.3, 1.6, C.z + k * 64 + sg * 3.2 + 1.0, { out: 1 }); else b.prop(key, C.x + k * 64 + sg * 3.2 - 1.0, 0, C.z + u - 2.3, C.x + k * 64 + sg * 3.2 + 1.0, 1.6, C.z + u + 2.3, { out: 1 }); }
+      if (R.chance(0.5)) parkedCar(b, key, C.x + u - 2.3, 0, C.z + k * 64 + sg * 3.2 - 1.0, C.x + u + 2.3, 1.6, C.z + k * 64 + sg * 3.2 + 1.0, { out: 1 }); else parkedCar(b, key, C.x + k * 64 + sg * 3.2 - 1.0, 0, C.z + u - 2.3, C.x + k * 64 + sg * 3.2 + 1.0, 1.6, C.z + u + 2.3, { out: 1 }); }
     for (let i = 0; i < 8; i++) { const sg = R.chance(0.5) ? 1 : -1, u = R.range(-50, 50); if (Math.abs(u) < 8) continue; if (i % 2) { S.hydrant(b, C.x + u, 0, C.z + sg * 6); P.bench(b, C.x + sg * 7, 0, C.z + u, false); } else { S.trash(b, C.x + u, 0, C.z + sg * 6.2); S.planter(b, C.x + u + 3, 0, C.z + sg * 6.4, true); } }
     S.busStop(b, C.x + 40, 0, C.z + 6.4, true); S.busStop(b, C.x - 6.4, 0, C.z - 44, false);
     // overhead traffic lights (City Builder Bits): one per corner, the arm reaching over the lanes of the road beside it
@@ -140,7 +142,7 @@ export function buildTown(G, b, L, group, api) {
     // more parked cars along the side streets: the classic cars of City Pack 2 and the Builder Bits taxis and police
     const parked = ['city2/convertible_free_model', 'city2/nissan_gtr_free_model', 'city2/2015_dodge_challenger_free_model', 'city2/1994_nissan_180mx_free_model', 'cbits/taxi_free_model', 'cbits/stationwagon_free_model', 'cbits/car_hatchback_free_model'].filter(k => A && A.has(k));
     for (let i = 0; i < 14 && parked.length; i++) { const sg = R.chance(0.5) ? 1 : -1, k = R.pick([-1, 1]) * 32, u = R.range(-56, 56); if (Math.abs(Math.abs(u) - 32) < 4) continue; const key = R.pick(parked);
-      if (R.chance(0.5)) b.prop(key, C.x + u - 1.0, 0, C.z + k + sg * 3.3 - 2.3, C.x + u + 1.0, 1.5, C.z + k + sg * 3.3 + 2.3, { out: 1, uniform: 1 }); else b.prop(key, C.x + k + sg * 3.3 - 2.3, 0, C.z + u - 1.0, C.x + k + sg * 3.3 + 2.3, 1.5, C.z + u + 1.0, { out: 1, uniform: 1 }); }
+      if (R.chance(0.5)) parkedCar(b, key, C.x + u - 1.0, 0, C.z + k + sg * 3.3 - 2.3, C.x + u + 1.0, 1.5, C.z + k + sg * 3.3 + 2.3, { out: 1, uniform: 1 }); else parkedCar(b, key, C.x + k + sg * 3.3 - 2.3, 0, C.z + u - 1.0, C.x + k + sg * 3.3 + 2.3, 1.5, C.z + u + 1.0, { out: 1, uniform: 1 }); }
   }
 
   // ================= RAILWAY: track, level crossings, station, parked train =================
@@ -201,7 +203,7 @@ export function buildTown(G, b, L, group, api) {
     world.flattenRect(cx - half - 8, cz - 36, cx + half + 8, cz + 36, y, 16); world.paintRect(0, cx - half - 8, cz - 4, cx + half + 8, cz + 4, 255, 1); world.paintRect(2, cx - half - 8, cz - 7.5, cx + half + 8, cz + 7.5, 225, 1); world.paintRect(3, cx - half - 10, cz - 38, cx + half + 10, cz + 38, 0, 3);
     row('x', cx - half, cx + half, cz - 9.5, 0, y, 12); row('x', cx - half, cx + half, cz + 9.5, 2, y, 12);
     b.origin(0, y, 0, 0); for (let u = -half + 6; u <= half - 6; u += 16) { if (Math.abs(u) < 8) continue; P.lamp(b, cx + u, 0, cz - 7, 1); P.lamp(b, cx + u + 8, 0, cz + 7, -1); tree(cx + u + 4, cz - 6.2, 0.6); tree(cx + u + 12, cz + 6.2, 0.6); }
-    for (let i = 0; i < 4; i++) { const u = R.range(-half + 8, half - 8); if (Math.abs(u) < 9) continue; b.prop(R.pick(['city/car', 'city/car_2', 'city/suv', 'city/van']), cx + u - 2.3, 0, cz + (i % 2 ? 3.2 : -3.2) - 1, cx + u + 2.3, 1.6, cz + (i % 2 ? 3.2 : -3.2) + 1, { out: 1 }); }
+    for (let i = 0; i < 4; i++) { const u = R.range(-half + 8, half - 8); if (Math.abs(u) < 9) continue; parkedCar(b, R.pick(['city/car', 'city/car_2', 'city/suv', 'city/van']), cx + u - 2.3, 0, cz + (i % 2 ? 3.2 : -3.2) - 1, cx + u + 2.3, 1.6, cz + (i % 2 ? 3.2 : -3.2) + 1, { out: 1 }); }
     S.busStop(b, cx - 20, 0, cz + 6.6, true); S.hydrant(b, cx + 24, 0, cz - 6.4); S.trash(b, cx - 30, 0, cz - 6.2); S.mailbox(b, cx + 10, 0, cz + 6.4);
     // back lanes: enterable houses and a corner store behind each row
     for (const sg of [-1, 1]) { api.house(R, cx - 30, cz + sg * 29, sg < 0 ? 0 : 2, y, { w: 10, d: 8 }); api.house(R, cx + 30, cz + sg * 29, sg < 0 ? 0 : 2, y, { w: 10, d: 8 }); }

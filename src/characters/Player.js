@@ -44,7 +44,8 @@ export class Player extends Character {
     // engine vibration, with a jolt of turbulence every few seconds
     this.shakeCam(0.2); this._turbT = (this._turbT === undefined ? 2.5 : this._turbT) - dt; if (this._turbT <= 0) { this._turbT = 2.5 + Math.random() * 4; this.shakeCam(0.75 + Math.random() * 0.3); this.G.ui.shakeHud(1); }
     if (!M.canJump) this.prompt = { text: 'APPROACHING THE DROP ZONE  ·  STAND BY', key: 'interact' };
-    if (M.canJump) { this.prompt = { text: 'JUMP  ·  ALT 440 m', key: 'interact' }; if (this.G.input.pressed('interact') || this.G.input.pressed('jump') || M.forceJump) this.jump(); }
+    if (M.canJump) { this.prompt = { text: 'JUMP  ·  ALT 440 m', key: 'interact' }; if (this.G.input.pressed('interact') || this.G.input.pressed('jump')) { this.jump(); return; } }
+    if (M.forceJump) this.jump();
   }
   jump() { const pl = this.G.match.plane; this.shakeCam(1.1); this.G.ui.shakeHud(2); this.mode = 'fall'; this.pos.copy(pl.pos); this.pos.y -= 7; this.vel.set(Math.sin(pl.yaw) * 34, -8, Math.cos(pl.yaw) * 34); this.camYaw = pl.yaw; this.camPitch = -0.5; this.G.match.onPlayerJump(); }
 
@@ -127,7 +128,7 @@ export class Player extends Character {
       if (I.pressed('roll') && this.grounded && this.stance === 0 && !this.swim && this.soldier && this.soldier.play) { if (this.soldier.play('Roll')) { G.fx.dust(this.pos.x, this.pos.y, this.pos.z, 5); this.shakeCam(0.22); this.vel.x = Math.sin(this.yaw) * 6; this.vel.z = Math.cos(this.yaw) * 6; } }
       // melee: unarmed combo (punches / kicks) or a weapon-butt strike; the blow lands a moment after the swing starts
       this.meleeCd -= dt;
-      if (I.pressed('melee') && this.meleeCd <= 0 && this.soldier && this.soldier.melee && !this.reloading) { const tool = !w && this.meleeItem ? ITEMS[this.meleeItem] : null; const kind = w ? 'bash' : tool ? (this.soldier.play && this.soldier.play('Sword_Slash', 1.5) ? 'Sword_Slash' : this.soldier.melee()) : this.soldier.melee(); if (w) this.bashFlag = true; if (kind) { this.shakeCam(0.14); this.meleeCd = w ? 0.7 : 0.42; this.meleeHit = w ? 0.14 : 0.17; this.meleeDmg = w ? 42 : tool ? tool.dmg : /Kick/.test(kind) ? 46 : /Sword/.test(kind) ? 55 : 30; if (tool) this.meleeCd = tool.rate; if (this.grounded) { this.vel.x += Math.sin(this.yaw) * 2.6; this.vel.z += Math.cos(this.yaw) * 2.6; } G.audio.footstep('dirt', 0, 0, 0, true, 1.2); } }
+      if (I.pressed('melee') && this.meleeCd <= 0 && this.soldier && this.soldier.melee && this.reloadT < 0) { const tool = this.meleeItem ? ITEMS[this.meleeItem] : null; const kind = w && !tool ? 'bash' : tool ? (this.soldier.play && this.soldier.play('Sword_Slash', 1.5) ? 'Sword_Slash' : this.soldier.melee()) : this.soldier.melee(); if (w && !tool) this.bashFlag = true; if (kind) { this.shakeCam(0.14); this.meleeCd = w && !tool ? 0.7 : 0.42; this.meleeHit = w && !tool ? 0.14 : 0.17; this.meleeDmg = w && !tool ? 42 : tool ? tool.dmg : /Kick/.test(kind) ? 46 : /Sword/.test(kind) ? 55 : 30; if (tool) this.meleeCd = tool.rate; if (this.grounded) { this.vel.x += Math.sin(this.yaw) * 2.6; this.vel.z += Math.cos(this.yaw) * 2.6; } G.audio.footstep('dirt', 0, 0, 0, true, 1.2); } }
       if (this.meleeHit >= 0) { this.meleeHit -= dt; if (this.meleeHit < 0) { const fx0 = Math.sin(this.yaw), fz0 = Math.cos(this.yaw); let hit = false;
         for (const c of G.chars) { if (c === this || !c.alive) continue; const dx = c.pos.x - this.pos.x, dz = c.pos.z - this.pos.z, dy = c.pos.y - this.pos.y; const d = Math.hypot(dx, dz); if (d > 2.3 || Math.abs(dy) > 1.6) continue; if (d > 0.4 && (dx * fx0 + dz * fz0) / d < 0.45) continue;
           c.damage(this.meleeDmg, this, 'body', 'melee', fx0, fz0); hit = true; G.fx.impact(c.pos.x - fx0 * 0.25, c.pos.y + 1.2, c.pos.z - fz0 * 0.25, -fx0, 0.3, -fz0, 5); if (c.vel) { c.vel.x += fx0 * 3.5; c.vel.z += fz0 * 3.5; } }
@@ -141,7 +142,7 @@ export class Player extends Character {
         else if (this._zoomDirty) { this._zoomDirty = false; G.settings.d.camDist = this.camDist; G.settings.d.view = this.fpp ? 'first' : 'third'; G.settings.save(); } }
       if (this.cur === 3) { if (I.mhit[0] && this.throwCd <= 0 && this.bag.frag > 0) this.throwGrenade(); }
       else if (w) {
-        const mode = def.modes[w.mode || 0]; let pull = false;
+        const mode = def.modes[w.mode || 0]; let pull = false; if (this.burst > 0 && (this.reloadT >= 0 || this.heal || this.sprinting)) this.burst = 0;
         if (mode === 'AUTO') pull = I.mb[0]; else if (mode === 'BURST') { if (I.mhit[0] && this.burst <= 0) this.burst = 3; pull = this.burst > 0; } else pull = I.mhit[0];
         if (pull && this.fireCd <= 0 && !this.sprinting) {
           this._aimRay();
@@ -205,8 +206,12 @@ export class Player extends Character {
     if (G.settings.d.autoPickup && this._auto <= 0 && this.alive) { this._auto = 0.2; const list = G.loot.near(p.x, p.z, 1.5, this._near); for (const it of list) { if (it.alive && Math.abs(it.y - p.y) < 1.3 && this._wants(it)) { this.pickup(it); break; } } }
     const it = G.loot.nearest(p.x, p.y, p.z, 2.3); const veh = G.vehicles.nearest(p, 3.4);
     if (it) { this.prompt = { text: itemName(it.id) + (it.n > 1 ? ' x' + it.n : ''), key: 'interact', item: it }; if (!ui && I.pressed('interact')) this.pickup(it); }
+    else if (veh && this.bag.fuel > 0 && veh.fuel < 60) { this.prompt = { text: 'REFUEL ' + veh.def.name + ' · ' + Math.round(veh.fuel) + '% (+50%)', key: 'interact' }; if (!ui && I.pressed('interact')) this.refuel(veh); }
     else if (veh) { this.prompt = { text: 'DRIVE ' + veh.def.name, key: 'interact' }; if (!ui && I.pressed('interact')) G.vehicles.enter(this, veh); }
   }
+  // pour a jerrycan into the vehicle you are in or standing next to
+  refuel(veh) { const G = this.G; veh = veh || this.vehicle || G.vehicles.nearest(this.pos, 3.4); if (!veh || veh.dead) { G.ui.toast('NO VEHICLE NEARBY'); return false; } if (!(this.bag.fuel > 0)) return false; if (veh.fuel >= 99) { G.ui.toast('TANK IS FULL'); return false; }
+    this._take('fuel', 1); veh.fuel = Math.min(100, veh.fuel + ITEMS.fuel.fuel); G.audio.reload(1); G.ui.toast(veh.def.name + ' REFUELLED · ' + Math.round(veh.fuel) + '%'); return true; }
 
   _seat(dt) {
     const G = this.G, I = G.input, v = this.vehicle; if (!v) { this.mode = 'ground'; return; }

@@ -106,7 +106,8 @@ export class Game {
   // ---- state transitions ----
   toMenu(first) {
     if (this.pendingLower && !first) { location.reload(); return; } // apply an automatic quality drop between matches
-    this.match.stop(); if (this.pet && this.pet.root) this.pet.root.visible = false; this.state = 'menu'; this.input.enabled = false; this.input.unlock(); this.ai.reset(); this.combat.reset(); this.loot.clear();
+    this.match.stop(); if (this.pet) { if (this.pet.ready) this.pet.reset(); if (this.pet.root) this.pet.root.visible = false; }
+    document.body.classList.remove('lowhp', 'falling'); this.player._fl = false; for (const id of ['mission', 'sidejobs']) { const e = document.getElementById(id); if (e) e.style.display = 'none'; } this.state = 'menu'; this.input.enabled = false; this.input.unlock(); this.ai.reset(); this.combat.reset(); this.loot.clear();
     for (const v of this.vehicles.list) this.gfx.scene.remove(v.grp); this.vehicles.list.length = 0;
     const p = this.player; p.reset(); p.mode = 'ground'; p.grounded = true; p.outfit = this.settings.d.outfit;
     // scenic overlook near Iron City
@@ -138,8 +139,8 @@ export class Game {
     try { await r.compileAsync(this.gfx.scene, this.gfx.camera); } catch (e) { console.warn('match warmup', e); }
     for (const o of shadowOff) o.castShadow = false; for (const o of shown) o.visible = false; this.gfx.scene.remove(g); temp.length = 0;
   }
-  pause() { if (this.state !== 'play') return; this.state = 'paused'; this.ui.open('pause'); }
-  resume() { if (this.state !== 'paused') return; this.state = 'play'; this.input.lock(); }
+  pause() { if (this.state !== 'play') return; this.state = 'paused'; if (this.audio.ctx && this.audio.ctx.state === 'running') this.audio.ctx.suspend(); this.ui.open('pause'); }
+  resume() { if (this.state !== 'paused') return; this.state = 'play'; if (this.audio.ctx && this.audio.ctx.state === 'suspended') this.audio.ctx.resume(); this.input.lock(); }
 
   frame(dt) {
     const gfx = this.gfx, cam = gfx.camera, p = this.player, I = this.input;

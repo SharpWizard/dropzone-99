@@ -515,3 +515,19 @@ asphalt_02, brick_wall_005, concrete_wall_004 (cladding), concrete_wall_008, aer
 | Submachine Gun - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/nsP3JukU73 |
 | Tripod - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/sVTKUSz3m2 |
 | Yeti - Free Model | Quaternius | CC0 1.0 | https://poly.pizza/m/ceRHrn8HHE |
+
+## Playable heroes
+
+The hero models, used unmodified apart from colour tints on the Astronaut and SWAT.
+
+| Model | Author | Licence | Source |
+|---|---|---|---|
+| Astronaut | Quaternius | CC0 1.0 | https://poly.pizza/m/3hC2i0CTuO |
+| Witch | Quaternius | CC-BY 3.0 | https://poly.pizza/m/QBEOV9ZUT8 |
+| Worker | Quaternius | CC-BY 3.0 | https://poly.pizza/m/E8079Ahx7k |
+| Suit | Quaternius | CC-BY 3.0 | https://poly.pizza/m/sOUciDsoVV |
+| Animated Woman | Quaternius | CC0 1.0 | https://poly.pizza/m/nIItLV9nxS |
+| Punk | Quaternius | CC0 1.0 | https://poly.pizza/m/djXoqejw6w |
+| Adventurer | Quaternius | CC0 1.0 | https://poly.pizza/m/ZwF0K7WBmu |
+| Hooded Adventurer | Quaternius | CC0 1.0 | https://poly.pizza/m/y9KWOVG21R |
+| Animated Woman | Quaternius | CC0 1.0 | https://poly.pizza/m/qJ2gsTUBHL |

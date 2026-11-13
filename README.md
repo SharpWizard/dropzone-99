@@ -53,6 +53,7 @@ public/assets/models/   GLB models (see CREDITS.md)
 
 ## Notes
 
+- Ten playable heroes (src/characters/Heroes.js): the Astronaut (GHOST, the main hero) and SWAT trooper (VANGUARD) in custom colours, plus the eight women of the Ultimate Modular Women Pack in their own colours. All share one rig and clip set.
 - Terrain, buildings, textures and all audio are generated in code. Characters, guns, vehicles, street props and furniture are GLB models from Poly Pizza; if a model fails to load the game falls back to a procedural version.
 - Trees, bushes, rocks, grass, flowers and forest-floor plants come from the Stylized Nature MegaKit and Ultimate Stylized Nature Pack (CC0), grouped by biome in `NATURE` (src/assets/Assets.js). New packs are fetched with `node tools/fetch-bundles.mjs`, shrunk with `node tools/optimize-packs.mjs` and given light tree LODs with `node tools/build-lods.mjs`.
 - Rendering (src/rendering/Gfx.js): HDR pipeline with cascaded soft shadows, MSAA + alpha-to-coverage foliage, SSAO, bloom, ACES and a vivid grade; atmospheric height fog with sun scattering replaces three's fog chunks for every material. Dynamic objects cast shadows only near the camera and rigs are culled out of view (`_dynLOD`); props are batched per 96 m cell with size-based draw distances. Settings has presets, output resolution and render scale; resolution adapts automatically while the window is focused.
@@ -61,6 +62,8 @@ public/assets/models/   GLB models (see CREDITS.md)
 - The town layer (src/world/Town.js) builds the City Pack downtown, small towns, roadside hamlets, the railway loop with its station and running trains, and the Eagle Peak fort.
 - Floating pickups (first aid, bandages, water, food cans, an axe, a knife, a shovel and VIPER pistols) hover across the island; melee tools are carried in the hand and swung with the melee key. Wildlife (src/world/Animals.js) grazes the woods and the farm; hunting scores POINTS (bears fight back).
 - STORY mode (default) is free roam: a hidden cache in every location, supply drops that fall near you, rolling bounties and location discovery (src/battleRoyale/Activities.js). BATTLE ROYALE mode in Settings brings back the shrinking zone.
+- Vehicles burn fuel; jerrycans (loot) add 50%: stand next to the vehicle and press F, or use one from the inventory.
+- Your companion (dragon or ghost skull) is picked in CHARACTER and joins after 3 kills; it never attacks civilians.
 - Career (src/core/Career.js) saves lifetime points in the browser; seven ranks unlock a better starting loadout.
 - Hostiles are the alien Swarm (Ultimate Monsters Bundle) with guns from the Ultimate Guns Pack; civilians flee them.
 - Models are meshopt-compressed (`node tools/compress-meshes.mjs`); the loader decodes and unpacks them. Shaders compile during loading and again in parallel during the plane ride, so arriving somewhere new does not stall.

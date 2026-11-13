@@ -24,7 +24,7 @@ export class Career {
     if (r >= 4) { P.helmet.lvl = 1; P.helmet.dur = 80; P.vest.lvl = 1; P.vest.dur = 200; }
     if (r >= 5) { P.pack = Math.max(P.pack, 1); P.bag.medkit = (P.bag.medkit || 0) + 1; }
     if (r >= 6) { P.weapons[0] = { id: 'kestrel', ammo: 30, scope: 0, supp: false, mode: 0 }; P.bag.ammo_556 = (P.bag.ammo_556 || 0) + 90; }
-    if (P.weapons[0] || P.weapons[2]) P._wkey = '';
+    if (P.weapons[0] || P.weapons[2]) { P._wkey = ''; if (P.cur < 0) for (const i of [0, 2]) if (P.weapons[i]) { P.switchTo(i, true); break; } }
   }
 
   // end of match: bank the match

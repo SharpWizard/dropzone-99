@@ -20,7 +20,7 @@ export class Activities {
     this._newBounty();
     this._hud();
   }
-  on() { return this.G.settings.d.mode !== 'BATTLE ROYALE'; }
+  on() { return !this.G.match.br(); }
 
   _chestMesh() {
     const g = new THREE.Group(), A = this.G.assets; let m = null;

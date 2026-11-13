@@ -125,7 +125,7 @@ export class Water {
   constructor(G, heightTex) {
     const gfx = G.gfx;
     this.uniforms = { tHeight: { value: heightTex }, tWaves: { value: G.T.waves.normalMap }, uTime: gfx.uTime, uSun: { value: gfx.sunDir }, uSunCol: { value: new THREE.Color(1, 0.95, 0.85) },
-      uFog: { value: gfx.scene.fog.color }, uFogD: { value: gfx.scene.fog.density } };
+      uFog: { value: gfx.scene.fog.color }, uFogD: gfx.uFogD || (gfx.uFogD = { value: gfx.scene.fog.density }) };
     const mat = new THREE.ShaderMaterial({
       uniforms: this.uniforms, transparent: true, depthWrite: false,
       vertexShader: `varying vec3 vW; void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,

@@ -16,6 +16,7 @@ export const ITEMS = {
   drink: { name: 'Energy Drink', type: 'heal', n: 1, w: 4, boost: 40, time: 3 },
   axe: { name: 'Survival Axe', type: 'melee', dmg: 85, rate: 0.62, w: 0, model: 'survival/axe_free_model' }, knife: { name: 'Combat Knife', type: 'melee', dmg: 58, rate: 0.36, w: 0, model: 'survival/knife_free_model' },
   shovel: { name: 'Shovel', type: 'melee', dmg: 70, rate: 0.55, w: 0, model: 'survival/shovel_free_model' },
+  fuel: { name: 'Jerrycan', type: 'fuel', n: 1, w: 15, fuel: 50, model: 'urban/gas_can' },
   food: { name: 'Food Supply', type: 'heal', n: 1, w: 3, heal: 15, cap: 100, boost: 12, time: 2.4 }, frag: { name: 'Frag Grenade', type: 'throw', n: 1, w: 12 },
 };
 for (const id in WEAPONS) ITEMS[id] = { name: WEAPONS[id].name, type: 'weapon', w: 0 };
@@ -25,9 +26,9 @@ export const itemName = (id) => (ITEMS[id] ? ITEMS[id].name : id);
 // weighted loot tables: [id, weight]
 const TABLE = {
   1: [['kestrel', 7], ['ravager', 6], ['hornet', 8], ['breacher', 6], ['viper', 10], ['sentry', 2], ['longbow', 0.7], ['ammo_556', 12], ['ammo_762', 11], ['ammo_9mm', 12], ['ammo_12g', 6], ['ammo_338', 2],
-    ['bandage', 14], ['medkit', 5], ['drink', 8], ['food', 9], ['frag', 5], ['helmet1', 6], ['helmet2', 2.5], ['vest1', 6], ['vest2', 2.5], ['pack1', 6], ['pack2', 3], ['scope2', 4], ['scope4', 1.5], ['supp', 2]],
+    ['bandage', 14], ['medkit', 5], ['drink', 8], ['food', 9], ['frag', 5], ['helmet1', 6], ['helmet2', 2.5], ['vest1', 6], ['vest2', 2.5], ['pack1', 6], ['pack2', 3], ['scope2', 4], ['scope4', 1.5], ['supp', 2], ['fuel', 3]],
   2: [['kestrel', 9], ['ravager', 9], ['hornet', 4], ['breacher', 3], ['sentry', 6], ['longbow', 4], ['ammo_556', 10], ['ammo_762', 12], ['ammo_9mm', 5], ['ammo_338', 6], ['ammo_12g', 3],
-    ['bandage', 8], ['medkit', 9], ['drink', 7], ['food', 4], ['frag', 9], ['helmet2', 6], ['helmet3', 3], ['vest2', 6], ['vest3', 3], ['pack2', 5], ['pack3', 3], ['scope4', 5], ['scope8', 2.5], ['scope2', 3], ['supp', 4]],
+    ['bandage', 8], ['medkit', 9], ['drink', 7], ['food', 4], ['frag', 9], ['helmet2', 6], ['helmet3', 3], ['vest2', 6], ['vest3', 3], ['pack2', 5], ['pack3', 3], ['scope4', 5], ['scope8', 2.5], ['scope2', 3], ['supp', 4], ['fuel', 2]],
 };
 // tier 3: food stalls, pantries and supply crates
 TABLE[3] = [['food', 14], ['drink', 4], ['bandage', 3], ['medkit', 1]];

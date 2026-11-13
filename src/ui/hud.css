@@ -74,6 +74,7 @@ span.chip { cursor: default; }
 .ic.drink { background: #5ab4ff; clip-path: polygon(25% 0, 75% 0, 75% 100%, 25% 100%); }
 .ic.helmet, .ic.vest, .ic.pack { background: var(--armor); clip-path: polygon(0 0, 100% 0, 100% 60%, 50% 100%, 0 60%); }
 .ic.throw { background: #9fe870; clip-path: circle(45%); }
+.ic.fuel { background: #e0452e; clip-path: polygon(20% 12%, 62% 12%, 80% 30%, 80% 100%, 20% 100%); }
 .empty { color: var(--faint); font-size: 13px; padding: 10px 2px; }
 .capbar { height: 3px; background: var(--line); margin: 4px 0 8px; }
 .capbar u { display: block; height: 100%; background: var(--hot2); }

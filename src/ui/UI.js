@@ -5,6 +5,7 @@ import { ACTIONS, DIFFS } from '../core/Settings.js';
 import { OUTFITS } from '../characters/Soldier.js';
 import { GLB_OUTFITS, SoldierGLB } from '../characters/SoldierGLB.js';
 import { HEROES } from '../characters/Heroes.js';
+import { PETS } from '../characters/Pet.js';
 import { PRESETS } from '../rendering/Gfx.js';
 import { TOTAL } from '../battleRoyale/Match.js';
 import { fmtTime, clamp, wrapAngle } from '../utils/math.js';
@@ -12,7 +13,7 @@ import { HALF, WORLD } from '../world/WorldData.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html !== undefined) e.innerHTML = html; return e; };
-const WNAME = { frag: 'Frag Grenade', zone: 'the zone', fall: 'gravity', vehicle: 'a vehicle', crash: 'a crash' };
+const WNAME = { frag: 'Frag Grenade', zone: 'the zone', fall: 'gravity', vehicle: 'a vehicle', crash: 'a crash', pet: 'companion', melee: 'melee' };
 
 export class UI {
   constructor(G) {
@@ -67,11 +68,11 @@ export class UI {
         <div><h3>KEY BINDINGS <small>click to rebind</small></h3><div class="keys">${ACTIONS.map(([a, l]) => `<div class="krow"><span>${l}</span><button class="chip key" data-act="bind" data-arg="${a}">${G.settings.label(a)}</button></div>`).join('')}<div class="krow"><span>Shoot / Aim</span><b class="fixed">LMB / RMB</b></div><div class="krow"><span>Pause</span><b class="fixed">ESC</b></div></div><button class="btn sm" data-act="resetkeys">RESET BINDINGS</button></div></div></div>`;
     } else if (name === 'howto') {
       const k = (a) => `<kbd>${G.settings.label(a)}</kbd>`;
-      h = `<div class="p-box">${head('HOW TO PLAY')}<div class="grid2"><div><h3>THE MATCH</h3><ol class="steps"><li><b>Deploy.</b> Press ${k('interact')} to leave the plane. Look down to dive faster, open the parachute with ${k('interact')}.</li><li><b>Loot.</b> Buildings hold weapons, armor and meds. Walk over ammo to grab it, press ${k('interact')} for the rest.</li><li><b>Survive.</b> Stay inside the blue zone. The white circle on the map is the next safe area.</li><li><b>Win.</b> Be the last of 99 standing.</li></ol>
-        <h3>TIPS</h3><ul class="tips"><li>Headshots deal 2.3x. Helmets and vests soak damage until they break.</li><li>Crouching or going prone tightens your spread and makes you harder to spot.</li><li>Gunfire and sprinting draw enemies. A suppressor keeps you quiet.</li><li>Vehicles are fast but loud. Watch the fuel gauge.</li><li>Bandages heal to 75. Energy drinks regenerate the rest.</li><li>Get 3 kills to earn a flying companion (dragon hurls fireballs, ghost skull fires spectral bolts).</li><li>Jetpack flies like a vehicle: W speed up, S brake, A/D turn, SPACE climb (uses fuel), SHIFT descend. Land anywhere, rooftops included.</li></ul><h3>CREDITS</h3><p class="note">3D models from poly.pizza. CC-BY 3.0: Alex Safayan, Bruno Oliveira, CMHT Oculus, Danni Bittman, Darwin Yamamoto, Francisco Hui, Ignition Labs, J-Toastie, Jakers_H, Jarlan Perez, Jens Kull, Julien Kleber (Juliusprod), Nick Slough, Poly by Google, Zsky, dook, jeremy, madtrollstudio. CC0: CreativeTrio, Kay Lousberg, Kenney, Quaternius. Full list in CREDITS.md.</p></div>
+      h = `<div class="p-box">${head('HOW TO PLAY')}<div class="grid2"><div><h3>THE MATCH</h3><ol class="steps"><li><b>Deploy.</b> Press ${k('interact')} to leave the plane. Look down to dive faster, ignite the jetpack with ${k('interact')} and fly it down anywhere, rooftops included.</li><li><b>Loot.</b> Buildings hold weapons, armor and meds. Walk over ammo to grab it, press ${k('interact')} for the rest.</li>${G.match.br() ? '<li><b>Survive.</b> Stay inside the blue zone. The white circle on the map is the next safe area.</li><li><b>Win.</b> Be the last of 99 standing.</li>' : '<li><b>Explore.</b> STORY mode is free roam: follow the six missions, find a hidden cache in every location, grab supply drops and complete bounties.</li><li><b>Win.</b> Finish the final assault on the Citadel. (BATTLE ROYALE mode in Settings brings back the shrinking zone.)</li>'}</ol>
+        <h3>TIPS</h3><ul class="tips"><li>Headshots deal 2.3x. Helmets and vests soak damage until they break.</li><li>Crouching or going prone tightens your spread and makes you harder to spot.</li><li>Gunfire and sprinting draw enemies. A suppressor keeps you quiet.</li><li>Vehicles are fast but loud. Watch the fuel gauge: a jerrycan adds 50% (stand by the vehicle and press ${k('interact')}, or use it from the inventory).</li><li>Bandages heal to 75. Energy drinks regenerate the rest.</li><li>Get 3 kills to earn a flying companion (dragon hurls fireballs, ghost skull fires spectral bolts).</li><li>Jetpack flies like a vehicle: W speed up, S brake, A/D turn, SPACE climb (uses fuel), SHIFT descend. Land anywhere, rooftops included.</li></ul><h3>CREDITS</h3><p class="note">3D models from poly.pizza. CC-BY 3.0: Alex Safayan, Bruno Oliveira, CMHT Oculus, Danni Bittman, Darwin Yamamoto, Francisco Hui, Ignition Labs, J-Toastie, Jakers_H, Jarlan Perez, Jens Kull, Julien Kleber (Juliusprod), Nick Slough, Poly by Google, Quaternius (Witch, Worker and Suit heroes), Zsky, dook, jeremy, madtrollstudio. CC0: CreativeTrio, Kay Lousberg, Kenney, Quaternius. Full list in CREDITS.md.</p></div>
         <div><h3>CONTROLS</h3><div class="keys">${[['Move', k('forward') + k('left') + k('back') + k('right')], ['Look / Shoot / Aim', '<kbd>MOUSE</kbd><kbd>LMB</kbd><kbd>RMB</kbd>'], ['Sprint / Jump', k('sprint') + k('jump')], ['Crouch / Prone', k('crouch') + k('prone')], ['Reload / Fire mode', k('reload') + k('firemode')], ['Interact', k('interact')], ['Weapons', k('slot1') + k('slot2') + k('slot3') + k('slot4')], ['Bandage / Kit / Drink', k('heal1') + k('heal2') + k('heal3')], ['Shoulder / Camera', k('shoulder') + k('camera')], ['Inventory / Map', k('inventory') + k('map')], ['Vehicle', k('forward') + k('back') + ' steer ' + k('left') + k('right') + ' brake ' + k('jump')]].map(([a, b]) => `<div class="krow"><span>${a}</span><div>${b}</div></div>`).join('')}</div></div></div></div>`;
     } else if (name === 'character') {
-      h = `<div class="p-box narrow right">${head('CHARACTER')}<label class="row"><span>Callsign</span><input type="text" id="c-name" maxlength="14" value="${S.name.replace(/"/g, '')}"></label><h3>HERO</h3><div class="heroes">${HEROES.map((h, i) => `<button class="herocard ${i === (S.hero || 0) ? 'on' : ''}" data-act="hero" data-arg="${i}" style="--hc:#${h.accent.toString(16).padStart(6, '0')}"><b>${h.name}</b><span>${h.role}</span><em>${h.blurb}</em></button>`).join('')}</div></div>`;
+      h = `<div class="p-box narrow right">${head('CHARACTER')}<label class="row"><span>Callsign</span><input type="text" id="c-name" maxlength="14" value="${S.name.replace(/"/g, '')}"></label><h3>HERO</h3><div class="heroes">${HEROES.map((h, i) => `<button class="herocard ${i === (S.hero || 0) ? 'on' : ''}" data-act="hero" data-arg="${i}" style="--hc:#${h.accent.toString(16).padStart(6, '0')}"><b>${h.name}</b><span>${h.role}</span><em>${h.blurb}</em></button>`).join('')}</div><h3>COMPANION <small>joins you after 3 kills</small></h3><div class="heroes">${Object.entries(PETS).map(([k, p]) => `<button class="herocard ${k === (S.pet || 'dragon') ? 'on' : ''}" data-act="pet" data-arg="${k}" style="--hc:rgb(${p.halo.map(v => Math.round(v / Math.max(...p.halo) * 255)).join(',')})"><b>${p.name}</b><em>${k === 'dragon' ? 'Hurls fireballs that burst on impact' : 'Fires fast spectral bolts'}</em></button>`).join('')}</div></div>`;
     } else if (name === 'inventory') h = `<div class="p-box wide inv">${head('INVENTORY', 'Left click: use / equip / attach &nbsp;·&nbsp; Right click: drop')}<div class="inv3"><div><h3>VICINITY</h3><div id="i-near" class="ilist"></div></div><div><h3>BACKPACK <small id="i-cap"></small></h3><div class="capbar"><u id="i-capfill"></u></div><div id="i-bag" class="ilist"></div></div><div><h3>LOADOUT</h3><div id="i-load"></div></div></div></div>`;
     else if (name === 'map') h = `<div class="p-box mapbox">${head('DROPZONE ISLAND', 'Click to place a marker')}<canvas id="bigmap" width="760" height="760"></canvas></div>`;
     this.pan.innerHTML = h;
@@ -92,16 +93,16 @@ export class UI {
     else if (a === 'rscale') { localStorage.setItem('dz.rscale', arg.replace('%', '')); G.gfx.resize(); this.open('settings'); }
     else if (a === 'res') { localStorage.setItem('dz.res', arg); G.gfx.resMode = arg; G.gfx.resize(); this.open('settings'); }
         else if (a === 'preset') { localStorage.setItem('dz.preset', arg); location.reload(); }
-    else if (a === 'gmode') { S.mode = arg; G.settings.save(); this.open('settings'); }
+    else if (a === 'gmode') { S.mode = arg; G.settings.save(); if (G.state === 'play' || G.state === 'paused') this.toast('GAME MODE CHANGES NEXT MATCH'); this.open('settings'); }
     else if (a === 'diff') { S.difficulty = arg; G.settings.save(); this.open('settings'); }
     else if (a === 'toggle') { S[arg] = !S[arg]; G.settings.save(); this.open('settings'); }
     else if (a === 'bind') { btn.textContent = 'PRESS KEY'; btn.classList.add('on'); G.input.capture = (code) => { if (code !== 'Escape') { S.keys[arg] = code; G.settings.save(); } this.open('settings'); }; }
     else if (a === 'resetkeys') { for (const [k, , c] of ACTIONS) S.keys[k] = c; G.settings.save(); this.open('settings'); }
-    else if (a === 'pet') { S.pet = arg; G.settings.save(); this.open('character'); }
+    else if (a === 'pet') { S.pet = arg; G.settings.save(); if (G.pet && G.pet.unlocked) G.pet.setKind(arg); this.open('character'); }
     else if (a === 'hero') { S.hero = +arg; G.settings.save(); G.player.setHero(S.hero); this.open('character'); }
     else if (a === 'outfit') { S.outfit = +arg; G.settings.save(); G.player.outfit = S.outfit; if (G.player.soldier) G.player.soldier.setOutfit(S.outfit); this.open('character'); }
     else if (a === 'take') { const it = this._nearItems && this._nearItems[+arg]; if (it && it.alive) G.player.pickup(it); this._inv(); }
-    else if (a === 'use') { const p = G.player, d = ITEMS[arg]; if (d.type === 'heal') { p.tryHeal(arg); this.close(); } else if (d.type === 'scope' || d.type === 'supp') { if (!p.attach(arg)) this.toast('CANNOT ATTACH TO THIS WEAPON'); this._inv(); } else if (d.type === 'throw') { p.switchTo(3); this.close(); } }
+    else if (a === 'use') { const p = G.player, d = ITEMS[arg]; if (d.type === 'heal') { p.tryHeal(arg); this.close(); } else if (d.type === 'scope' || d.type === 'supp') { if (!p.attach(arg)) this.toast('CANNOT ATTACH TO THIS WEAPON'); this._inv(); } else if (d.type === 'throw') { p.switchTo(3); this.close(); } else if (d.type === 'fuel') { if (p.refuel()) this._inv(); } }
     else if (a === 'slot') { G.player.switchTo(+arg); this._inv(); } else if (a === 'dropw') { G.player.dropWeapon(+arg); this._inv(); } else if (a === 'detach') { const [s, w] = arg.split(':'); G.player.detach(+s, w); this._inv(); }
   }
 
@@ -109,7 +110,7 @@ export class UI {
     if (this.panel !== 'inventory') return; const G = this.G, p = G.player;
     const near = this._nearItems = G.loot.near(p.pos.x, p.pos.z, 3.2, []).filter(i => i.alive && Math.abs(i.y - p.pos.y) < 1.8).slice(0, 14);
     $('#i-near').innerHTML = near.length ? near.map((it, i) => `<button class="item" data-act="take" data-arg="${i}"><i class="ic ${ITEMS[it.id].type}"></i><span>${itemName(it.id)}</span><b>${it.n > 1 ? 'x' + it.n : ''}</b></button>`).join('') : '<p class="empty">Nothing within reach</p>';
-    const order = ['heal', 'throw', 'ammo', 'scope', 'supp']; const keys = Object.keys(p.bag).filter(k => p.bag[k] > 0).sort((a, b) => order.indexOf(ITEMS[a].type) - order.indexOf(ITEMS[b].type));
+    const order = ['heal', 'throw', 'fuel', 'ammo', 'scope', 'supp']; const keys = Object.keys(p.bag).filter(k => p.bag[k] > 0).sort((a, b) => order.indexOf(ITEMS[a].type) - order.indexOf(ITEMS[b].type));
     $('#i-bag').innerHTML = keys.length ? keys.map(k => `<button class="item" data-act="use" data-arg="${k}" data-drop="${k}"><i class="ic ${ITEMS[k].type}"></i><span>${itemName(k)}</span><b>x${p.bag[k]}</b></button>`).join('') : '<p class="empty">Backpack is empty</p>';
     const w = p.weight(), c = p.capacity(); $('#i-cap').textContent = Math.round(w) + ' / ' + c; $('#i-capfill').style.width = clamp(w / c * 100, 0, 100) + '%';
     const slot = (i, label) => { const wp = p.weapons[i]; if (!wp) return `<div class="wslot empty"><em>${label}</em><span>EMPTY</span></div>`; const d = WEAPONS[wp.id]; return `<div class="wslot ${p.cur === i ? 'on' : ''}"><em>${label} · ${d.cls}</em><button class="wname" data-act="slot" data-arg="${i}">${d.name}</button><span>${wp.ammo} / ${p.ammoFor(d)} · ${AMMO_NAMES[d.ammo]}</span><div class="atts">${wp.scope ? `<button class="chip on" data-act="detach" data-arg="${i}:scope">${wp.scope}x SCOPE ✕</button>` : d.baseScope ? `<span class="chip">${d.baseScope}x BUILT-IN</span>` : ''}${wp.supp ? `<button class="chip on" data-act="detach" data-arg="${i}:supp">SUPPRESSOR ✕</button>` : ''}<button class="chip" data-act="dropw" data-arg="${i}">DROP</button></div></div>`; };
@@ -126,6 +127,7 @@ export class UI {
     if (Z.active || M.state !== 'idle') { if (Z.active) { ctx.strokeStyle = '#3aa0ff'; ctx.lineWidth = lw * 1.6; ctx.beginPath(); ctx.arc(this._w2m(Z.cx, size), this._w2m(Z.cz, size), Z.r * s, 0, 6.283); ctx.stroke(); ctx.fillStyle = 'rgba(40,110,255,.16)'; ctx.beginPath(); ctx.rect(0, 0, size, size); ctx.arc(this._w2m(Z.cx, size), this._w2m(Z.cz, size), Z.r * s, 0, 6.283, true); ctx.fill('evenodd'); }
       if (Z.active && Z.nr > 1) { ctx.strokeStyle = '#fff'; ctx.lineWidth = lw; ctx.beginPath(); ctx.arc(this._w2m(Z.nx, size), this._w2m(Z.nz, size), Z.nr * s, 0, 6.283); ctx.stroke(); } }
     if (G.activities) G.activities.drawMap(ctx, (v) => this._w2m(v, size), lw);
+    if (G.match) G.match.drawObjectives(ctx, (v) => this._w2m(v, size), lw);
     if (this.marker) { const mx = this._w2m(this.marker.x, size), mz = this._w2m(this.marker.z, size); ctx.fillStyle = '#ffb02e'; ctx.beginPath(); ctx.moveTo(mx, mz); ctx.lineTo(mx - lw * 4, mz - lw * 9); ctx.lineTo(mx + lw * 4, mz - lw * 9); ctx.fill(); }
   }
   _bigmap() {
@@ -158,6 +160,7 @@ export class UI {
     if (this.marker) mark(this.marker.x, this.marker.z, '#ffb02e'); if (G.zone.active && G.zone.outside(p.pos.x, p.pos.z)) mark(G.zone.cx, G.zone.cz, '#3aa0ff'); else if (G.zone.active && Math.hypot(p.pos.x - G.zone.nx, p.pos.z - G.zone.nz) > G.zone.nr) mark(G.zone.nx, G.zone.nz, '#ffffff');
     for (const t of this.threats) mark(t.x, t.z, `rgba(255,70,50,${clamp(t.t / 2.2, 0, 1)})`);
     if (G.activities) for (const m of G.activities.marks()) mark(m.x, m.z, m.col);
+    if (G.match) for (const o of G.match.objectives()) if (o.main) mark(o.x, o.z, o.kind === 'foe' ? '#ff5a4a' : '#5fe6ff');
     ctx.globalAlpha = 1; ctx.fillStyle = '#ff5a1f'; ctx.fillRect(W / 2 - 1, 22, 2, 14); ctx.fillStyle = '#ece8dc'; ctx.font = '700 11px Consolas, monospace'; ctx.fillText(Math.round(hdg) + '°', W / 2, 44);
   }
 
@@ -225,7 +228,7 @@ export class UI {
     if (this.cache.ck !== ck) { this.cache.ck = ck; $('#cons').innerHTML = [['bandage', 'heal1', 'BANDAGE'], ['medkit', 'heal2', 'FIRST AID'], ['drink', 'heal3', 'ENERGY']].map(([id, a, n]) => `<div class="con ${p.bag[id] ? '' : 'none'}"><kbd>${S.label(a)}</kbd><i class="ic ${id}"></i><b>${p.bag[id] || 0}</b><span>${n}</span></div>`).join(''); }
     // zone
     const Z = G.zone; if (Z.active) { this.set('z-time', fmtTime(Z.timer > 9000 ? 0 : Z.timer)); this.set('z-label', Z.shrinking ? 'ZONE SHRINKING' : 'ZONE HOLDS'); const out = Z.outside(p.pos.x, p.pos.z); const zc = (Z.shrinking ? 's' : 'w') + (out ? 'o' : ''); if (this.cache.zc !== zc) { this.cache.zc = zc; $('.zone').className = 'zone ' + (Z.shrinking ? 'shr ' : '') + (out ? 'out' : ''); } }
-    else { this.set('z-time', '--:--'); this.set('z-label', p.mode === 'plane' ? 'DEPLOYING' : G.settings.d.mode === 'BATTLE ROYALE' ? 'ZONE PENDING' : 'FREE ROAM · EXPLORE'); }
+    else { this.set('z-time', '--:--'); this.set('z-label', p.mode === 'plane' ? 'DEPLOYING' : G.match.br() ? 'ZONE PENDING' : 'FREE ROAM · EXPLORE'); }
     G.gfx.fx.uZone.value = Z.active && Z.outside(p.pos.x, p.pos.z) && p.mode !== 'plane' ? 1 : 0;
     // crosshair
     const cross = $('#cross'), ground = p.mode === 'ground' && p.alive; const showCross = ground && !p.scoped && (w || p.cur === 3) && !this.panel;

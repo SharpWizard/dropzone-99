@@ -31,7 +31,7 @@ export class Input {
   constructor(canvas, settings) {
     this.s = settings; this.canvas = canvas; this.down = new Set(); this.hit = new Set(); this.mb = [false, false, false]; this.mhit = [false, false, false]; this.mx = 0; this.my = 0; this.wheel = 0; this.locked = false; this.enabled = false; this.capture = null;
     addEventListener('keydown', (e) => {
-      if (this.capture) { e.preventDefault(); const c = this.capture; this.capture = null; c(e.code); return; }
+      if (this.capture) { e.preventDefault(); e.stopImmediatePropagation(); const c = this.capture; this.capture = null; c(e.code); return; }
       if (e.code === 'Tab' || e.code === 'Space' || (this.enabled && (e.code.startsWith('Arrow') || e.code === 'AltLeft'))) e.preventDefault();
       if (e.target && (e.target.tagName === 'INPUT')) return;
       if (!e.repeat) this.hit.add(e.code); this.down.add(e.code);

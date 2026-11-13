@@ -68,21 +68,25 @@ function proceduralPlane(G) {
 const DROPS = [['iron', 16], ['base', 10], ['port', 9], ['river', 8], ['green', 7], ['steel', 8], ['dust', 7], ['last', 6], ['forest', 6], ['peak', 2], ['', 21]];
 
 export class Match {
-  constructor(G) { this.G = G; this.state = 'idle'; this.plane = { pos: new THREE.Vector3(), yaw: 0, mesh: planeMesh(G), s: 0 }; this.plane.mesh.visible = false; G.gfx.scene.add(this.plane.mesh); this.time = 0; this.alive = TOTAL; this.canJump = false; this.forceJump = false; this.endT = -1; this.result = null; }
+  constructor(G) { this.G = G; this.state = 'idle'; this.plane = { pos: new THREE.Vector3(), yaw: 0, mesh: planeMesh(G), s: 0 }; this.plane.mesh.visible = false; G.gfx.scene.add(this.plane.mesh);
+    // objective beacon: a cyan light beam over the current mission objective
+    this.beacon = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.7, 400, 12, 1, true), new THREE.MeshBasicMaterial({ color: new THREE.Color(0.35, 1.8, 2.6), transparent: true, opacity: 0.3, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false })); this.beacon.visible = false; this.beacon.renderOrder = 5; G.gfx.scene.add(this.beacon); this.obj = []; this.objT = 0;
+    this.time = 0; this.alive = TOTAL; this.canJump = false; this.forceJump = false; this.endT = -1; this.result = null; }
 
   start() {
-    const G = this.G, R = this.R = new RNG((Date.now() % 1e9) | 0); this.state = 'plane'; this.time = 0; this.endT = -1; this.result = null; this.canJump = false; this.forceJump = false; this.landed = false;
+    const G = this.G, R = this.R = new RNG((Date.now() % 1e9) | 0); this.state = 'plane'; this.mode = G.settings.d.mode; this.win = false; this.time = 0; this.endT = -1; this.result = null; this.canJump = false; this.forceJump = false; this.landed = false;
     G.combat.reset(); G.fx.clear(); G.loot.clear(); G.loot.spawnAll(R.int(1, 1e9)); if (G.animals) G.animals.spawn(); G.vehicles.reset(R);
     G.player.reset(); G.player.outfit = G.settings.d.outfit; G.player.name = G.settings.d.name || 'YOU'; if (G.player.soldier) G.player.soldier.setOutfit(G.player.outfit); G.ai.reset();
-    G.zone.reset(R); this.alive = G.chars.length;
-    // story mission 1: five survivors hide in the Civilian Survival Zone (the 'river' location)
+    G.zone.reset(R);
+    // story mission 1: six survivors hide in the Civilian Survival Zone (the 'river' location)
     if (G.mission && G.mission.targets) for (const t of G.mission.targets) G.gfx.scene.remove(t.mesh);
     if (G.mission && G.mission.points) for (const t of G.mission.points) G.gfx.scene.remove(t.mesh);
     { const L = G.world.locations.find(l => l.id === 'river'); G.mission = { need: 6, got: 0, won: false, stage: 1 }; this.seen = new Set(); const IRON = G.world.locations.find(l => l.id === 'iron');
       G.ai.bots.slice(0, 18).forEach((b, i) => { const L0 = L; { /* six hide by the river, the rest are caught in the streets of Iron City */ } b.civ = true; b.modelKey = PEOPLE_KEYS[(i * 5) % PEOPLE_KEYS.length]; if (b.soldier) { G.gfx.scene.remove(b.soldier.group); b.soldier = null; } b.weapons = [null, null, null]; b.cur = -1; b._wkey = ''; b.bag = {}; b.drop = null; b.mode = 'ground'; b.grounded = true; b.speedNow = 0; b.rescueT = 0; b.home = null; b.goal = null;
         const LL = i < 6 ? L0 : IRON; const a = i * 2.4 + R.f(), r = R.range(10, LL.r * 0.55), x = LL.x + Math.cos(a) * r, z = LL.z + Math.sin(a) * r; const f = G.nav.nearestFree(x, z, 20) || { x, z }; b.pos.set(f.x, G.world.heightAt(f.x, f.z), f.z); b.yaw = a; });
-      G.ui.banner('MISSION 1 · INTO THE RUINS', 'Find the survivors hiding in the Civilian Survival Zone');
+      G.ui.banner('MISSION 1 · INTO THE RUINS', 'Rescue 6 survivors: follow the cyan beacon and stand beside them');
     }
+    this.alive = G.chars.reduce((n, c) => n + (c.civ ? 0 : 1), 0);
     // flight path across the island
     const a = R.f() * 6.283, ox = R.range(-220, 220), oz = R.range(-220, 220); this.dir = { x: Math.sin(a), z: Math.cos(a) }; this.org = { x: ox - this.dir.x * 1350, z: oz - this.dir.z * 1350 }; this.len = 2700;
     const P = this.plane; P.s = 0; P.yaw = a; P.mesh.visible = true; P.mesh.rotation.y = a; this._planePos();
@@ -106,10 +110,38 @@ export class Match {
     G.ui.onMatchStart();
   }
 
+  // the current mission's objectives, [{ x, z, kind, main }]; 'main' is the one the waypoint, beacon and distance point to
+  objectives() { return this.obj; }
+  _objectives() {
+    const G = this.G, M = G.mission, P = G.player, out = []; if (!M || M.won || this.state === 'idle' || this.state === 'over' || !P.alive) return out;
+    const pick = (list) => { let b = null, bd = 1e18; for (const o of list) { const d = (o.x - P.pos.x) ** 2 + (o.z - P.pos.z) ** 2; if (d < bd) { bd = d; b = o; } } if (b) b.main = true; return list; };
+    const air = (b) => b.mode === 'plane' || b.mode === 'chute' || b.mode === 'fall';
+    if (M.stage === 1) { for (const b of G.ai.bots) if (b.civ && b.alive && !b.rescued) out.push({ x: b.pos.x, z: b.pos.z, kind: 'civ' }); return pick(out); }
+    if (M.stage === 2) { const B = G.world.locations.find(l => l.id === 'base'); return [{ x: B.x, z: B.z, kind: 'goal', main: true }]; }
+    if (M.stage === 3) { const foes = []; for (const b of G.ai.bots) if (!b.civ && b.alive && !air(b)) foes.push({ x: b.pos.x, z: b.pos.z, kind: 'foe' }); const l = pick(foes).filter(o => o.main); return l; }
+    if (M.stage === 4 && M.targets) { for (const t of M.targets) if (!t.done) out.push({ x: t.x, z: t.z, kind: 'goal' }); return pick(out); }
+    if (M.stage === 5 && M.boss && M.boss.alive) return [{ x: M.boss.pos.x, z: M.boss.pos.z, kind: 'foe', main: true }];
+    if (M.stage === 6 && M.points) { const t = M.points.find(q => !q.done); return t ? [{ x: t.x, z: t.z, kind: 'goal', main: true }] : out; }
+    return out;
+  }
+  _updateObjectives(dt) {
+    const G = this.G; this.objT -= dt; if (this.objT <= 0) { this.objT = 0.25; this.obj = this._objectives(); }
+    const m = this.obj.find(o => o.main), P = G.player; const d = m ? Math.hypot(m.x - P.pos.x, m.z - P.pos.z) : 0; this.objDist = m ? d : -1;
+    this.beacon.visible = !!m && d > 14 && P.mode !== 'plane'; if (this.beacon.visible) { const gy = G.world.heightAt(m.x, m.z); this.beacon.position.set(m.x, gy + 200, m.z); this.beacon.material.opacity = 0.2 + Math.sin(this.time * 3) * 0.07; }
+  }
+  // markers for the minimap and the big map
+  drawObjectives(ctx, w2m, lw) {
+    for (const o of this.obj) { const x = w2m(o.x), z = w2m(o.z);
+      if (o.kind === 'civ' && !o.main) { ctx.fillStyle = '#7dffb0'; ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = lw * 0.8; ctx.beginPath(); ctx.arc(x, z, lw * 2.6, 0, 6.283); ctx.fill(); ctx.stroke(); continue; }
+      const r = lw * (o.main ? 6 : 4.5); ctx.fillStyle = o.kind === 'foe' ? '#ff5a4a' : '#5fe6ff'; ctx.strokeStyle = '#fff'; ctx.lineWidth = lw * 1.2;
+      ctx.beginPath(); ctx.moveTo(x, z - r); ctx.lineTo(x + r, z); ctx.lineTo(x, z + r); ctx.lineTo(x - r, z); ctx.closePath(); if (o.main) ctx.fill(); ctx.stroke(); }
+  }
+  br() { return (this.mode || this.G.settings.d.mode) === 'BATTLE ROYALE'; }
   _missionUI() {
     const G = this.G, M = G.mission; let el = document.getElementById('mission');
     if (!el) { el = document.createElement('div'); el.id = 'mission'; el.style.cssText = 'position:fixed;left:20px;top:92px;font:600 12px/1.3 system-ui,sans-serif;letter-spacing:.12em;color:#9ff4ff;text-shadow:0 0 8px rgba(95,230,255,.5);pointer-events:none;z-index:4'; document.body.appendChild(el); }
-    el.textContent = M.won ? 'MISSION COMPLETE' : M.stage === 6 && M.points ? (function () { const t = M.points.find(q => !q.done); return t ? 'MISSION 6 · THE FINAL ASSAULT — ' + t.name + ' ' + Math.min(t.need, t.hold).toFixed(1) + ' / ' + t.need : 'MISSION COMPLETE'; })() : M.stage === 5 && M.boss ? 'MISSION 5 · THE TITAN WALKER — HULL ' + Math.max(0, Math.round((M.boss.hp / M.boss.maxHp) * 100)) + '%' : M.stage === 4 ? 'MISSION 4 · BURN THE ALIEN HIVES — REACTORS ' + (M.done || 0) + ' / 3' : M.stage === 3 ? 'MISSION 3 · THE RESISTANCE AWAKENS — PATROLS ' + Math.max(0, (G.player.kills || 0) - M.killBase) + ' / 3' : M.stage === 2 ? 'MISSION 2 · THE RESISTANCE BUNKER — ' + Math.round(M.dist || 0) + ' M' + (M.hold ? ' · HOLD ' + Math.max(0, 3 - M.hold).toFixed(1) : '') : 'MISSION 1 · INTO THE RUINS — SURVIVORS ' + M.got + ' / ' + M.need;
+    el.textContent = M.won ? 'MISSION COMPLETE' : M.stage === 6 && M.points ? (function () { const t = M.points.find(q => !q.done); return t ? 'MISSION 6 · THE FINAL ASSAULT — ' + t.name + ' ' + Math.min(t.need, t.hold).toFixed(1) + ' / ' + t.need : 'MISSION COMPLETE'; })() : M.stage === 5 && M.boss ? 'MISSION 5 · THE TITAN WALKER — HULL ' + Math.max(0, Math.round((M.boss.hp / M.boss.maxHp) * 100)) + '%' : M.stage === 4 ? 'MISSION 4 · BURN THE ALIEN HIVES — REACTORS ' + (M.done || 0) + ' / 3' : M.stage === 3 ? 'MISSION 3 · THE RESISTANCE AWAKENS — PATROLS ' + Math.max(0, (G.player.kills || 0) - M.killBase) + ' / 3' : M.stage === 2 ? 'MISSION 2 · THE RESISTANCE BUNKER' + (M.hold ? ' — HOLD ' + Math.max(0, 3 - M.hold).toFixed(1) : '') : 'MISSION 1 · INTO THE RUINS — SURVIVORS ' + M.got + ' / ' + M.need;
+    if (!M.won && this.objDist >= 0) el.textContent += '  ·  ' + Math.round(this.objDist) + ' M';
     el.style.display = G.state === 'play' || G.state === 'paused' ? 'block' : 'none';
   }
   _celebrate() { const G = this.G, p = G.player.pos; G.fx.burst(p.x, p.y + 7, p.z); G.player.shakeCam(0.5); G.ui.shakeHud(1); }
@@ -128,18 +160,19 @@ export class Match {
           for (const w of [-14, 14]) S.spawn(P.pos.x - d.x * 6 + rx * w, y + 1.5, P.pos.z - d.z * 6 + rz * w, 0, 0.3, 0, 1, 1, 1, 0.2, 0.9, 3.6, 0.9, 0, 0);
           for (const w of [-3.5, 3.5]) { K.spawn(P.pos.x - d.x * 18 + rx * w, y + 1, P.pos.z - d.z * 18 + rz * w, -d.x * 14, 0, -d.z * 14, 1.6, 2.8, 5, 1, 1.6, 0.16, 3, 0, 0); S.spawn(P.pos.x - d.x * 20 + rx * w, y + 1, P.pos.z - d.z * 20 + rz * w, -d.x * 6, 0.4, -d.z * 6, 0.8, 0.82, 0.86, 0.16, 1.4, 2.4, 1.6, 0, 0.4); }
           if (G.player.mode === 'plane') for (let i = 0; i < 2; i++) { const f = 110 + Math.random() * 110, l = (Math.random() - 0.5) * 150; S.spawn(P.pos.x + d.x * f + rx * l, y + (Math.random() - 0.5) * 60, P.pos.z + d.z * f + rz * l, 0, 0, 0, 1, 1, 1, 0.1 + Math.random() * 0.12, 10 + Math.random() * 22, 4, 3, 0, 0); } } }
-      const dc = Math.hypot(P.pos.x, P.pos.z); this.canJump = dc < 960 && P.s > 200 && P.s < this.len - 150; this.forceJump = G.player.mode === 'plane' && P.s > this.len - 420 && dc > 700 && P.s > this.len / 2;
+      const dc = Math.hypot(P.pos.x, P.pos.z); this.canJump = dc < 960 && P.s > 200 && P.s < this.len - 150; this.forceJump = G.player.mode === 'plane' && (P.s > this.len / 2 && dc > 800 || P.s > this.len - 160); // leaving the island: jump while still over the coast
       for (const b of G.ai.bots) if (b.mode === 'plane' && P.s >= b.jumpS) { const D = b.drop; D.sx = P.pos.x; D.sy = P.pos.y - 6; D.sz = P.pos.z; D.ty = Math.max(G.world.heightAt(D.tx, D.tz), -1); D.t = 0; D.dur = 24 + Math.hypot(D.tx - D.sx, D.tz - D.sz) / 24 + b.R.range(0, 8); b.pos.set(D.sx, D.sy, D.sz); b.mode = 'chute'; }
       if (P.s > this.len + 500) { P.mesh.visible = false; }
       if (this.state === 'plane' && P.s > this.len - 100 && G.player.mode !== 'plane') { this.state = 'play'; }
-      if (this.state === 'plane' && G.player.mode !== 'plane' && !G.zone.active && G.settings.d.mode === 'BATTLE ROYALE' && P.s > this.len * 0.75) { G.zone.begin(); this.state = 'play'; G.ui.banner('SAFE ZONE MARKED', 'First circle is on your map'); }
+      if (this.state === 'plane' && G.player.mode !== 'plane' && !G.zone.active && this.br() && P.s > this.len * 0.75) { G.zone.begin(); this.state = 'play'; G.ui.banner('SAFE ZONE MARKED', 'First circle is on your map'); }
     }
-    if (!G.zone.active && G.settings.d.mode === 'BATTLE ROYALE' && this.time > 55 && G.player.mode !== 'plane') { G.zone.begin(); this.state = 'play'; G.ui.banner('SAFE ZONE MARKED', 'First circle is on your map'); }
-    G.zone.update(dt);
+    if (!G.zone.active && this.br() && this.time > 55 && G.player.mode !== 'plane') { G.zone.begin(); this.state = 'play'; G.ui.banner('SAFE ZONE MARKED', 'First circle is on your map'); }
+    G.zone.update(dt); this._updateObjectives(dt);
     // exploration: every named location you set foot in for the first time is logged and rewarded
     this._dT = (this._dT || 0) - dt; if (this._dT <= 0 && G.player.alive && G.player.mode === 'ground') { this._dT = 1; const L = G.world.locationAt(G.player.pos.x, G.player.pos.z); this.seen = this.seen || new Set();
       if (L && !this.seen.has(L.id)) { this.seen.add(L.id); G.player.points = (G.player.points || 0) + 50; G.fx.sparkle(G.player.pos.x, G.player.pos.y + 1, G.player.pos.z, 1, 0.8, 0.3, 22); if (G.career) G.career.discover(L.id); G.ui.banner('DISCOVERED · ' + L.name, '+50 POINTS  ·  ' + this.seen.size + ' / ' + G.world.locations.length + ' LOCATIONS'); G.audio.ui('click'); } }
     if (G.mission) { const M = G.mission, P = G.player;
+      if (M.stage === 1) { this._civT = (this._civT || 0) - dt; if (this._civT <= 0) { this._civT = 1; const left = G.ai.bots.reduce((n, b) => n + (b.civ && b.alive && !b.rescued ? 1 : 0), 0); if (M.got + left < M.need) { M.need = Math.max(1, M.got + left); if (M.got < M.need) G.ui.toast('SURVIVORS LOST · RESCUE THE ' + (M.need - M.got) + ' STILL ALIVE'); } } }
       if (M.stage === 1 && M.got >= M.need) { M.stage = 2; G.ui.banner('MISSION 2 · THE RESISTANCE BUNKER', 'Escort complete. Reach the bunker in the north-east and hold it'); G.audio.ui('win'); G.match._celebrate(); }
       if (M.stage === 2 && !M.won && P.alive && this.state !== 'over' && this.endT < 0) { const B = G.world.locations.find(l => l.id === 'base'); M.dist = Math.hypot(P.pos.x - B.x, P.pos.z - B.z); M.hold = M.dist < 30 ? (M.hold || 0) + dt : 0;
         if (M.hold > 3) { // bunker secured: the armoury opens and the resistance equips the player
@@ -180,14 +213,14 @@ export class Match {
 
   onKill(attacker, victim, wid, head) {
     const G = this.G; this.alive = G.chars.reduce((n, c) => n + (c.alive && !c.civ ? 1 : 0), 0); victim.rank = this.alive + 1;
-    if (attacker && attacker !== victim) attacker.kills++;
-    if (attacker && attacker.isPlayer && attacker !== victim) attacker.points = (attacker.points || 0) + (head ? 150 : 100);
+    if (attacker && attacker !== victim && !victim.civ) attacker.kills++;
+    if (attacker && attacker.isPlayer && attacker !== victim && !victim.civ) attacker.points = (attacker.points || 0) + (head ? 150 : 100);
     G.fx.kill(victim.pos.x, victim.pos.y, victim.pos.z); if (attacker && attacker.isPlayer && attacker !== victim && G.activities) G.activities.onKill(victim, head); if (attacker && attacker.isPlayer && attacker !== victim) { G.player.shakeCam(head ? 0.5 : 0.32); G.ui.shakeHud(1); if (!victim.civ) G.ui.pointsPop(head ? 150 : 100, head ? 'HEADSHOT' : 'KILL'); }
-    if (victim.civ) { if (attacker && attacker.isPlayer) { attacker.points -= 300; attacker.kills--; G.ui.toast('CIVILIAN KILLED · -200 POINTS'); } else if (victim.pos.distanceTo(G.player.pos) < 120) G.ui.toast('A CIVILIAN WAS KILLED NEARBY'); }
+    if (victim.civ) { if (attacker && attacker.isPlayer) { attacker.points = (attacker.points || 0) - 200; G.ui.toast('CIVILIAN KILLED · -200 POINTS'); } else if (victim.pos.distanceTo(G.player.pos) < 120) G.ui.toast('A CIVILIAN WAS KILLED NEARBY'); }
     if (attacker && attacker.isPlayer && attacker.kills >= PET_KILLS && G.pet && !G.pet.unlocked) G.pet.unlock(attacker);
     G.ui.feed(attacker && attacker !== victim ? attacker : null, victim, wid, head);
-    if (attacker && attacker.isPlayer && attacker !== victim) { G.audio.kill(); G.ui.killBanner(victim.name, attacker.kills, head); }
-    if (victim.isPlayer) { this.win = false; this.endT = 2.6; G.audio.ui('lose'); }
+    if (attacker && attacker.isPlayer && attacker !== victim && !victim.civ) { G.audio.kill(); G.ui.killBanner(victim.name, attacker.kills, head); }
+    if (victim.isPlayer && !(this.win && this.endT >= 0)) { this.win = false; this.endT = 2.6; G.audio.ui('lose'); }
     else if (this.alive === 1 && G.player.alive) { this.win = true; G.player.rank = 1; this.endT = 1.6; }
     if (this.alive <= 10 && this.alive > 1 && !victim.isPlayer && this.alive !== this._lastAnn) { this._lastAnn = this.alive; if (this.alive === 10 || this.alive === 5 || this.alive === 2) G.ui.banner(this.alive + ' SURVIVORS LEFT', this.alive === 2 ? 'Final duel' : 'The circle is closing'); }
   }
@@ -196,7 +229,7 @@ export class Match {
     this._bankResult = true;
     this.result = { win: !!this.win, rank: this.win ? 1 : p.rank || this.alive + 1, kills: p.kills, points: p.points || 0, damage: Math.round(p.dmgDealt), time: this.time, accuracy: p.shots ? Math.round(p.hits / p.shots * 100) : 0, headshots: p.headshots };
     if (this.G.career) { const up = this.G.career.bank(this.result); this.result.rankUp = up ? up[1] + (up[2] ? ' · ' + up[2] : '') : null; this.result.career = this.G.career.summary(); }
-    if (this.win) G.audio.ui('win'); G.match._celebrate(); G.ui.showEnd(this.result);
+    if (this.win) { G.audio.ui('win'); this._celebrate(); } G.ui.showEnd(this.result);
   }
-  stop() { this.state = 'idle'; this.plane.mesh.visible = false; this.G.zone.active = false; this.G.zone.mesh.visible = false; }
+  stop() { this.state = 'idle'; this.plane.mesh.visible = false; this.beacon.visible = false; this.obj = []; this.G.zone.active = false; this.G.zone.mesh.visible = false; }
 }
