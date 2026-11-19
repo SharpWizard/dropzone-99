@@ -3,13 +3,54 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DROPZONE 99 — Drop in. Gear up. Outlast them all.</title>
+<title>DROPZONE 99 · Free Battle Royale Game in Your Browser (No Download)</title>
+<meta name="description" content="Play DROPZONE 99 free in your browser: a 3D third-person battle royale. Drop from the plane, loot guns, drive jeeps and tanks, survive the zone against 98 bots. No download, no install. Built with Three.js and Claude Opus 5.5.">
+<meta name="keywords" content="battle royale, browser game, free online game, play in browser, no download, 3D shooter, third-person shooter, WebGL game, Three.js game, survival shooter, HTML5 game, free fire style, pubg style, AI made game, Claude Opus">
+<meta name="author" content="SharpWizard">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#ff5a1f">
+<link rel="canonical" href="https://sharpwizard.github.io/dropzone-99/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="DROPZONE 99">
+<meta property="og:title" content="DROPZONE 99 · Free 3D Battle Royale in Your Browser">
+<meta property="og:description" content="99 drop in. One survives. Skydive onto the island, loot, drive and fight 98 bots. Free, no download. Built with Claude Opus 5.5.">
+<meta property="og:url" content="https://sharpwizard.github.io/dropzone-99/">
+<meta property="og:image" content="https://sharpwizard.github.io/dropzone-99/og-image.jpg">
+<meta property="og:image:width" content="1600">
+<meta property="og:image:height" content="900">
+<meta property="og:image:alt" content="Skydiving over the DROPZONE 99 island in a browser battle royale">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DROPZONE 99 · Free 3D Battle Royale in Your Browser">
+<meta name="twitter:description" content="99 drop in. One survives. Play free in your browser, no download. Built with Claude Opus 5.5.">
+<meta name="twitter:image" content="https://sharpwizard.github.io/dropzone-99/og-image.jpg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "DROPZONE 99",
+  "url": "https://sharpwizard.github.io/dropzone-99/",
+  "image": "https://sharpwizard.github.io/dropzone-99/og-image.jpg",
+  "description": "A free 3D third-person battle royale that runs in the browser. Skydive onto an island, loot weapons, drive vehicles and outlast 98 AI opponents.",
+  "genre": ["Battle royale", "Third-person shooter", "Action"],
+  "gamePlatform": "Web browser",
+  "applicationCategory": "Game",
+  "operatingSystem": "Windows, macOS, Linux, ChromeOS",
+  "playMode": "SinglePlayer",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "SharpWizard", "url": "https://github.com/SharpWizard" },
+  "codeRepository": "https://github.com/SharpWizard/dropzone-99"
+}
+</script>
 <link rel="stylesheet" href="/src/ui/ui.css">
 <link rel="stylesheet" href="/src/ui/hud.css">
 </head>
 <body>
 <div id="app">
-  <canvas id="view" tabindex="0"></canvas>
+  <canvas id="view" tabindex="0" aria-label="DROPZONE 99 game view"></canvas>
   <div id="ui"></div>
   <div id="boot">
     <div class="boot-logo">DROPZONE <b>99</b></div>
@@ -18,6 +59,7 @@
     <div class="boot-msg" id="boot-msg">Starting engines</div>
   </div>
 </div>
+<noscript><h1>DROPZONE 99</h1><p>A free 3D battle royale game that runs in your browser. Turn on JavaScript and WebGL to play.</p></noscript>
 <script type="module" src="/src/main.js"></script>
 </body>
 </html>

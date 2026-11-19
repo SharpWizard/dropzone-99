@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "DROPZONE 99 - 3D third-person battle royale (Three.js)",
+  "description": "DROPZONE 99 - free 3D third-person battle royale game for the browser (Three.js, WebGL). Built with Claude Opus 5.5.",
+  "homepage": "https://sharpwizard.github.io/dropzone-99/",
+  "keywords": ["battle-royale", "browser-game", "threejs", "webgl", "game", "shooter", "html5-game", "claude"],
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5199",
     "build": "vite build",

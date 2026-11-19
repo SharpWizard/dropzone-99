@@ -1,17 +1,86 @@
-# DROPZONE 99
+<div align="center">
 
-**99 drop in. One survives.** A single-player third-person battle royale for the browser, built with Three.js (WebGL2).
+# DROPZONE 99 · Free 3D Battle Royale in Your Browser
 
-**Play online:** https://sharpwizard.github.io/dropzone-99/ (deployed from master by .github/workflows/deploy.yml)
+**99 drop in. One survives.**
 
-## Run
+A third-person battle royale you play right in the browser. No download, no install, no account.
+Skydive onto an island, loot weapons, drive jeeps and tanks, and outlast 98 bots.
 
-```
-npm install
-npm run dev
-```
+### ▶ [PLAY NOW: sharpwizard.github.io/dropzone-99](https://sharpwizard.github.io/dropzone-99/)
 
-Open http://127.0.0.1:5199/ — or `npm run build` and serve the `dist/` folder.
+[![Play in browser](https://img.shields.io/badge/PLAY-in%20browser-ff5a1f?style=for-the-badge)](https://sharpwizard.github.io/dropzone-99/)
+[![Built with Claude Opus 5.5](https://img.shields.io/badge/built%20with-Claude%20Opus%205.5-d97757?style=for-the-badge)](https://www.anthropic.com/claude)
+[![Three.js](https://img.shields.io/badge/Three.js-WebGL2-049ef4?style=for-the-badge)](https://threejs.org/)
+[![Stars](https://img.shields.io/github/stars/SharpWizard/dropzone-99?style=for-the-badge)](https://github.com/SharpWizard/dropzone-99/stargazers)
+
+![Skydiving over the DROPZONE 99 island](docs/screenshots/04-freefall.jpg)
+
+</div>
+
+## What is DROPZONE 99?
+
+DROPZONE 99 is a **free browser battle royale game** inspired by mobile and PC battle royales such as **Free Fire** and **PUBG**: you jump out of a plane over a big island, land wherever you like, pick up guns and medical supplies, find a vehicle and fight to be the last one standing.
+
+The whole game runs in a single web page with **Three.js and WebGL2**. The terrain, buildings, textures and all sound are generated in code.
+
+**Built with Claude.** The game was designed and programmed together with **Claude Opus 5.5** (Anthropic's AI model, used through Claude Code): the game loop, rendering pipeline, bot AI, vehicle physics, missions, UI and deployment were all written in conversation with the model.
+
+> DROPZONE 99 is an independent fan project. It is not affiliated with, endorsed by or connected to Garena (Free Fire), KRAFTON (PUBG) or any other publisher. All names, characters, art and code here are original or come from the free asset packs listed in [CREDITS.md](CREDITS.md).
+
+## Features
+
+- 🪂 **Plane drop, freefall and jetpack landing**: choose your landing spot and dive for it
+- 🏝️ **One big island** with 10 locations: Iron City, Deadport Docks, Industrial Warzone, Eagle Peak Fort, Resistance Bunker, Ashwood Ruins, Greenfield Farms, The Dead Sector, Last Hope Outpost and the Civilian Survival Zone
+- 🔫 **7 guns** (assault rifles, SMG, DMR, sniper, shotgun, pistol) with scopes, suppressors, fire modes, recoil, damage falloff and headshots, plus grenades and melee tools
+- 🚙 **Drivable vehicles**: jeeps, sedans, pickups, trucks, motorcycles, a supercar, an ambulance and tanks, all with fuel
+- 🤖 **98 AI opponents** that hear gunshots, flank, use cover, call out targets and lay down suppressive fire. Four difficulty levels.
+- 🧑‍🚀 **10 playable heroes** and a **companion** (dragon or ghost skull) that joins you after 3 kills
+- 🎬 **Story campaign**: 6 missions with checkpoints, escort and patrol missions and a Titan boss
+- ⭕ **Battle Royale mode**: the classic shrinking safe zone over 7 phases, last one alive wins
+- 🌦️ **Day and night cycle and weather**, cascaded shadows, bloom, ambient occlusion, wind in the grass
+- 🏆 **Career ranks** saved in your browser unlock a better starting loadout
+- ⚙️ Graphics presets from LOW to ULTRA, auto-picked for your GPU, plus fully rebindable keys
+
+## Gameplay: how a match works
+
+### 1. Pick your hero
+
+Choose from 10 heroes, each with their own outfit, and pick the companion that will fight beside you.
+
+![Main menu](docs/screenshots/01-main-menu.jpg)
+![Hero select](docs/screenshots/02-hero-select.jpg)
+
+### 2. Ride the plane and jump
+
+Every match starts on the drop plane flying across the island. The dashed line on the minimap is the flight path. Press **F** to jump when you are over the place you want to land.
+
+![On the drop plane](docs/screenshots/03-plane-drop.jpg)
+
+### 3. Freefall and land
+
+Hold **W** to dive faster and steer with the mouse. Altitude and speed are shown on screen. Below 400 m press **F** to fire the jetpack, which also opens on its own at 105 m, then steer it down to the ground.
+
+![Freefall](docs/screenshots/04-freefall.jpg)
+![Landed](docs/screenshots/05-landed.jpg)
+
+### 4. Loot and fight
+
+Walk over weapons, ammo, armour, bandages, first aid kits and energy drinks and press **F** (or open the inventory with **Tab**). Aim with the right mouse button and fire with the left. Bots react to sound, so a suppressor keeps you hidden longer.
+
+![Firefight](docs/screenshots/06-firefight.jpg)
+
+### 5. Drive
+
+Press **F** next to a vehicle to get in. Vehicles burn fuel, and jerrycans from the loot fill them up by 50%.
+
+![Driving a motorcycle](docs/screenshots/07-driving.jpg)
+
+### 6. Read the map and survive
+
+Open the map with **M** to see all ten locations and your mission objective, and click it to place a marker. In **Story** mode you follow the campaign, find hidden caches, collect bounties and save survivors. In **Battle Royale** mode (Settings) a white circle shrinks in 7 phases, the zone outside hurts more each phase, and the last player alive wins.
+
+![Island map](docs/screenshots/08-island-map.jpg)
 
 ## Controls
 
@@ -22,7 +91,7 @@ Open http://127.0.0.1:5199/ — or `npm run build` and serve the `dist/` folder.
 | Sprint / jump | Shift / Space |
 | Crouch / prone | C / Z |
 | Reload / fire mode | R / B |
-| Pick up, interact, jump from plane, parachute, enter and exit vehicles | F |
+| Pick up, interact, jump from plane, jetpack, enter and exit vehicles | F |
 | Weapons / grenade | 1 2 3 / 4 |
 | Bandage / first aid / energy drink | 5 / 6 / 7 |
 | Switch shoulder / first-person | Q / V |
@@ -31,9 +100,39 @@ Open http://127.0.0.1:5199/ — or `npm run build` and serve the `dist/` folder.
 | Cheats on / off | K (or the CHEATS button, top right) |
 | Pause | Esc |
 
-All keys can be rebound in Settings. Graphics presets (LOW, MEDIUM, HIGH, ULTRA) are in Settings too; the game picks one from your GPU on first launch and scales resolution to hold frame rate.
+All keys can be rebound in Settings.
 
-## Layout
+## Run it locally
+
+```
+git clone https://github.com/SharpWizard/dropzone-99.git
+cd dropzone-99
+npm install
+npm run dev
+```
+
+Open http://127.0.0.1:5199/, or run `npm run build` and serve the `dist/` folder. Every push to `master` is built and published to GitHub Pages by `.github/workflows/deploy.yml`.
+
+## How it works
+
+| Part | What it does | Where |
+|---|---|---|
+| Game loop | Fixed state machine: boot, menu, play, paused | `src/core/Game.js` |
+| Rendering | HDR pipeline with cascaded soft shadows, SSAO, bloom, ACES tone mapping, height fog, adaptive resolution | `src/rendering/` |
+| World | Procedural terrain and water, 10 locations, towns, a railway with running trains, instanced vegetation | `src/terrain/`, `src/world/` |
+| Bots | 98 bots. Those near you run full perception, path finding and ballistics; distant ones run a cheap abstract simulation so the frame rate holds. | `src/ai/` |
+| Combat | Ray-cast shots with spread, recoil and range falloff, headshot zones, grenades | `src/combat/`, `src/weapons/` |
+| Vehicles | Simple driving model with fuel, damage and enter/exit | `src/vehicles/` |
+| Match | Plane path, drop, shrinking zone phases, story missions and checkpoints | `src/battleRoyale/` |
+| Audio | Every sound is synthesised in code with Web Audio | `src/audio/` |
+
+## Share it
+
+If you enjoyed it, **star the repo ⭐** and share the link. It helps a lot.
+
+`#battleroyale #browsergame #indiegame #threejs #webgl #gamedev #madewithclaude`
+
+## Code layout
 
 ```
 src/

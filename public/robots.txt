@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sharpwizard.github.io/dropzone-99/sitemap.xml
